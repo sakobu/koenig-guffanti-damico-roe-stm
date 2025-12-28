@@ -14,7 +14,7 @@ function AxisLine({ direction, color, label, length }: AxisProps) {
   return (
     <group>
       <Line points={[[0, 0, 0], end]} color={color} lineWidth={3} />
-      <Sphere args={[0.12, 16, 16]} position={end}>
+      <Sphere args={[0.15, 16, 16]} position={end}>
         <meshBasicMaterial color={color} />
       </Sphere>
       <Billboard position={end}>
