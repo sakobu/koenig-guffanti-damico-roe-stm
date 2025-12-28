@@ -1,4 +1,4 @@
-import { Spacecraft } from "./spacecraft/Spacecraft";
+import { Spacecraft } from "./Spacecraft";
 
 interface DeputyProps {
   position?: [number, number, number];

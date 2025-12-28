@@ -1,8 +1,8 @@
 import Scene from './components/canvas/Scene'
-import RICAxes from './components/canvas/RICAxes'
-import Chief from './components/canvas/Chief'
-import Deputy from './components/canvas/Deputy'
-import Grid from './components/canvas/Grid'
+import RICAxes from './components/canvas/environment/RICAxes'
+import Grid from './components/canvas/environment/Grid'
+import Chief from './components/canvas/spacecraft/Chief'
+import Deputy from './components/canvas/spacecraft/Deputy'
 
 export default function App() {
   return (
