@@ -15,9 +15,9 @@ export function SolarPanel({
   depth,
   position,
   rotation = [0, 0, 0],
-  color = '#2266ff',
-  emissive = '#1144aa',
-  emissiveIntensity = 0.4
+  color = '#d0d0d0',
+  emissive = '#444444',
+  emissiveIntensity = 0.2
 }: SolarPanelProps) {
   return (
     <mesh position={position} rotation={rotation}>

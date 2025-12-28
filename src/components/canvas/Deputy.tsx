@@ -1,4 +1,4 @@
-import { Spacecraft } from "./spacecraft";
+import { Spacecraft } from "./spacecraft/Spacecraft";
 
 interface DeputyProps {
   position?: [number, number, number];
@@ -20,10 +20,10 @@ export default function Deputy({ position = [150, 80, 0] }: DeputyProps) {
         emissiveIntensity: 0.6,
       }}
       arms={[
-        // Left arm
-        { position: [-7, 0, 0], length: 8, direction: "x" },
+        // Left arm - connects body edge (x=-3) to panel (x=-14)
+        { position: [-8.5, 0, 0], length: 11, direction: "x" },
         // Right arm
-        { position: [7, 0, 0], length: 8, direction: "x" },
+        { position: [8.5, 0, 0], length: 11, direction: "x" },
       ]}
       solarPanels={[
         // Left panel
@@ -40,6 +40,10 @@ export default function Deputy({ position = [150, 80, 0] }: DeputyProps) {
           depth: 8,
           position: [14, 0, 0],
         },
+      ]}
+      navigationLights={[
+        { position: [0, 4, 5], color: "#4488ff", intensity: 5, distance: 150 },
+        { position: [0, -4, 5], color: "#4488ff", intensity: 5, distance: 150 },
       ]}
     />
   );

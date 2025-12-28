@@ -29,7 +29,7 @@ function Arm({ position, length, direction }: ArmProps) {
   return (
     <mesh position={position}>
       <boxGeometry args={size} />
-      <meshStandardMaterial color="#444444" metalness={0.6} roughness={0.4} />
+      <meshStandardMaterial color="#b0b0b0" metalness={0.7} roughness={0.3} />
     </mesh>
   )
 }
