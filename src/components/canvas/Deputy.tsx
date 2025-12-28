@@ -1,18 +1,22 @@
 import { Spacecraft } from "./spacecraft";
 
-export default function Chief() {
+interface DeputyProps {
+  position?: [number, number, number];
+}
+
+export default function Deputy({ position = [150, 80, 0] }: DeputyProps) {
   return (
     <Spacecraft
-      position={[0, 0, 0]}
-      scale={2}
-      label="Chief"
-      labelColor="#ff6666"
+      position={position}
+      scale={1.8}
+      label="Deputy"
+      labelColor="#6688ff"
       mainBody={{
         width: 6,
         height: 6,
         depth: 8,
-        color: "#cc4444",
-        emissive: "#ff4422",
+        color: "#4466cc",
+        emissive: "#2266ff",
         emissiveIntensity: 0.6,
       }}
       arms={[
