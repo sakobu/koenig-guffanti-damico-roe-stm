@@ -5,19 +5,18 @@ import Chief from './components/canvas/spacecraft/Chief'
 import Deputy from './components/canvas/spacecraft/Deputy'
 import Waypoints from './components/canvas/Waypoints'
 import Trajectory from './components/canvas/Trajectory'
+import ClickPlane from './components/canvas/ClickPlane'
 import Sidebar from './components/ui/Sidebar'
-import { useMissionStore } from './stores/mission'
 
 export default function App() {
-  const initialPosition = useMissionStore((state) => state.initialPosition)
-
   return (
     <div className="w-screen h-screen bg-black">
       <Scene>
+        <ClickPlane />
         <Grid />
         <RICAxes />
         <Chief />
-        <Deputy position={initialPosition as [number, number, number]} />
+        <Deputy />
         <Waypoints />
         <Trajectory />
       </Scene>

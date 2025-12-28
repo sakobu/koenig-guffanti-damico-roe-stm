@@ -1,13 +1,12 @@
+import { useMissionStore } from "../../../stores/mission";
 import { Spacecraft } from "./Spacecraft";
 
-interface DeputyProps {
-  position?: [number, number, number];
-}
+export default function Deputy() {
+  const position = useMissionStore((state) => state.initialPosition);
 
-export default function Deputy({ position = [150, 80, 0] }: DeputyProps) {
   return (
     <Spacecraft
-      position={position}
+      position={position as unknown as [number, number, number]}
       scale={1.8}
       label="Deputy"
       labelColor="#6688ff"
