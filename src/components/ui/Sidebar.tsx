@@ -1,7 +1,28 @@
 import { useState } from "react";
+import { useMissionStore } from "../../stores/mission";
+
+// Preset waypoint positions for quick testing
+const PRESET_WAYPOINTS: [number, number, number][] = [
+  [0, -50, 0],    // Behind chief
+  [30, 0, 30],    // Inspection viewpoint
+  [0, 50, 0],     // Ahead of chief
+  [-30, 0, -30],  // Opposite viewpoint
+];
 
 export default function Sidebar() {
   const [isOpen, setIsOpen] = useState(true);
+  const [presetIndex, setPresetIndex] = useState(0);
+
+  const waypoints = useMissionStore((state) => state.waypoints);
+  const missionPlan = useMissionStore((state) => state.missionPlan);
+  const addWaypoint = useMissionStore((state) => state.addWaypoint);
+  const clearWaypoints = useMissionStore((state) => state.clearWaypoints);
+
+  const handleAddWaypoint = () => {
+    const position = PRESET_WAYPOINTS[presetIndex % PRESET_WAYPOINTS.length];
+    addWaypoint(position);
+    setPresetIndex((i) => i + 1);
+  };
 
   return (
     <>
@@ -18,11 +39,76 @@ export default function Sidebar() {
           </h1>
         </div>
 
-        {/* Content area - panels will go here */}
+        {/* Content area */}
         <div className="p-4 space-y-4 overflow-y-auto h-[calc(100%-60px)]">
-          <div className="text-xs text-zinc-500 uppercase tracking-wider">
-            Panels will go here
+          {/* Waypoint controls */}
+          <div className="space-y-2">
+            <div className="text-xs text-zinc-500 uppercase tracking-wider">
+              Waypoints
+            </div>
+            <div className="flex gap-2">
+              <button
+                onClick={handleAddWaypoint}
+                className="flex-1 px-3 py-2 bg-amber-600 hover:bg-amber-500
+                  text-white text-sm font-medium rounded transition-colors"
+              >
+                Add Waypoint
+              </button>
+              <button
+                onClick={clearWaypoints}
+                disabled={waypoints.length === 0}
+                className="px-3 py-2 bg-zinc-700 hover:bg-zinc-600
+                  text-zinc-300 text-sm rounded transition-colors
+                  disabled:opacity-50 disabled:cursor-not-allowed"
+              >
+                Clear
+              </button>
+            </div>
+
+            {/* Waypoint list */}
+            {waypoints.length > 0 && (
+              <div className="space-y-1 mt-3">
+                {waypoints.map((wp, i) => (
+                  <div
+                    key={i}
+                    className="text-xs text-zinc-400 font-mono bg-zinc-800/50
+                      px-2 py-1 rounded"
+                  >
+                    WP{i + 1}: [{wp.position[0]}, {wp.position[1]}, {wp.position[2]}]
+                  </div>
+                ))}
+              </div>
+            )}
           </div>
+
+          {/* Mission summary */}
+          {missionPlan && (
+            <div className="space-y-2 pt-4 border-t border-zinc-800">
+              <div className="text-xs text-zinc-500 uppercase tracking-wider">
+                Mission Summary
+              </div>
+              <div className="space-y-1 text-sm">
+                <div className="flex justify-between text-zinc-400">
+                  <span>Total Delta-V:</span>
+                  <span className="font-mono text-cyan-400">
+                    {missionPlan.totalDeltaV.toFixed(4)} m/s
+                  </span>
+                </div>
+                <div className="flex justify-between text-zinc-400">
+                  <span>Total Time:</span>
+                  <span className="font-mono text-cyan-400">
+                    {(missionPlan.totalTime / 60).toFixed(1)} min
+                  </span>
+                </div>
+                <div className="flex justify-between text-zinc-400">
+                  <span>Converged:</span>
+                  <span className={missionPlan.converged ? "text-green-400" : "text-red-400"}>
+                    {missionPlan.converged ? "Yes" : "No"}
+                  </span>
+                </div>
+              </div>
+            </div>
+          )}
         </div>
       </div>
 
