@@ -1,9 +1,16 @@
+import Scene from './components/canvas/Scene'
+import RICAxes from './components/canvas/RICAxes'
+import Chief from './components/canvas/Chief'
+import Grid from './components/canvas/Grid'
+
 export default function App() {
   return (
-    <div className="min-h-screen flex items-center justify-center bg-gray-100">
-      <h1 className="text-3xl font-bold underline text-blue-600">
-        Hello, Vite with React and Tailwind CSS!
-      </h1>
+    <div className="w-screen h-screen bg-black">
+      <Scene>
+        <Grid />
+        <RICAxes />
+        <Chief />
+      </Scene>
     </div>
-  );
+  )
 }
