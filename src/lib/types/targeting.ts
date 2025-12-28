@@ -1,5 +1,5 @@
 /**
- * Targeting Module Type Definitions
+ * Targeting and mission planning type definitions.
  *
  * Types for impulsive maneuver planning and multi-waypoint trajectory optimization.
  *
@@ -7,42 +7,9 @@
  * PhD Thesis, TU Delft, 2010, Section 2.2.2 (Gauss Variational Equations)
  */
 
-import type { DragConfig } from '../core/types/config';
-import type { ClassicalOrbitalElements } from '../core/types/orbital-elements';
-import type { Vector3 } from '../core/types/vectors';
-
-// ============================================================================
-// Matrix Types
-// ============================================================================
-
-/**
- * 6x3 Control Influence Matrix.
- *
- * Maps RIC delta-v [dvR, dvI, dvC] to instantaneous ROE change.
- * Derived from Gauss Variational Equations (D'Amico 2010, Eq. 2.38).
- */
-export type ControlMatrix6x3 = readonly [
-  readonly [number, number, number],
-  readonly [number, number, number],
-  readonly [number, number, number],
-  readonly [number, number, number],
-  readonly [number, number, number],
-  readonly [number, number, number],
-];
-
-/**
- * 3x6 matrix for position extraction or transpose operations.
- */
-export type Matrix3x6 = readonly [
-  readonly [number, number, number, number, number, number],
-  readonly [number, number, number, number, number, number],
-  readonly [number, number, number, number, number, number],
-];
-
-/**
- * 3x3 matrix for linear system solving.
- */
-export type Matrix3x3 = readonly [Vector3, Vector3, Vector3];
+import type { DragConfig } from "./config";
+import type { ClassicalOrbitalElements } from "./orbital-elements";
+import type { Vector3 } from "./vectors";
 
 // ============================================================================
 // Waypoint and Maneuver Types

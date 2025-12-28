@@ -15,22 +15,22 @@
  * The transformation reduces to the near-circular form (Eq. 2.17) when e -> 0.
  */
 
-import type { STM6 } from "../core/types/matrices";
+import type { STM6 } from "../types/matrices";
 import type {
   ClassicalOrbitalElements,
   QuasiNonsingularROE,
-} from "../core/types/orbital-elements";
-import type { RelativeState, ROEVector } from "../core/types/vectors";
+} from "../types/orbital-elements";
+import type { RelativeState, ROEVector } from "../types/vectors";
 
-import { matVecMul6 } from "../core/math/matrix-ops";
+import { matVecMul6 } from "../math/matrices";
 import {
   angularVelocity,
   meanMotion,
   orbitalRadius,
   radialVelocity,
   trueAnomalyFromMean,
-} from "../core/kepler";
-import { roeToVector, vectorToROE } from "./roe-state";
+} from "../math/kepler";
+import { roeToVector, vectorToROE } from "./roe-vector";
 
 // ============================================================================
 // INTERNAL HELPER TYPES (used only by this module)

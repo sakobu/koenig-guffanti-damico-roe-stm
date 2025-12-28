@@ -1,45 +1,21 @@
 /**
- * Differential Drag State Transition Matrices
+ * Differential Drag Model Dispatch
  *
- * This module provides density-model-free drag STMs from Koenig et al. (2017).
- * Instead of requiring atmospheric density models, these STMs use estimated
- * time derivatives of the relative orbital elements due to drag.
+ * Provides automatic model selection for drag propagation based on
+ * eccentricity and configuration type.
  *
- * **Available Models:**
- * - `eccentric`: 7x7 STM for orbits with e >= 0.05 (Section VII, Appendix C)
- * - `arbitrary`: 9x9 STM for any eccentricity including near-circular (Section VIII, Appendix D)
- * - `auto`: Automatically selects the appropriate model based on eccentricity
- *
- * **Estimation Utilities:**
- * - `estimateDragDerivativesWithJ2Correction`: Recommended for estimating drag derivatives
- * - `estimateDaDot`: Simple semi-major axis derivative estimation
- *
- * Reference: Koenig, Guffanti, D'Amico (2017) "New State Transition Matrices
- * for Spacecraft Relative Motion in Perturbed Orbits", JGCD Vol. 40, No. 7
+ * Reference: Koenig, Guffanti, D'Amico (2017), Sections VII-VIII
  */
 
 import type {
   DragConfig,
   DragConfigArbitrary,
-} from "../../../core/types/config";
-import type { ClassicalOrbitalElements } from "../../../core/types/orbital-elements";
-import type { ROEVector } from "../../../core/types/vectors";
+} from "../types/config";
+import type { ClassicalOrbitalElements } from "../types/orbital-elements";
+import type { ROEVector } from "../types/vectors";
 
-import { computeJ2DragSTMArbitrary } from "./arbitrary";
-import { computeJ2DragSTMEccentric } from "./eccentric";
-
-// Re-export STM computation functions
-export { computeJ2DragSTMEccentric } from "./eccentric";
-export {
-  computeJ2DragSTMArbitrary,
-  eccentricToArbitraryConfig,
-} from "./arbitrary";
-
-// Re-export estimation utilities
-export {
-  estimateDaDot,
-  estimateDragDerivativesWithJ2Correction,
-} from "./estimation";
+import { computeJ2DragSTMArbitrary } from "../stm/drag-arbitrary";
+import { computeJ2DragSTMEccentric } from "../stm/drag-eccentric";
 
 /** Eccentricity threshold for model selection (Section VII) */
 const ECCENTRICITY_THRESHOLD = 0.05;

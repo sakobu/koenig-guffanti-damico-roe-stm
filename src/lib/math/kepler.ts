@@ -5,7 +5,7 @@
  * when applying the STM over time by converting between anomalies and computing orbital periods.
  */
 
-import type { TrueAnomaly } from "./types/orbital-elements";
+import type { TrueAnomaly } from "../types/orbital-elements";
 
 /**
  * Solve Kepler's equation to obtain true anomaly from mean anomaly.
@@ -174,4 +174,18 @@ export const angularVelocity = (
   const eta = Math.sqrt(1 - eccentricity * eccentricity);
   const factor = 1 + eccentricity * Math.cos(trueAnomaly);
   return (n * factor * factor) / (eta * eta * eta);
+};
+
+/**
+ * Normalize an angle to the range [0, 2*PI).
+ *
+ * JavaScript's modulo operator returns negative values for negative inputs,
+ * so this function properly normalizes angles to the standard range.
+ * @param angle - Input angle [rad]
+ * @returns Normalized angle in [0, 2*PI)
+ */
+export const normalizeAngle = (angle: number): number => {
+  const TWO_PI = 2 * Math.PI;
+  const result = angle % TWO_PI;
+  return result < 0 ? result + TWO_PI : result;
 };

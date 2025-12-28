@@ -7,21 +7,21 @@
  * Reference: Koenig, Guffanti, D'Amico (2017)
  */
 
-import type { ROEPropagationOptions } from "../core/types/config";
+import type { ROEPropagationOptions } from "../types/config";
 import type {
   ClassicalOrbitalElements,
   QuasiNonsingularROE,
-} from "../core/types/orbital-elements";
-import type { ROEVector } from "../core/types/vectors";
+} from "../types/orbital-elements";
+import type { ROEVector } from "../types/vectors";
 
-import { J2, R_EARTH } from "../core/constants";
-import { matVecMul6 } from "../core/math/matrix-ops";
-import { computeKappa } from "../core/math/orbital-factors";
-import { meanMotion } from "..//core/kepler";
-import { normalizeAngle, roeToVector, vectorToROE } from "./roe-state";
-import { propagateWithDrag } from "./stm/drag";
-import { computeJ2STM } from "./stm/j2";
-import { computeKeplerianSTM } from "./stm/keplerian";
+import { J2, R_EARTH } from "../constants";
+import { matVecMul6 } from "../math/matrices";
+import { computeKappa } from "../math/orbital-factors";
+import { meanMotion, normalizeAngle } from "../math/kepler";
+import { roeToVector, vectorToROE } from "../transforms/roe-vector";
+import { propagateWithDrag } from "./drag-dispatch";
+import { computeJ2STM } from "../stm/j2";
+import { computeKeplerianSTM } from "../stm/keplerian";
 
 /**
  * Propagate Quasi-Nonsingular ROE state forward in time.

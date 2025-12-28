@@ -5,21 +5,21 @@
  * Propagates ROE state at regular intervals and converts to RIC positions.
  */
 
-import type { ROEPropagationOptions } from "../core/types/config";
-import type { ClassicalOrbitalElements } from "../core/types/orbital-elements";
-import type { Vector3 } from "../core/types/vectors";
+import type { ROEPropagationOptions } from "../types/config";
+import type { ClassicalOrbitalElements } from "../types/orbital-elements";
+import type { Vector3 } from "../types/vectors";
 import type {
   ManeuverLeg,
   MissionPlan,
   TargetingOptions,
   TrajectoryPoint,
-} from "./types";
+} from "../types/targeting";
 
-import { ricToROE, roeToRIC } from "../dynamics/roe-ric";
-import { propagateROEWithChief } from "../dynamics/propagation";
-import { roeToVector, vectorToROE } from "../dynamics/roe-state";
+import { ricToROE, roeToRIC } from "../transforms/roe-ric";
+import { propagateROEWithChief } from "../propagation/propagate";
+import { roeToVector, vectorToROE } from "../transforms/roe-vector";
 import { applyDeltaV } from "./control-matrix";
-import { ZERO_VECTOR3 } from "./matrix-utils";
+import { ZERO_VECTOR3 } from "../math/vectors";
 
 /**
  * Generate dense trajectory points for a single maneuver leg.

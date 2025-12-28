@@ -1,9 +1,16 @@
 /**
- * State Transition Matrix type definitions.
+ * Matrix type definitions for State Transition Matrices and control.
  *
  * References:
  * - Koenig, Guffanti, D'Amico (2017) "New State Transition Matrices..."
+ * - D'Amico (2010) PhD Thesis, TU Delft
  */
+
+import type { Vector3 } from "./vectors";
+
+// ============================================================================
+// STM Row Types
+// ============================================================================
 
 /**
  * Row type for 6x6 STM.
@@ -52,6 +59,10 @@ export type Row9 = readonly [
  * Row of drag contributions (3 elements: da-dot, dex-dot, dey-dot).
  */
 export type DragRow3 = readonly [daDot: number, dexDot: number, deyDot: number];
+
+// ============================================================================
+// State Transition Matrices
+// ============================================================================
 
 /**
  * 6x6 State Transition Matrix.
@@ -111,3 +122,36 @@ export type DragColumns6x3 = readonly [
   rowDix: DragRow3,
   rowDiy: DragRow3
 ];
+
+// ============================================================================
+// Control and Utility Matrices
+// ============================================================================
+
+/**
+ * 6x3 Control Influence Matrix.
+ *
+ * Maps RIC delta-v [dvR, dvI, dvC] to instantaneous ROE change.
+ * Derived from Gauss Variational Equations (D'Amico 2010, Eq. 2.38).
+ */
+export type ControlMatrix6x3 = readonly [
+  readonly [number, number, number],
+  readonly [number, number, number],
+  readonly [number, number, number],
+  readonly [number, number, number],
+  readonly [number, number, number],
+  readonly [number, number, number],
+];
+
+/**
+ * 3x6 matrix for position extraction or transpose operations.
+ */
+export type Matrix3x6 = readonly [
+  readonly [number, number, number, number, number, number],
+  readonly [number, number, number, number, number, number],
+  readonly [number, number, number, number, number, number],
+];
+
+/**
+ * 3x3 matrix for linear system solving.
+ */
+export type Matrix3x3 = readonly [Vector3, Vector3, Vector3];

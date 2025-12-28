@@ -15,19 +15,19 @@
  * For near-circular orbits, use the arbitrary eccentricity model instead.
  */
 
-import type { STM7 } from "../../../core/types/matrices";
-import type { ClassicalOrbitalElements } from "../../../core/types/orbital-elements";
-import type { ROEVector, ROEVector7 } from "../../../core/types/vectors";
+import type { STM7 } from "../types/matrices";
+import type { ClassicalOrbitalElements } from "../types/orbital-elements";
+import type { ROEVector, ROEVector7 } from "../types/vectors";
 
-import { J2, R_EARTH } from "../../../core/constants";
-import { matVecMul7 } from "../../../core/math/matrix-ops";
+import { J2, R_EARTH } from "../constants";
+import { matVecMul7 } from "../math/matrices";
 import {
   computeApsidalState,
   computeKappa,
   computeOrbitalFactors,
-} from "../../../core/math/orbital-factors";
-import { meanMotion } from "../../../core/kepler";
-import { buildJ2Matrix } from "../j2";
+} from "../math/orbital-factors";
+import { meanMotion } from "../math/kepler";
+import { buildJ2Matrix } from "./j2";
 
 /**
  * Compute complete J2+Drag STM for eccentric orbits

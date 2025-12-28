@@ -1,17 +1,14 @@
-export type { ClassicalOrbitalElements } from "./core/types/orbital-elements";
-export type { RelativeState, Vector3 } from "./core/types/vectors";
-export type { DragConfigAuto } from "./core/types/config";
+/**
+ * RPO Library - Spacecraft Rendezvous & Proximity Operations
+ *
+ * TypeScript implementation of ROE-based mission planning algorithms.
+ * Based on Koenig et al. (2017) and D'Amico (2010).
+ */
 
-export { J2, MU_EARTH, R_EARTH, SECONDS_PER_DAY } from "./core/constants";
-
-export {
-  trueAnomalyFromMean,
-  meanMotion,
-  orbitalRadius,
-  radialVelocity,
-  angularVelocity,
-} from "./core/kepler";
-
+// Types
+export type { ClassicalOrbitalElements } from "./types/orbital-elements";
+export type { RelativeState, Vector3 } from "./types/vectors";
+export type { DragConfigAuto } from "./types/config";
 export type {
   Waypoint,
   Maneuver,
@@ -19,19 +16,33 @@ export type {
   MissionPlan,
   TargetingOptions,
   TrajectoryPoint,
-} from "./mission/types";
+} from "./types/targeting";
 
+// Constants
+export { J2, MU_EARTH, R_EARTH, SECONDS_PER_DAY } from "./constants";
+
+// Kepler utilities
+export {
+  trueAnomalyFromMean,
+  meanMotion,
+  orbitalRadius,
+  radialVelocity,
+  angularVelocity,
+} from "./math/kepler";
+
+// Mission planning
 export {
   planMission,
   replanFromWaypoint,
   getMissionStateAtTime,
   getMissionSummary,
   extractWaypointPositions,
-} from "./mission/planner";
+} from "./targeting/planner";
 
+// Trajectory generation
 export {
   generateLegTrajectory,
   generateMissionTrajectory,
   generateTrajectoryWithManeuvers,
   sampleTrajectoryUniform,
-} from "./mission/trajectory-output";
+} from "./targeting/trajectory";

@@ -1,17 +1,29 @@
 /**
- * Matrix operations for STM computations.
+ * Matrix operations for STM computations and linear systems.
  *
  * References:
  * - Koenig, Guffanti, D'Amico (2017) "New State Transition Matrices..."
+ * - D'Amico (2010) PhD Thesis, TU Delft
  */
 
 import type {
   ROEVector,
   ROEVector7,
   ROEVector9,
-} from '../types/vectors';
+  Vector3,
+} from "../types/vectors";
 
-import type { STM6, STM7, STM9 } from '../types/matrices';
+import type {
+  STM6,
+  STM7,
+  STM9,
+  ControlMatrix6x3,
+  Matrix3x3,
+} from "../types/matrices";
+
+// ============================================================================
+// STM Matrix-Vector Multiplication
+// ============================================================================
 
 /**
  * Perform Matrix-Vector multiplication for a 6x6 Matrix and a 6-element Vector.
@@ -215,3 +227,105 @@ export const matVecMul9 = (A: STM9, v: ROEVector9): ROEVector9 => [
     A[8][7] * v[7] +
     A[8][8] * v[8],
 ];
+
+// ============================================================================
+// Control Matrix Operations
+// ============================================================================
+
+/**
+ * Multiply 6x3 matrix by 3-vector: B * v.
+ *
+ * Used to compute ROE change from delta-v: dROE = B * dv
+ * @param B - 6x3 control influence matrix
+ * @param v - 3-element delta-v vector
+ * @returns 6-element ROE change vector
+ */
+export const matMul6x3_3x1 = (B: ControlMatrix6x3, v: Vector3): ROEVector => [
+  B[0][0] * v[0] + B[0][1] * v[1] + B[0][2] * v[2],
+  B[1][0] * v[0] + B[1][1] * v[1] + B[1][2] * v[2],
+  B[2][0] * v[0] + B[2][1] * v[1] + B[2][2] * v[2],
+  B[3][0] * v[0] + B[3][1] * v[1] + B[3][2] * v[2],
+  B[4][0] * v[0] + B[4][1] * v[1] + B[4][2] * v[2],
+  B[5][0] * v[0] + B[5][1] * v[1] + B[5][2] * v[2],
+];
+
+/**
+ * Multiply 3x3 matrix by 3-vector: A * v.
+ * @param A - 3x3 matrix
+ * @param v - 3-element vector
+ * @returns Result vector A * v
+ */
+export const matMul3x3_3x1 = (A: Matrix3x3, v: Vector3): Vector3 => [
+  A[0][0] * v[0] + A[0][1] * v[1] + A[0][2] * v[2],
+  A[1][0] * v[0] + A[1][1] * v[1] + A[1][2] * v[2],
+  A[2][0] * v[0] + A[2][1] * v[1] + A[2][2] * v[2],
+];
+
+// ============================================================================
+// Matrix Inversion and Linear System Solving
+// ============================================================================
+
+/**
+ * Compute determinant of 3x3 matrix.
+ * @param A - 3x3 matrix
+ * @returns Determinant value
+ */
+const det3x3 = (A: Matrix3x3): number => {
+  const [[a, b, c], [d, e, f], [g, h, i]] = A;
+  return a * (e * i - f * h) - b * (d * i - f * g) + c * (d * h - e * g);
+};
+
+/**
+ * Invert a 3x3 matrix analytically.
+ *
+ * Uses cofactor expansion and Cramer's rule.
+ * @param A - 3x3 matrix to invert
+ * @returns Inverted 3x3 matrix
+ * @throws {Error} If matrix is singular (det ~ 0)
+ */
+export const invert3x3 = (A: Matrix3x3): Matrix3x3 => {
+  const [[a, b, c], [d, e, f], [g, h, i]] = A;
+
+  const det = det3x3(A);
+
+  if (Math.abs(det) < 1e-15) {
+    throw new Error(
+      "[matrices]: Jacobian matrix is singular. " +
+        "The problem may be ill-conditioned at this configuration."
+    );
+  }
+
+  const invDet = 1 / det;
+
+  // Cofactor matrix transposed (adjugate) divided by determinant
+  return [
+    [
+      (e * i - f * h) * invDet,
+      (c * h - b * i) * invDet,
+      (b * f - c * e) * invDet,
+    ],
+    [
+      (f * g - d * i) * invDet,
+      (a * i - c * g) * invDet,
+      (c * d - a * f) * invDet,
+    ],
+    [
+      (d * h - e * g) * invDet,
+      (b * g - a * h) * invDet,
+      (a * e - b * d) * invDet,
+    ],
+  ];
+};
+
+/**
+ * Solve 3x3 linear system A * x = b.
+ *
+ * Uses direct inversion (appropriate for 3x3 with good conditioning).
+ * @param A - 3x3 coefficient matrix
+ * @param b - 3-element right-hand side
+ * @returns Solution vector x
+ */
+export const solve3x3 = (A: Matrix3x3, b: Vector3): Vector3 => {
+  const Ainv = invert3x3(A);
+  return matMul3x3_3x1(Ainv, b);
+};

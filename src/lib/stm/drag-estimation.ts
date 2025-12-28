@@ -9,12 +9,12 @@
  * the linear STM assumption.
  */
 
-import type { DragConfigArbitrary } from "../../../core/types/config";
-import type { ClassicalOrbitalElements } from "../../../core/types/orbital-elements";
-import type { ROEVector } from "../../../core/types/vectors";
+import type { DragConfigArbitrary } from "../types/config";
+import type { ClassicalOrbitalElements } from "../types/orbital-elements";
+import type { ROEVector } from "../types/vectors";
 
-import { matVecMul6 } from "../../../core/math/matrix-ops";
-import { computeJ2STM } from "../j2";
+import { matVecMul6 } from "../math/matrices";
+import { computeJ2STM } from "./j2";
 
 /**
  * Estimate drag derivatives with J2 correction.

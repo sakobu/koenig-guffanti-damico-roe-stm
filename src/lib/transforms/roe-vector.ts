@@ -16,9 +16,9 @@
  *   dey' = -dex sin(omega) + dey cos(omega) ~= e * d-omega
  */
 
-import type { ROEVector } from "../core/types/vectors";
-import type { STM6 } from "../core/types/matrices";
-import type { QuasiNonsingularROE } from "../core/types/orbital-elements";
+import type { ROEVector } from "../types/vectors";
+import type { STM6 } from "../types/matrices";
+import type { QuasiNonsingularROE } from "../types/orbital-elements";
 
 /**
  * Convert a Quasi-Nonsingular ROE object into a 6-element state vector.
@@ -107,18 +107,4 @@ export const computeInverseJMatrix = (omega: number): STM6 => {
     [0, 0, 0, 0, 1, 0],
     [0, 0, 0, 0, 0, 1],
   ];
-};
-
-/**
- * Normalize an angle to the range [0, 2*PI).
- *
- * JavaScript's modulo operator returns negative values for negative inputs,
- * so this function properly normalizes angles to the standard range.
- * @param angle - Input angle [rad]
- * @returns Normalized angle in [0, 2*PI)
- */
-export const normalizeAngle = (angle: number): number => {
-  const TWO_PI = 2 * Math.PI;
-  const result = angle % TWO_PI;
-  return result < 0 ? result + TWO_PI : result;
 };

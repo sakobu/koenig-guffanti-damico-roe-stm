@@ -17,20 +17,20 @@
  * - When highest accuracy is needed
  */
 
-import type { DragConfigArbitrary } from "../../../core/types/config";
-import type { DragColumns6x3, STM9 } from "../../../core/types/matrices";
-import type { ClassicalOrbitalElements } from "../../../core/types/orbital-elements";
-import type { ROEVector, ROEVector9 } from "../../../core/types/vectors";
+import type { DragConfigArbitrary } from "../types/config";
+import type { DragColumns6x3, STM9 } from "../types/matrices";
+import type { ClassicalOrbitalElements } from "../types/orbital-elements";
+import type { ROEVector, ROEVector9 } from "../types/vectors";
 
-import { J2, R_EARTH } from "../../../core/constants";
-import { matVecMul9 } from "../../../core/math/matrix-ops";
+import { J2, R_EARTH } from "../constants";
+import { matVecMul9 } from "../math/matrices";
 import {
   computeApsidalState,
   computeKappa,
   computeOrbitalFactors,
-} from "../../../core/math/orbital-factors";
-import { meanMotion } from "../../../core/kepler";
-import { buildJ2Matrix } from "../j2";
+} from "../math/orbital-factors";
+import { meanMotion } from "../math/kepler";
+import { buildJ2Matrix } from "./j2";
 
 /**
  * Compute complete J2+Drag STM for arbitrary eccentricity orbits
