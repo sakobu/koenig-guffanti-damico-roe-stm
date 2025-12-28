@@ -1,62 +1,63 @@
-import { Line, Text, Cone, GizmoHelper, Billboard } from '@react-three/drei'
+import { Line, Text, Sphere, GizmoHelper, Billboard } from "@react-three/drei";
 
 interface AxisProps {
-  direction: [number, number, number]
-  color: string
-  label: string
-  length: number
+  direction: [number, number, number];
+  color: string;
+  label: string;
+  length: number;
 }
 
 function AxisLine({ direction, color, label, length }: AxisProps) {
-  const [dx, dy, dz] = direction
-  const end: [number, number, number] = [dx * length, dy * length, dz * length]
-  const labelPos: [number, number, number] = [
-    dx * (length + 0.3),
-    dy * (length + 0.3),
-    dz * (length + 0.3),
-  ]
-
-  let rotation: [number, number, number] = [0, 0, 0]
-  if (dx === 1) rotation = [0, 0, -Math.PI / 2]
-  if (dz === 1) rotation = [Math.PI / 2, 0, 0]
+  const [dx, dy, dz] = direction;
+  const end: [number, number, number] = [dx * length, dy * length, dz * length];
 
   return (
     <group>
-      <Line
-        points={[[0, 0, 0], end]}
-        color={color}
-        lineWidth={3}
-      />
-      <Cone
-        args={[0.06, 0.15, 8]}
-        position={end}
-        rotation={rotation}
-      >
+      <Line points={[[0, 0, 0], end]} color={color} lineWidth={3} />
+      <Sphere args={[0.12, 16, 16]} position={end}>
         <meshBasicMaterial color={color} />
-      </Cone>
-      <Billboard position={labelPos}>
+      </Sphere>
+      <Billboard position={end}>
         <Text
-          fontSize={0.25}
-          color={color}
+          fontSize={0.15}
+          color="#000000"
           anchorX="center"
           anchorY="middle"
+          fontWeight="bold"
+          renderOrder={1}
+          material-depthTest={false}
         >
           {label}
         </Text>
       </Billboard>
     </group>
-  )
+  );
 }
 
 function AxesGroup() {
-  const length = 0.8
+  const length = 0.8;
   return (
     <group>
-      <AxisLine direction={[0, 1, 0]} color="#20df80" label="R" length={length} />
-      <AxisLine direction={[1, 0, 0]} color="#ff2060" label="I" length={length} />
-      <AxisLine direction={[0, 0, 1]} color="#2080ff" label="C" length={length} />
+      <AxisLine
+        direction={[0, 1, 0]}
+        color="#20df80"
+        label="R"
+        length={length}
+      />
+      <AxisLine
+        direction={[1, 0, 0]}
+        color="#ff2060"
+        label="I"
+        length={length}
+      />
+      <AxisLine
+        direction={[0, 0, 1]}
+        color="#2080ff"
+        label="C"
+        length={length}
+      />
     </group>
-  )
+  );
 }
 
 export default function RICAxes() {
@@ -66,5 +67,5 @@ export default function RICAxes() {
         <AxesGroup />
       </group>
     </GizmoHelper>
-  )
+  );
 }
