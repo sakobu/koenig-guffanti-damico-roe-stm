@@ -1,4 +1,4 @@
-import { Line, Text, Cone, GizmoHelper } from '@react-three/drei'
+import { Line, Text, Cone, GizmoHelper, Billboard } from '@react-three/drei'
 
 interface AxisProps {
   direction: [number, number, number]
@@ -7,7 +7,7 @@ interface AxisProps {
   length: number
 }
 
-function Axis({ direction, color, label, length }: AxisProps) {
+function AxisLine({ direction, color, label, length }: AxisProps) {
   const [dx, dy, dz] = direction
   const end: [number, number, number] = [dx * length, dy * length, dz * length]
   const labelPos: [number, number, number] = [
@@ -25,7 +25,7 @@ function Axis({ direction, color, label, length }: AxisProps) {
       <Line
         points={[[0, 0, 0], end]}
         color={color}
-        lineWidth={2}
+        lineWidth={3}
       />
       <Cone
         args={[0.06, 0.15, 8]}
@@ -34,26 +34,27 @@ function Axis({ direction, color, label, length }: AxisProps) {
       >
         <meshBasicMaterial color={color} />
       </Cone>
-      <Text
-        position={labelPos}
-        fontSize={0.25}
-        color={color}
-        anchorX="center"
-        anchorY="middle"
-      >
-        {label}
-      </Text>
+      <Billboard position={labelPos}>
+        <Text
+          fontSize={0.25}
+          color={color}
+          anchorX="center"
+          anchorY="middle"
+        >
+          {label}
+        </Text>
+      </Billboard>
     </group>
   )
 }
 
-function AxesContent() {
+function AxesGroup() {
   const length = 0.8
   return (
     <group>
-      <Axis direction={[0, 1, 0]} color="#22c55e" label="R" length={length} />
-      <Axis direction={[1, 0, 0]} color="#ef4444" label="I" length={length} />
-      <Axis direction={[0, 0, 1]} color="#3b82f6" label="C" length={length} />
+      <AxisLine direction={[0, 1, 0]} color="#20df80" label="R" length={length} />
+      <AxisLine direction={[1, 0, 0]} color="#ff2060" label="I" length={length} />
+      <AxisLine direction={[0, 0, 1]} color="#2080ff" label="C" length={length} />
     </group>
   )
 }
@@ -61,8 +62,8 @@ function AxesContent() {
 export default function RICAxes() {
   return (
     <GizmoHelper alignment="bottom-right" margin={[80, 80]}>
-      <group scale={40}>
-        <AxesContent />
+      <group scale={55}>
+        <AxesGroup />
       </group>
     </GizmoHelper>
   )
