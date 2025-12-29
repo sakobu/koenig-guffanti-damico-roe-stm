@@ -1,6 +1,6 @@
 import { Plane } from "@react-three/drei";
 import type { ThreeEvent } from "@react-three/fiber";
-import { useMissionStore } from "../../stores/mission";
+import { useMissionStore } from "../../../stores/mission";
 
 export default function ClickPlane() {
   const addWaypoint = useMissionStore((state) => state.addWaypoint);

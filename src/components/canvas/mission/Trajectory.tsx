@@ -1,5 +1,5 @@
 import { Line } from "@react-three/drei";
-import { useMissionStore } from "../../stores/mission";
+import { useMissionStore } from "../../../stores/mission";
 
 export default function Trajectory() {
   const trajectoryPoints = useMissionStore((state) => state.trajectoryPoints);

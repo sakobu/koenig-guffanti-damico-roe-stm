@@ -1,4 +1,4 @@
-import { useMissionStore } from "../../stores/mission";
+import { useMissionStore } from "../../../stores/mission";
 import Waypoint from "./Waypoint";
 
 export default function Waypoints() {

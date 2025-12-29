@@ -3,9 +3,9 @@ import RICAxes from './components/canvas/environment/RICAxes'
 import Grid from './components/canvas/environment/Grid'
 import Chief from './components/canvas/spacecraft/Chief'
 import Deputy from './components/canvas/spacecraft/Deputy'
-import Waypoints from './components/canvas/Waypoints'
-import Trajectory from './components/canvas/Trajectory'
-import ClickPlane from './components/canvas/ClickPlane'
+import Waypoints from './components/canvas/mission/Waypoints'
+import Trajectory from './components/canvas/mission/Trajectory'
+import ClickPlane from './components/canvas/mission/ClickPlane'
 import Sidebar from './components/ui/Sidebar'
 
 export default function App() {

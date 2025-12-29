@@ -6,7 +6,7 @@ export default function Deputy() {
 
   return (
     <Spacecraft
-      position={position as unknown as [number, number, number]}
+      position={position}
       scale={1.8}
       label="Deputy"
       labelColor="#6688ff"

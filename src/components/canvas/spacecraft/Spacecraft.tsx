@@ -1,4 +1,5 @@
 import { Text } from '@react-three/drei'
+import type { Vector3 } from '@orbital'
 import { MainBody, type MainBodyProps } from './MainBody'
 import { SolarPanel, type SolarPanelProps } from './SolarPanel'
 import { NavigationLight, type NavigationLightProps } from './NavigationLight'
@@ -10,7 +11,7 @@ export interface ArmProps {
 }
 
 export interface SpacecraftProps {
-  position?: [number, number, number]
+  position?: Vector3
   scale?: number
   mainBody: MainBodyProps
   solarPanels: SolarPanelProps[]

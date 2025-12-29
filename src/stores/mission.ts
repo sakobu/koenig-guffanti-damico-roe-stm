@@ -7,11 +7,7 @@ import type {
   Vector3,
   Waypoint,
 } from "@orbital";
-import {
-  generateMissionTrajectory,
-  MU_EARTH,
-  planMission,
-} from "@orbital";
+import { generateMissionTrajectory, MU_EARTH, planMission } from "@orbital";
 
 // ISS-like reference orbit
 const DEFAULT_CHIEF: ClassicalOrbitalElements = {
@@ -26,7 +22,7 @@ const DEFAULT_CHIEF: ClassicalOrbitalElements = {
 };
 
 // Deputy starts 100m in I-track, 50m radial
-const DEFAULT_INITIAL_POSITION: Vector3 = [50, 100, 0];
+const DEFAULT_INITIAL_POSITION: Vector3 = [200, -500, 0];
 
 interface MissionState {
   // Chief orbit
@@ -67,7 +63,10 @@ function computeMission(
   initialPosition: Vector3,
   includeJ2: boolean,
   includeDrag: boolean
-): { missionPlan: MissionPlan | null; trajectoryPoints: readonly TrajectoryPoint[] } {
+): {
+  missionPlan: MissionPlan | null;
+  trajectoryPoints: readonly TrajectoryPoint[];
+} {
   if (waypoints.length === 0) {
     return { missionPlan: null, trajectoryPoints: [] };
   }
