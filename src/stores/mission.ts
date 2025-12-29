@@ -119,7 +119,7 @@ export const useMissionStore = create<MissionStore>((set, get) => ({
   trajectoryPoints: [],
   includeJ2: true,
   includeDrag: false,
-  daDotDrag: -1e-10,
+  daDotDrag: SCENARIOS[DEFAULT_SCENARIO].defaultDaDotDrag,
   scenario: DEFAULT_SCENARIO,
   selectedWaypointIndex: null,
   isDraggingWaypoint: false,
@@ -237,11 +237,12 @@ export const useMissionStore = create<MissionStore>((set, get) => ({
 
   setScenario: (key) => {
     const scenario = SCENARIOS[key];
-    // Clear waypoints when scenario changes
+    // Clear waypoints and reset physics defaults when scenario changes
     set({
       scenario: key,
       chief: scenario.chief,
       initialPosition: scenario.initialPosition,
+      daDotDrag: scenario.defaultDaDotDrag,
       waypoints: [],
       missionPlan: null,
       trajectoryPoints: [],

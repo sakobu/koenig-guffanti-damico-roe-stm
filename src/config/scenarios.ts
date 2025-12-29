@@ -8,12 +8,13 @@ export interface Scenario {
   description: string;
   chief: ClassicalOrbitalElements;
   initialPosition: Vector3;
+  defaultDaDotDrag: number;
 }
 
 export const SCENARIOS: Record<ScenarioKey, Scenario> = {
   iss: {
     label: "ISS Circular",
-    description: "~400 km altitude, e=0.0005",
+    description: "a=6,778 km, e=0.0005",
     chief: {
       semiMajorAxis: 6_778_000,
       eccentricity: 0.0005,
@@ -24,7 +25,8 @@ export const SCENARIOS: Record<ScenarioKey, Scenario> = {
       angularMomentum: Math.sqrt(MU_EARTH * 6_778_000 * (1 - 0.0005 ** 2)),
       gravitationalParameter: MU_EARTH,
     },
-    initialPosition: [0, -500, 0], // 500m behind in along-track
+    initialPosition: [50, -300, 20], // 300m behind, 50m radial, 20m cross-track
+    defaultDaDotDrag: -1e-10, // ~400 km altitude - moderate drag
   },
   eccentric: {
     label: "High-Alt Eccentric",
@@ -39,7 +41,8 @@ export const SCENARIOS: Record<ScenarioKey, Scenario> = {
       angularMomentum: Math.sqrt(MU_EARTH * 10_000_000 * (1 - 0.1 ** 2)),
       gravitationalParameter: MU_EARTH,
     },
-    initialPosition: [0, -800, 0], // 800m behind (larger separation for eccentric)
+    initialPosition: [100, -600, 0], // 600m behind, 100m radial offset
+    defaultDaDotDrag: -1e-12, // 3600+ km altitude - drag negligible
   },
   lowAltEccentric: {
     label: "Low-Alt Eccentric",
@@ -54,7 +57,8 @@ export const SCENARIOS: Record<ScenarioKey, Scenario> = {
       angularMomentum: Math.sqrt(MU_EARTH * 7_500_000 * (1 - 0.1 ** 2)),
       gravitationalParameter: MU_EARTH,
     },
-    initialPosition: [0, -800, 0], // 800m behind (same as eccentric for comparison)
+    initialPosition: [80, -500, 30], // 500m behind, 80m radial, 30m cross-track
+    defaultDaDotDrag: -5e-10, // 372-1872 km perigee/apogee - strong drag at perigee
   },
 };
 

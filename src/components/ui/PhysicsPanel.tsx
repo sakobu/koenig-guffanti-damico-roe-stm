@@ -32,6 +32,15 @@ export default function PhysicsPanel() {
     setDaDotDrag(sliderToDrag(value));
   };
 
+  // J2/Drag coupling: drag STMs inherently include J2 effects
+  // Cannot have drag without J2 (see propagate.ts)
+  const handleJ2Change = (value: boolean) => {
+    setIncludeJ2(value);
+    if (!value && includeDrag) {
+      setIncludeDrag(false);
+    }
+  };
+
   // Format drag rate for display
   const formatDragRate = (drag: number): string => {
     const exp = Math.round(Math.log10(-drag));
@@ -45,12 +54,13 @@ export default function PhysicsPanel() {
         <Toggle
           label="Include J2"
           value={includeJ2}
-          onChange={setIncludeJ2}
+          onChange={handleJ2Change}
         />
         <Toggle
           label="Include Drag"
           value={includeDrag}
           onChange={setIncludeDrag}
+          disabled={!includeJ2}
         />
 
         {includeDrag && (

@@ -26,9 +26,9 @@ export default function Toggle({
         onClick={() => onChange(!value)}
         className={`relative inline-flex h-5 w-9 shrink-0 cursor-pointer
           rounded-full border-2 border-transparent transition-colors duration-200 ease-in-out
-          focus:outline-none focus:ring-2 focus:ring-cyan-500 focus:ring-offset-2 focus:ring-offset-zinc-900
+          focus:outline-none focus-visible:ring-2 focus-visible:ring-cyan-500 focus-visible:ring-offset-2 focus-visible:ring-offset-zinc-900
           disabled:opacity-50 disabled:cursor-not-allowed
-          ${value ? "bg-cyan-500" : "bg-zinc-600"}`}
+          ${value ? "bg-cyan-500" : "bg-zinc-700"}`}
       >
         <span
           className={`pointer-events-none inline-block h-4 w-4 transform rounded-full

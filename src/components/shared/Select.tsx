@@ -30,11 +30,14 @@ export default function Select({
       <div className="relative">
         <select
           value={value}
-          onChange={(e) => onChange(e.target.value)}
+          onChange={(e) => {
+            onChange(e.target.value);
+            e.target.blur(); // Remove focus after selection
+          }}
           disabled={disabled}
           className="w-full px-3 py-2 text-sm bg-zinc-800 text-zinc-200 rounded
             border border-zinc-700 appearance-none cursor-pointer
-            focus:outline-none focus:ring-2 focus:ring-cyan-500 focus:border-transparent
+            focus:outline-none focus-visible:ring-2 focus-visible:ring-cyan-500 focus-visible:border-transparent
             disabled:opacity-50 disabled:cursor-not-allowed"
         >
           {options.map((option) => (

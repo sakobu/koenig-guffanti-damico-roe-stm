@@ -14,7 +14,10 @@ import type {
 import type { ClassicalOrbitalElements } from "../types/orbital-elements";
 import type { ROEVector } from "../types/vectors";
 
-import { computeJ2DragSTMArbitrary } from "../stm/drag-arbitrary";
+import {
+  computeJ2DragSTMArbitrary,
+  eccentricToArbitraryConfig,
+} from "../stm/drag-arbitrary";
 import { computeJ2DragSTMEccentric } from "../stm/drag-eccentric";
 
 /** Eccentricity threshold for model selection (Section VII) */
@@ -74,11 +77,18 @@ export const propagateWithDrag = (
       return propagate(roe, dragConfig.daDotDrag);
     } else {
       // Use arbitrary model for near-circular orbits
-      const config: Omit<DragConfigArbitrary, "type"> = {
-        daDotDrag: dragConfig.daDotDrag,
-        dexDotDrag: dragConfig.dexDotDrag ?? 0,
-        deyDotDrag: dragConfig.deyDotDrag ?? 0,
-      };
+      // Derive eccentricity derivatives from daDotDrag using circularization constraint
+      // if not explicitly provided
+      const config: Omit<DragConfigArbitrary, "type"> =
+        dragConfig.dexDotDrag !== undefined &&
+        dragConfig.deyDotDrag !== undefined
+          ? {
+              daDotDrag: dragConfig.daDotDrag,
+              dexDotDrag: dragConfig.dexDotDrag,
+              deyDotDrag: dragConfig.deyDotDrag,
+            }
+          : eccentricToArbitraryConfig(dragConfig.daDotDrag, chief);
+
       const { propagate } = computeJ2DragSTMArbitrary(chief, tau);
       return propagate(roe, config);
     }
