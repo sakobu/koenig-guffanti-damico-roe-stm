@@ -8,28 +8,11 @@ import type {
   Vector3,
   Waypoint,
 } from "@orbital";
-import { generateMissionTrajectory, MU_EARTH, planMission } from "@orbital";
+import { generateMissionTrajectory, planMission } from "@orbital";
+import { SCENARIOS, type ScenarioKey } from "../config/scenarios";
 
-// ISS-like reference orbit
-const DEFAULT_CHIEF: ClassicalOrbitalElements = {
-  semiMajorAxis: 6_778_000, // ~400 km altitude
-  eccentricity: 0.0005,
-  inclination: (51.6 * Math.PI) / 180,
-  raan: (45 * Math.PI) / 180,
-  argumentOfPerigee: (30 * Math.PI) / 180,
-  meanAnomaly: 0,
-  angularMomentum: Math.sqrt(MU_EARTH * 6_778_000 * (1 - 0.0005 ** 2)),
-  gravitationalParameter: MU_EARTH,
-};
-
-// Deputy starts 100m in I-track, 50m radial
-const DEFAULT_INITIAL_POSITION: Vector3 = [200, -500, 0];
-
-// Typical LEO differential drag rate
-const DEFAULT_DRAG_CONFIG: DragConfigAuto = {
-  type: "auto",
-  daDotDrag: -1e-10,
-};
+// Default scenario
+const DEFAULT_SCENARIO: ScenarioKey = "iss";
 
 interface MissionState {
   // Chief orbit
@@ -50,6 +33,10 @@ interface MissionState {
   // Physics settings
   includeJ2: boolean;
   includeDrag: boolean;
+  daDotDrag: number;
+
+  // Scenario
+  scenario: ScenarioKey;
 
   // Selection
   selectedWaypointIndex: number | null;
@@ -66,6 +53,8 @@ interface MissionActions {
   selectWaypoint: (index: number | null) => void;
   setIncludeJ2: (value: boolean) => void;
   setIncludeDrag: (value: boolean) => void;
+  setDaDotDrag: (value: number) => void;
+  setScenario: (key: ScenarioKey) => void;
   setDraggingWaypoint: (value: boolean) => void;
 }
 
@@ -77,7 +66,8 @@ function computeMission(
   chief: ClassicalOrbitalElements,
   initialPosition: Vector3,
   includeJ2: boolean,
-  includeDrag: boolean
+  includeDrag: boolean,
+  daDotDrag: number
 ): {
   missionPlan: MissionPlan | null;
   trajectoryPoints: readonly TrajectoryPoint[];
@@ -92,10 +82,14 @@ function computeMission(
   };
 
   try {
+    const dragConfig: DragConfigAuto = {
+      type: "auto",
+      daDotDrag,
+    };
     const options = {
       includeJ2,
       includeDrag,
-      dragConfig: DEFAULT_DRAG_CONFIG,
+      dragConfig,
     };
 
     const plan = planMission(initialState, waypoints, chief, options);
@@ -118,13 +112,15 @@ function computeMission(
 
 export const useMissionStore = create<MissionStore>((set, get) => ({
   // Initial state
-  chief: DEFAULT_CHIEF,
-  initialPosition: DEFAULT_INITIAL_POSITION,
+  chief: SCENARIOS[DEFAULT_SCENARIO].chief,
+  initialPosition: SCENARIOS[DEFAULT_SCENARIO].initialPosition,
   waypoints: [],
   missionPlan: null,
   trajectoryPoints: [],
   includeJ2: true,
   includeDrag: false,
+  daDotDrag: -1e-10,
+  scenario: DEFAULT_SCENARIO,
   selectedWaypointIndex: null,
   isDraggingWaypoint: false,
 
@@ -137,7 +133,8 @@ export const useMissionStore = create<MissionStore>((set, get) => ({
       state.chief,
       state.initialPosition,
       state.includeJ2,
-      state.includeDrag
+      state.includeDrag,
+      state.daDotDrag
     );
     set({ waypoints: newWaypoints, missionPlan, trajectoryPoints });
   },
@@ -152,7 +149,8 @@ export const useMissionStore = create<MissionStore>((set, get) => ({
       state.chief,
       state.initialPosition,
       state.includeJ2,
-      state.includeDrag
+      state.includeDrag,
+      state.daDotDrag
     );
     set({ waypoints: newWaypoints, missionPlan, trajectoryPoints });
   },
@@ -165,7 +163,8 @@ export const useMissionStore = create<MissionStore>((set, get) => ({
       state.chief,
       state.initialPosition,
       state.includeJ2,
-      state.includeDrag
+      state.includeDrag,
+      state.daDotDrag
     );
     // Clear selection if deleted waypoint was selected, or adjust index if needed
     let newSelectedIndex = state.selectedWaypointIndex;
@@ -204,7 +203,8 @@ export const useMissionStore = create<MissionStore>((set, get) => ({
       state.chief,
       state.initialPosition,
       value,
-      state.includeDrag
+      state.includeDrag,
+      state.daDotDrag
     );
     set({ includeJ2: value, missionPlan, trajectoryPoints });
   },
@@ -216,9 +216,37 @@ export const useMissionStore = create<MissionStore>((set, get) => ({
       state.chief,
       state.initialPosition,
       state.includeJ2,
-      value
+      value,
+      state.daDotDrag
     );
     set({ includeDrag: value, missionPlan, trajectoryPoints });
+  },
+
+  setDaDotDrag: (value) => {
+    const state = get();
+    const { missionPlan, trajectoryPoints } = computeMission(
+      state.waypoints,
+      state.chief,
+      state.initialPosition,
+      state.includeJ2,
+      state.includeDrag,
+      value
+    );
+    set({ daDotDrag: value, missionPlan, trajectoryPoints });
+  },
+
+  setScenario: (key) => {
+    const scenario = SCENARIOS[key];
+    // Clear waypoints when scenario changes
+    set({
+      scenario: key,
+      chief: scenario.chief,
+      initialPosition: scenario.initialPosition,
+      waypoints: [],
+      missionPlan: null,
+      trajectoryPoints: [],
+      selectedWaypointIndex: null,
+    });
   },
 
   setDraggingWaypoint: (value) => {

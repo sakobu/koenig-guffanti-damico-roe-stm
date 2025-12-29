@@ -1,5 +1,7 @@
 import { useUIStore } from "../../stores/ui";
 import WaypointPanel from "./WaypointPanel";
+import PhysicsPanel from "./PhysicsPanel";
+import ScenarioPanel from "./ScenarioPanel";
 import MissionSummaryPanel from "./MissionSummaryPanel";
 
 export default function Sidebar() {
@@ -23,6 +25,8 @@ export default function Sidebar() {
 
         {/* Content area */}
         <div className="p-4 space-y-4 overflow-y-auto h-[calc(100%-60px)]">
+          <ScenarioPanel />
+          <PhysicsPanel />
           <WaypointPanel />
           <MissionSummaryPanel />
         </div>
