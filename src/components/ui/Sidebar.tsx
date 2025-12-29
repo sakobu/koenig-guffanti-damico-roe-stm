@@ -19,7 +19,7 @@ export default function Sidebar() {
         {/* Header */}
         <div className="flex items-center justify-between p-4">
           <h1 className="text-sm font-semibold text-zinc-100 tracking-wide">
-            Koenig & D'Amico RPO Simulator
+            Koenig & D'Amico ROE STM
           </h1>
         </div>
 
