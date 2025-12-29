@@ -5,6 +5,7 @@ export default function Waypoints() {
   const waypoints = useMissionStore((state) => state.waypoints);
   const selectedIndex = useMissionStore((state) => state.selectedWaypointIndex);
   const selectWaypoint = useMissionStore((state) => state.selectWaypoint);
+  const updateWaypoint = useMissionStore((state) => state.updateWaypoint);
 
   return (
     <>
@@ -15,6 +16,7 @@ export default function Waypoints() {
           index={index}
           isSelected={selectedIndex === index}
           onSelect={() => selectWaypoint(index)}
+          onDrag={(newPosition) => updateWaypoint(index, newPosition)}
         />
       ))}
     </>

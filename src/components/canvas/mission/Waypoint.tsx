@@ -1,12 +1,17 @@
 import { Sphere, Billboard, Text } from "@react-three/drei";
+import { useThree } from "@react-three/fiber";
 import type { ThreeEvent } from "@react-three/fiber";
+import { useState, useRef, useEffect, useCallback } from "react";
+import * as THREE from "three";
 import type { Vector3 } from "@orbital";
+import { useMissionStore } from "../../../stores/mission";
 
 interface WaypointProps {
   position: Vector3;
   index: number;
   isSelected: boolean;
   onSelect: () => void;
+  onDrag: (newPosition: Vector3) => void;
 }
 
 export default function Waypoint({
@@ -14,8 +19,86 @@ export default function Waypoint({
   index,
   isSelected,
   onSelect,
+  onDrag,
 }: WaypointProps) {
+  const { camera, gl } = useThree();
+  const [isDragging, setIsDragging] = useState(false);
+  const setDraggingWaypoint = useMissionStore((s) => s.setDraggingWaypoint);
+  const dragPlane = useRef(new THREE.Plane(new THREE.Vector3(0, 0, 1), 0));
+  const currentZ = useRef(position[2]);
+
+  // Update Z ref when position changes externally
+  useEffect(() => {
+    currentZ.current = position[2];
+  }, [position]);
+
+  const getWorldPosition = useCallback(
+    (clientX: number, clientY: number): [number, number, number] | null => {
+      const rect = gl.domElement.getBoundingClientRect();
+      const mouse = new THREE.Vector2(
+        ((clientX - rect.left) / rect.width) * 2 - 1,
+        -((clientY - rect.top) / rect.height) * 2 + 1
+      );
+
+      const raycaster = new THREE.Raycaster();
+      raycaster.setFromCamera(mouse, camera);
+
+      // Create plane at current Z position
+      dragPlane.current.set(new THREE.Vector3(0, 0, 1), -currentZ.current);
+
+      const intersection = new THREE.Vector3();
+      if (raycaster.ray.intersectPlane(dragPlane.current, intersection)) {
+        return [intersection.x, intersection.y, currentZ.current];
+      }
+      return null;
+    },
+    [camera, gl]
+  );
+
+  const handlePointerDown = (e: ThreeEvent<PointerEvent>) => {
+    e.stopPropagation();
+    setIsDragging(true);
+    setDraggingWaypoint(true);
+    document.body.style.cursor = "grabbing";
+    (e.target as HTMLElement).setPointerCapture(e.pointerId);
+  };
+
+  const handlePointerMove = (e: ThreeEvent<PointerEvent>) => {
+    if (!isDragging) return;
+    e.stopPropagation();
+
+    const newPos = getWorldPosition(e.clientX, e.clientY);
+    if (newPos) {
+      onDrag(newPos);
+    }
+  };
+
+  const handlePointerUp = (e: ThreeEvent<PointerEvent>) => {
+    if (!isDragging) return;
+    e.stopPropagation();
+    setIsDragging(false);
+    setDraggingWaypoint(false);
+    document.body.style.cursor = "grab";
+    (e.target as HTMLElement).releasePointerCapture(e.pointerId);
+  };
+
+  // Scroll wheel for Z adjustment while dragging
+  useEffect(() => {
+    if (!isDragging) return;
+
+    const handleWheel = (e: WheelEvent) => {
+      e.preventDefault();
+      const delta = e.deltaY * 0.5;
+      currentZ.current -= delta;
+      onDrag([position[0], position[1], currentZ.current]);
+    };
+
+    gl.domElement.addEventListener("wheel", handleWheel, { passive: false });
+    return () => gl.domElement.removeEventListener("wheel", handleWheel);
+  }, [isDragging, gl, onDrag, position]);
+
   const handleClick = (e: ThreeEvent<MouseEvent>) => {
+    if (isDragging) return; // Don't select if we just finished dragging
     e.stopPropagation();
     onSelect();
   };
@@ -29,8 +112,15 @@ export default function Waypoint({
       <Sphere
         args={[5, 16, 16]}
         onClick={handleClick}
-        onPointerOver={() => (document.body.style.cursor = "pointer")}
-        onPointerOut={() => (document.body.style.cursor = "auto")}
+        onPointerDown={handlePointerDown}
+        onPointerMove={handlePointerMove}
+        onPointerUp={handlePointerUp}
+        onPointerOver={() => {
+          if (!isDragging) document.body.style.cursor = "grab";
+        }}
+        onPointerOut={() => {
+          if (!isDragging) document.body.style.cursor = "auto";
+        }}
       >
         <meshStandardMaterial
           color={color}

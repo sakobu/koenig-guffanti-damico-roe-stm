@@ -53,6 +53,9 @@ interface MissionState {
 
   // Selection
   selectedWaypointIndex: number | null;
+
+  // UI state
+  isDraggingWaypoint: boolean;
 }
 
 interface MissionActions {
@@ -63,6 +66,7 @@ interface MissionActions {
   selectWaypoint: (index: number | null) => void;
   setIncludeJ2: (value: boolean) => void;
   setIncludeDrag: (value: boolean) => void;
+  setDraggingWaypoint: (value: boolean) => void;
 }
 
 type MissionStore = MissionState & MissionActions;
@@ -122,6 +126,7 @@ export const useMissionStore = create<MissionStore>((set, get) => ({
   includeJ2: true,
   includeDrag: false,
   selectedWaypointIndex: null,
+  isDraggingWaypoint: false,
 
   // Actions
   addWaypoint: (position) => {
@@ -214,5 +219,9 @@ export const useMissionStore = create<MissionStore>((set, get) => ({
       value
     );
     set({ includeDrag: value, missionPlan, trajectoryPoints });
+  },
+
+  setDraggingWaypoint: (value) => {
+    set({ isDraggingWaypoint: value });
   },
 }));

@@ -1,9 +1,24 @@
 import { Canvas } from '@react-three/fiber'
 import { OrbitControls } from '@react-three/drei'
 import type { ReactNode } from 'react'
+import { useMissionStore } from '../../stores/mission'
 
 interface SceneProps {
   children?: ReactNode
+}
+
+function Controls() {
+  const isDragging = useMissionStore((s) => s.isDraggingWaypoint)
+
+  return (
+    <OrbitControls
+      enabled={!isDragging}
+      enableDamping
+      dampingFactor={0.05}
+      minDistance={50}
+      maxDistance={5000}
+    />
+  )
 }
 
 export default function Scene({ children }: SceneProps) {
@@ -18,12 +33,7 @@ export default function Scene({ children }: SceneProps) {
       <ambientLight intensity={0.3} />
       <pointLight position={[200, 200, 200]} intensity={1} />
 
-      <OrbitControls
-        enableDamping
-        dampingFactor={0.05}
-        minDistance={50}
-        maxDistance={5000}
-      />
+      <Controls />
 
       {children}
     </Canvas>
