@@ -1,27 +1,39 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { useMissionStore } from "../../stores/mission";
-
-// Preset waypoint positions for quick testing
-const PRESET_WAYPOINTS: [number, number, number][] = [
-  [0, -50, 0],    // Behind chief
-  [30, 0, 30],    // Inspection viewpoint
-  [0, 50, 0],     // Ahead of chief
-  [-30, 0, -30],  // Opposite viewpoint
-];
 
 export default function Sidebar() {
   const [isOpen, setIsOpen] = useState(true);
-  const [presetIndex, setPresetIndex] = useState(0);
 
   const waypoints = useMissionStore((state) => state.waypoints);
   const missionPlan = useMissionStore((state) => state.missionPlan);
-  const addWaypoint = useMissionStore((state) => state.addWaypoint);
+  const selectedIndex = useMissionStore((state) => state.selectedWaypointIndex);
+  const selectWaypoint = useMissionStore((state) => state.selectWaypoint);
+  const removeWaypoint = useMissionStore((state) => state.removeWaypoint);
   const clearWaypoints = useMissionStore((state) => state.clearWaypoints);
 
-  const handleAddWaypoint = () => {
-    const position = PRESET_WAYPOINTS[presetIndex % PRESET_WAYPOINTS.length];
-    addWaypoint(position);
-    setPresetIndex((i) => i + 1);
+  // Keyboard handling
+  useEffect(() => {
+    const handleKeyDown = (e: KeyboardEvent) => {
+      if (e.key === "Escape") {
+        selectWaypoint(null);
+      } else if (
+        (e.key === "Delete" || e.key === "Backspace") &&
+        selectedIndex !== null
+      ) {
+        // Prevent browser back navigation on Backspace
+        e.preventDefault();
+        removeWaypoint(selectedIndex);
+      }
+    };
+
+    window.addEventListener("keydown", handleKeyDown);
+    return () => window.removeEventListener("keydown", handleKeyDown);
+  }, [selectedIndex, selectWaypoint, removeWaypoint]);
+
+  const handleDeleteSelected = () => {
+    if (selectedIndex !== null) {
+      removeWaypoint(selectedIndex);
+    }
   };
 
   return (
@@ -35,7 +47,7 @@ export default function Sidebar() {
         {/* Header */}
         <div className="flex items-center justify-between p-4">
           <h1 className="text-sm font-semibold text-zinc-100 tracking-wide">
-            RPO Mission Planner
+            Koenig & D'Amico RPO Simulator
           </h1>
         </div>
 
@@ -46,13 +58,18 @@ export default function Sidebar() {
             <div className="text-xs text-zinc-500 uppercase tracking-wider">
               Waypoints
             </div>
+            <div className="text-xs text-zinc-500 mb-2">
+              Shift+click on grid to add
+            </div>
             <div className="flex gap-2">
               <button
-                onClick={handleAddWaypoint}
-                className="flex-1 px-3 py-2 bg-amber-600 hover:bg-amber-500
-                  text-white text-sm font-medium rounded transition-colors"
+                onClick={handleDeleteSelected}
+                disabled={selectedIndex === null}
+                className="flex-1 px-3 py-2 bg-red-600 hover:bg-red-500
+                  text-white text-sm font-medium rounded transition-colors
+                  disabled:opacity-50 disabled:cursor-not-allowed"
               >
-                Add Waypoint
+                Delete
               </button>
               <button
                 onClick={clearWaypoints}
@@ -71,10 +88,16 @@ export default function Sidebar() {
                 {waypoints.map((wp, i) => (
                   <div
                     key={i}
-                    className="text-xs text-zinc-400 font-mono bg-zinc-800/50
-                      px-2 py-1 rounded"
+                    onClick={() => selectWaypoint(i)}
+                    className={`text-xs font-mono px-2 py-1 rounded cursor-pointer
+                      transition-colors ${
+                        selectedIndex === i
+                          ? "bg-cyan-600/30 text-cyan-300 ring-1 ring-cyan-500/50"
+                          : "bg-zinc-800/50 text-zinc-400 hover:bg-zinc-700/50"
+                      }`}
                   >
-                    WP{i + 1}: [{wp.position[0]}, {wp.position[1]}, {wp.position[2]}]
+                    WP{i + 1}: [{Math.round(wp.position[0])},{" "}
+                    {Math.round(wp.position[1])}, {Math.round(wp.position[2])}]
                   </div>
                 ))}
               </div>
@@ -102,7 +125,11 @@ export default function Sidebar() {
                 </div>
                 <div className="flex justify-between text-zinc-400">
                   <span>Converged:</span>
-                  <span className={missionPlan.converged ? "text-green-400" : "text-red-400"}>
+                  <span
+                    className={
+                      missionPlan.converged ? "text-green-400" : "text-red-400"
+                    }
+                  >
                     {missionPlan.converged ? "Yes" : "No"}
                   </span>
                 </div>

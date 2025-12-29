@@ -4,18 +4,20 @@ import { useMissionStore } from "../../../stores/mission";
 
 export default function ClickPlane() {
   const addWaypoint = useMissionStore((state) => state.addWaypoint);
+  const selectWaypoint = useMissionStore((state) => state.selectWaypoint);
 
   const handleClick = (e: ThreeEvent<MouseEvent>) => {
-    // Only add waypoint on Shift+click
-    if (!e.shiftKey) return;
-
-    // Stop propagation to prevent orbit controls interference
     e.stopPropagation();
 
-    // Waypoint [R, I, C] maps directly to Three.js [x, y, z]
-    // Plane lies in XY plane (z=0), so point.x = R, point.y = I
-    const point = e.point;
-    addWaypoint([point.x, point.y, 0]); // [R, I, C]
+    if (e.shiftKey) {
+      // Shift+click: add waypoint
+      // Waypoint [R, I, C] maps directly to Three.js [x, y, z]
+      const point = e.point;
+      addWaypoint([point.x, point.y, 0]);
+    } else {
+      // Regular click: deselect
+      selectWaypoint(null);
+    }
   };
 
   return (

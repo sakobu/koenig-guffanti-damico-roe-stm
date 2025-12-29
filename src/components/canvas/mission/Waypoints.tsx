@@ -3,14 +3,18 @@ import Waypoint from "./Waypoint";
 
 export default function Waypoints() {
   const waypoints = useMissionStore((state) => state.waypoints);
+  const selectedIndex = useMissionStore((state) => state.selectedWaypointIndex);
+  const selectWaypoint = useMissionStore((state) => state.selectWaypoint);
 
   return (
     <>
       {waypoints.map((wp, index) => (
         <Waypoint
           key={index}
-          position={wp.position as [number, number, number]}
+          position={wp.position}
           index={index}
+          isSelected={selectedIndex === index}
+          onSelect={() => selectWaypoint(index)}
         />
       ))}
     </>

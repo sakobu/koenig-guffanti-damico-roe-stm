@@ -1,6 +1,7 @@
 import { create } from "zustand";
 import type {
   ClassicalOrbitalElements,
+  DragConfigAuto,
   MissionPlan,
   RelativeState,
   TrajectoryPoint,
@@ -24,6 +25,12 @@ const DEFAULT_CHIEF: ClassicalOrbitalElements = {
 // Deputy starts 100m in I-track, 50m radial
 const DEFAULT_INITIAL_POSITION: Vector3 = [200, -500, 0];
 
+// Typical LEO differential drag rate
+const DEFAULT_DRAG_CONFIG: DragConfigAuto = {
+  type: "auto",
+  daDotDrag: -1e-10,
+};
+
 interface MissionState {
   // Chief orbit
   chief: ClassicalOrbitalElements;
@@ -43,6 +50,9 @@ interface MissionState {
   // Physics settings
   includeJ2: boolean;
   includeDrag: boolean;
+
+  // Selection
+  selectedWaypointIndex: number | null;
 }
 
 interface MissionActions {
@@ -50,6 +60,7 @@ interface MissionActions {
   updateWaypoint: (index: number, position: Vector3) => void;
   removeWaypoint: (index: number) => void;
   clearWaypoints: () => void;
+  selectWaypoint: (index: number | null) => void;
   setIncludeJ2: (value: boolean) => void;
   setIncludeDrag: (value: boolean) => void;
 }
@@ -77,18 +88,21 @@ function computeMission(
   };
 
   try {
-    const plan = planMission(initialState, waypoints, chief, {
+    const options = {
       includeJ2,
       includeDrag,
-    });
+      dragConfig: DEFAULT_DRAG_CONFIG,
+    };
+
+    const plan = planMission(initialState, waypoints, chief, options);
 
     const trajectory = generateMissionTrajectory(
       plan,
       chief,
       initialPosition,
       [0, 0, 0],
-      { includeJ2, includeDrag },
-      50 // points per leg
+      options,
+      200 // points per leg
     );
 
     return { missionPlan: plan, trajectoryPoints: trajectory };
@@ -107,6 +121,7 @@ export const useMissionStore = create<MissionStore>((set, get) => ({
   trajectoryPoints: [],
   includeJ2: true,
   includeDrag: false,
+  selectedWaypointIndex: null,
 
   // Actions
   addWaypoint: (position) => {
@@ -147,11 +162,34 @@ export const useMissionStore = create<MissionStore>((set, get) => ({
       state.includeJ2,
       state.includeDrag
     );
-    set({ waypoints: newWaypoints, missionPlan, trajectoryPoints });
+    // Clear selection if deleted waypoint was selected, or adjust index if needed
+    let newSelectedIndex = state.selectedWaypointIndex;
+    if (newSelectedIndex !== null) {
+      if (newSelectedIndex === index) {
+        newSelectedIndex = null;
+      } else if (newSelectedIndex > index) {
+        newSelectedIndex--;
+      }
+    }
+    set({
+      waypoints: newWaypoints,
+      missionPlan,
+      trajectoryPoints,
+      selectedWaypointIndex: newSelectedIndex,
+    });
   },
 
   clearWaypoints: () => {
-    set({ waypoints: [], missionPlan: null, trajectoryPoints: [] });
+    set({
+      waypoints: [],
+      missionPlan: null,
+      trajectoryPoints: [],
+      selectedWaypointIndex: null,
+    });
+  },
+
+  selectWaypoint: (index) => {
+    set({ selectedWaypointIndex: index });
   },
 
   setIncludeJ2: (value) => {
