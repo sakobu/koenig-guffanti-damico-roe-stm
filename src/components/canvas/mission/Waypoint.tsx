@@ -88,7 +88,8 @@ export default function Waypoint({
 
     const handleWheel = (e: WheelEvent) => {
       e.preventDefault();
-      const delta = e.deltaY * 0.5;
+      // Normalize delta for trackpad vs mouse wheel
+      const delta = e.deltaMode === 0 ? e.deltaY * 0.1 : e.deltaY * 3;
       currentZ.current -= delta;
       onDrag([position[0], position[1], currentZ.current]);
     };
@@ -98,7 +99,7 @@ export default function Waypoint({
   }, [isDragging, gl, onDrag, position]);
 
   const handleClick = (e: ThreeEvent<MouseEvent>) => {
-    if (isDragging) return; // Don't select if we just finished dragging
+    if (isDragging) return;
     e.stopPropagation();
     onSelect();
   };
@@ -108,7 +109,6 @@ export default function Waypoint({
 
   return (
     <group position={position}>
-      {/* Waypoint sphere */}
       <Sphere
         args={[5, 16, 16]}
         onClick={handleClick}
@@ -131,7 +131,6 @@ export default function Waypoint({
         />
       </Sphere>
 
-      {/* Label */}
       <Billboard position={[0, 15, 0]}>
         <Text
           fontSize={10}
