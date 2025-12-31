@@ -1,4 +1,5 @@
 import { useState } from "react";
+import { AlertTriangle, Check, ChevronDown, X } from "lucide-react";
 import { useMissionStore } from "../../../stores/mission";
 import Panel from "../Panel";
 import type { ManeuverLeg } from "@orbital";
@@ -34,24 +35,15 @@ function LegRow({
         </span>
         <div className="flex items-center gap-2">
           {!leg.converged && (
-            <span className="text-amber-400" title="Did not converge">
-              ⚠
+            <span title="Did not converge">
+              <AlertTriangle size={14} className="text-amber-400" />
             </span>
           )}
-          <svg
-            className={`w-3 h-3 text-zinc-500 transition-transform duration-200
+          <ChevronDown
+            size={12}
+            className={`text-zinc-500 transition-transform duration-200
               ${isExpanded ? "rotate-0" : "-rotate-90"}`}
-            fill="none"
-            stroke="currentColor"
-            viewBox="0 0 24 24"
-          >
-            <path
-              strokeLinecap="round"
-              strokeLinejoin="round"
-              strokeWidth={2}
-              d="M19 9l-7 7-7-7"
-            />
-          </svg>
+          />
         </div>
       </button>
 
@@ -93,9 +85,11 @@ function LegRow({
           </div>
           <div className="flex justify-between text-xs">
             <span className="text-zinc-500">Converged</span>
-            <span className={leg.converged ? "text-green-400" : "text-red-400"}>
-              {leg.converged ? "✓" : "✗"}
-            </span>
+            {leg.converged ? (
+              <Check size={14} className="text-green-400" />
+            ) : (
+              <X size={14} className="text-red-400" />
+            )}
           </div>
         </div>
       </div>
@@ -129,26 +123,24 @@ export default function ResultsPanel() {
         {/* Summary section */}
         <div className="space-y-1 text-sm">
           <div className="flex justify-between text-zinc-400">
-            <span>Total Delta-V:</span>
+            <span>Total ΔV:</span>
             <span className="font-mono text-cyan-400">
               {missionPlan.totalDeltaV.toFixed(4)} m/s
             </span>
           </div>
           <div className="flex justify-between text-zinc-400">
-            <span>Total Time:</span>
+            <span>Total TOF:</span>
             <span className="font-mono text-cyan-400">
               {(missionPlan.totalTime / 60).toFixed(1)} min
             </span>
           </div>
           <div className="flex justify-between text-zinc-400">
             <span>Converged:</span>
-            <span
-              className={
-                missionPlan.converged ? "text-green-400" : "text-red-400"
-              }
-            >
-              {missionPlan.converged ? "Yes" : "No"}
-            </span>
+            {missionPlan.converged ? (
+              <Check size={14} className="text-green-400" />
+            ) : (
+              <X size={14} className="text-red-400" />
+            )}
           </div>
           <div className="flex justify-between text-zinc-400">
             <span>Legs:</span>

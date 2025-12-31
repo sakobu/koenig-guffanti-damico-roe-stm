@@ -1,4 +1,5 @@
 import { useState, type ReactNode } from "react";
+import { ChevronDown } from "lucide-react";
 
 interface PanelProps {
   title: string;
@@ -22,20 +23,11 @@ export default function Panel({
         <span className="text-xs text-zinc-500 uppercase tracking-wider group-hover:text-zinc-400 transition-colors">
           {title}
         </span>
-        <svg
-          className={`w-4 h-4 text-zinc-500 transition-transform duration-200
+        <ChevronDown
+          size={16}
+          className={`text-zinc-500 transition-transform duration-200
             ${isOpen ? "rotate-0" : "-rotate-90"}`}
-          fill="none"
-          stroke="currentColor"
-          viewBox="0 0 24 24"
-        >
-          <path
-            strokeLinecap="round"
-            strokeLinejoin="round"
-            strokeWidth={2}
-            d="M19 9l-7 7-7-7"
-          />
-        </svg>
+        />
       </button>
       <div
         className={`overflow-hidden transition-all duration-200 ease-in-out

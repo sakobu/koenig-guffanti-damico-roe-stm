@@ -1,4 +1,5 @@
 import { useEffect } from "react";
+import { Gauge } from "lucide-react";
 import type { Vector3 } from "@orbital";
 import { useMissionStore } from "../../../stores/mission";
 import Panel from "../Panel";
@@ -88,8 +89,8 @@ export default function WaypointPanel() {
                   {Math.round(wp.position[1])}, {Math.round(wp.position[2])}]
                 </span>
                 {hasVelocity(wp.velocity) && (
-                  <span className="text-cyan-400 ml-2" title="Has drift velocity">
-                    →
+                  <span title="Has drift velocity">
+                    <Gauge size={12} className="text-cyan-400 ml-2" />
                   </span>
                 )}
               </div>

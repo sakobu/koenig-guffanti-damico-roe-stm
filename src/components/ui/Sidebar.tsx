@@ -1,3 +1,4 @@
+import { ChevronLeft } from "lucide-react";
 import { useUIStore } from "../../stores/ui";
 import WaypointPanel from "./panels/WaypointPanel";
 import PhysicsPanel from "./panels/PhysicsPanel";
@@ -42,21 +43,12 @@ export default function Sidebar() {
           text-zinc-400 hover:text-zinc-100 transition-all duration-300 ease-in-out
           ${isOpen ? "left-66" : "left-0"}`}
       >
-        <svg
-          className={`w-4 h-4 transition-transform duration-300 ${
+        <ChevronLeft
+          size={16}
+          className={`transition-transform duration-300 ${
             isOpen ? "" : "rotate-180"
           }`}
-          fill="none"
-          stroke="currentColor"
-          viewBox="0 0 24 24"
-        >
-          <path
-            strokeLinecap="round"
-            strokeLinejoin="round"
-            strokeWidth={2}
-            d="M15 19l-7-7 7-7"
-          />
-        </svg>
+        />
       </button>
     </>
   );
