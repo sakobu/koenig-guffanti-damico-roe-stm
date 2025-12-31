@@ -5,6 +5,10 @@ import { useState, useRef, useEffect, useCallback } from "react";
 import * as THREE from "three";
 import type { Vector3 } from "@orbital";
 import { useMissionStore } from "../../../stores/mission";
+import {
+  ricToThreePosition,
+  threeToRicPosition,
+} from "../../../utils/coordinates";
 
 interface WaypointProps {
   position: Vector3;
@@ -12,6 +16,7 @@ interface WaypointProps {
   isSelected: boolean;
   onSelect: () => void;
   onDrag: (newPosition: Vector3) => void;
+  scale?: number;
 }
 
 export default function Waypoint({
@@ -20,6 +25,7 @@ export default function Waypoint({
   isSelected,
   onSelect,
   onDrag,
+  scale = 1,
 }: WaypointProps) {
   const { camera, gl } = useThree();
   const [isDragging, setIsDragging] = useState(false);
@@ -33,7 +39,7 @@ export default function Waypoint({
   }, [position]);
 
   const getWorldPosition = useCallback(
-    (clientX: number, clientY: number): [number, number, number] | null => {
+    (clientX: number, clientY: number): Vector3 | null => {
       const rect = gl.domElement.getBoundingClientRect();
       const mouse = new THREE.Vector2(
         ((clientX - rect.left) / rect.width) * 2 - 1,
@@ -48,7 +54,10 @@ export default function Waypoint({
 
       const intersection = new THREE.Vector3();
       if (raycaster.ray.intersectPlane(dragPlane.current, intersection)) {
-        return [intersection.x, intersection.y, currentZ.current];
+        // Convert Three.js position to RIC, preserving current C (z) value
+        return threeToRicPosition(
+          new THREE.Vector3(intersection.x, intersection.y, currentZ.current)
+        );
       }
       return null;
     },
@@ -108,9 +117,9 @@ export default function Waypoint({
   const labelColor = isSelected ? "#67e8f9" : "#fbbf24";
 
   return (
-    <group position={position}>
+    <group position={ricToThreePosition(position)}>
       <Sphere
-        args={[5, 16, 16]}
+        args={[5 * scale, 16, 16]}
         onClick={handleClick}
         onPointerDown={handlePointerDown}
         onPointerMove={handlePointerMove}
@@ -131,9 +140,9 @@ export default function Waypoint({
         />
       </Sphere>
 
-      <Billboard position={[0, 15, 0]}>
+      <Billboard position={[0, 15 * scale, 0]}>
         <Text
-          fontSize={10}
+          fontSize={10 * scale}
           color={labelColor}
           anchorX="center"
           anchorY="middle"

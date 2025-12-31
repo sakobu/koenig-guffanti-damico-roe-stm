@@ -1,5 +1,7 @@
 import { Line } from "@react-three/drei";
+import type { Vector3 } from "three";
 import { useMissionStore } from "../../../stores/mission";
+import { ricToThreePosition } from "../../../utils/coordinates";
 
 export default function Trajectory() {
   const trajectoryPoints = useMissionStore((state) => state.trajectoryPoints);
@@ -9,13 +11,11 @@ export default function Trajectory() {
     return null;
   }
 
-  // Convert trajectory points to line points
+  // Convert RIC trajectory points to Three.js coordinates for rendering
   // Include initial position as the starting point
-  const points: [number, number, number][] = [
-    initialPosition as [number, number, number],
-    ...trajectoryPoints.map(
-      (pt) => pt.position as [number, number, number]
-    ),
+  const points: Vector3[] = [
+    ricToThreePosition(initialPosition),
+    ...trajectoryPoints.map((pt) => ricToThreePosition(pt.position)),
   ];
 
   return (

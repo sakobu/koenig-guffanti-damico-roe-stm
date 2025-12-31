@@ -5,9 +5,15 @@ import { useMissionStore } from '../../stores/mission'
 
 interface SceneProps {
   children?: ReactNode
+  cameraDistance?: number
+  maxZoomOut?: number
 }
 
-function Controls() {
+interface ControlsProps {
+  maxZoomOut: number
+}
+
+function Controls({ maxZoomOut }: ControlsProps) {
   const isDragging = useMissionStore((s) => s.isDraggingWaypoint)
 
   return (
@@ -16,16 +22,25 @@ function Controls() {
       enableDamping
       dampingFactor={0.05}
       minDistance={50}
-      maxDistance={5000}
+      maxDistance={maxZoomOut}
     />
   )
 }
 
-export default function Scene({ children }: SceneProps) {
+export default function Scene({
+  children,
+  cameraDistance = 1500,
+  maxZoomOut = 5000,
+}: SceneProps) {
   return (
     <Canvas
       style={{ position: 'fixed', inset: 0 }}
-      camera={{ position: [0, 0, 1500], fov: 50, near: 0.1, far: 10000 }}
+      camera={{
+        position: [0, 0, cameraDistance],
+        fov: 50,
+        near: 0.1,
+        far: maxZoomOut * 2,
+      }}
       gl={{ antialias: true }}
     >
       <color attach="background" args={['#000000']} />
@@ -33,7 +48,7 @@ export default function Scene({ children }: SceneProps) {
       <ambientLight intensity={0.3} />
       <pointLight position={[200, 200, 200]} intensity={1} />
 
-      <Controls />
+      <Controls maxZoomOut={maxZoomOut} />
 
       {children}
     </Canvas>

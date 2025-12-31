@@ -84,7 +84,8 @@ function computeMission(
   includeDrag: boolean,
   daDotDrag: number,
   dexDotDrag: number,
-  deyDotDrag: number
+  deyDotDrag: number,
+  scenario: ScenarioKey
 ): {
   missionPlan: MissionPlan | null;
   trajectoryPoints: readonly TrajectoryPoint[];
@@ -129,7 +130,7 @@ function computeMission(
       initialPosition,
       [0, 0, 0],
       options,
-      200 // points per leg
+      SCENARIOS[scenario].trajectoryPointsPerLeg
     );
 
     return { missionPlan: plan, trajectoryPoints: trajectory };
@@ -150,7 +151,8 @@ function computeMissionIncremental(
   includeDrag: boolean,
   daDotDrag: number,
   dexDotDrag: number,
-  deyDotDrag: number
+  deyDotDrag: number,
+  scenario: ScenarioKey
 ): {
   missionPlan: MissionPlan | null;
   trajectoryPoints: readonly TrajectoryPoint[];
@@ -165,7 +167,8 @@ function computeMissionIncremental(
       includeDrag,
       daDotDrag,
       dexDotDrag,
-      deyDotDrag
+      deyDotDrag,
+      scenario
     );
   }
 
@@ -212,7 +215,7 @@ function computeMissionIncremental(
       initialPosition,
       [0, 0, 0],
       options,
-      200
+      SCENARIOS[scenario].trajectoryPointsPerLeg
     );
 
     return { missionPlan: plan, trajectoryPoints: trajectory };
@@ -251,7 +254,8 @@ export const useMissionStore = create<MissionStore>((set, get) => ({
       state.includeDrag,
       state.daDotDrag,
       state.dexDotDrag,
-      state.deyDotDrag
+      state.deyDotDrag,
+      state.scenario
     );
     // Auto-select the newly added waypoint
     set({
@@ -278,7 +282,8 @@ export const useMissionStore = create<MissionStore>((set, get) => ({
       state.includeDrag,
       state.daDotDrag,
       state.dexDotDrag,
-      state.deyDotDrag
+      state.deyDotDrag,
+      state.scenario
     );
     set({ waypoints: newWaypoints, missionPlan, trajectoryPoints });
   },
@@ -297,7 +302,8 @@ export const useMissionStore = create<MissionStore>((set, get) => ({
       state.includeDrag,
       state.daDotDrag,
       state.dexDotDrag,
-      state.deyDotDrag
+      state.deyDotDrag,
+      state.scenario
     );
     set({ waypoints: newWaypoints, missionPlan, trajectoryPoints });
   },
@@ -313,7 +319,8 @@ export const useMissionStore = create<MissionStore>((set, get) => ({
       state.includeDrag,
       state.daDotDrag,
       state.dexDotDrag,
-      state.deyDotDrag
+      state.deyDotDrag,
+      state.scenario
     );
     // Clear selection if deleted waypoint was selected, or adjust index if needed
     let newSelectedIndex = state.selectedWaypointIndex;
@@ -355,7 +362,8 @@ export const useMissionStore = create<MissionStore>((set, get) => ({
       state.includeDrag,
       state.daDotDrag,
       state.dexDotDrag,
-      state.deyDotDrag
+      state.deyDotDrag,
+      state.scenario
     );
     set({ includeJ2: value, missionPlan, trajectoryPoints });
   },
@@ -370,7 +378,8 @@ export const useMissionStore = create<MissionStore>((set, get) => ({
       value,
       state.daDotDrag,
       state.dexDotDrag,
-      state.deyDotDrag
+      state.deyDotDrag,
+      state.scenario
     );
     set({ includeDrag: value, missionPlan, trajectoryPoints });
   },
@@ -385,7 +394,8 @@ export const useMissionStore = create<MissionStore>((set, get) => ({
       state.includeDrag,
       value,
       state.dexDotDrag,
-      state.deyDotDrag
+      state.deyDotDrag,
+      state.scenario
     );
     set({ daDotDrag: value, missionPlan, trajectoryPoints });
   },
@@ -400,7 +410,8 @@ export const useMissionStore = create<MissionStore>((set, get) => ({
       state.includeDrag,
       state.daDotDrag,
       value,
-      state.deyDotDrag
+      state.deyDotDrag,
+      state.scenario
     );
     set({ dexDotDrag: value, missionPlan, trajectoryPoints });
   },
@@ -415,7 +426,8 @@ export const useMissionStore = create<MissionStore>((set, get) => ({
       state.includeDrag,
       state.daDotDrag,
       state.dexDotDrag,
-      value
+      value,
+      state.scenario
     );
     set({ deyDotDrag: value, missionPlan, trajectoryPoints });
   },

@@ -1,8 +1,14 @@
 import { Plane } from "@react-three/drei";
 import type { ThreeEvent } from "@react-three/fiber";
+import { Vector3 } from "three";
 import { useMissionStore } from "../../../stores/mission";
+import { threeToRicPosition } from "../../../utils/coordinates";
 
-export default function ClickPlane() {
+interface ClickPlaneProps {
+  size?: number;
+}
+
+export default function ClickPlane({ size = 4000 }: ClickPlaneProps) {
   const addWaypoint = useMissionStore((state) => state.addWaypoint);
   const selectWaypoint = useMissionStore((state) => state.selectWaypoint);
 
@@ -10,10 +16,9 @@ export default function ClickPlane() {
     e.stopPropagation();
 
     if (e.shiftKey) {
-      // Shift+click: add waypoint
-      // Waypoint [R, I, C] maps directly to Three.js [x, y, z]
-      const point = e.point;
-      addWaypoint([point.x, point.y, 0]);
+      // Shift+click: add waypoint on the grid plane (C=0)
+      // Convert Three.js position to RIC
+      addWaypoint(threeToRicPosition(new Vector3(e.point.x, e.point.y, 0)));
     } else {
       // Regular click: deselect
       selectWaypoint(null);
@@ -22,7 +27,7 @@ export default function ClickPlane() {
 
   return (
     <Plane
-      args={[4000, 4000]}
+      args={[size, size]}
       position={[0, 0, 0]}
       onClick={handleClick}
       visible={false}

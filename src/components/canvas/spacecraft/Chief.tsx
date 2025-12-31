@@ -1,10 +1,14 @@
 import { Spacecraft } from "./Spacecraft";
 
-export default function Chief() {
+interface ChiefProps {
+  scale?: number;
+}
+
+export default function Chief({ scale = 1 }: ChiefProps) {
   return (
     <Spacecraft
       position={[0, 0, 0]}
-      scale={2}
+      scale={2 * scale}
       label="Chief"
       labelColor="#ff6666"
       mainBody={{

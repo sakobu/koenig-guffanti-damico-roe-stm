@@ -1,7 +1,12 @@
 import type { ClassicalOrbitalElements, Vector3 } from "@orbital";
 import { MU_EARTH } from "@orbital";
 
-export type ScenarioKey = "iss" | "eccentric" | "lowAltEccentric";
+export type ScenarioKey =
+  | "iss"
+  | "eccentric"
+  | "lowAltEccentric"
+  | "longDurationHold"
+  | "largeFormation";
 
 export interface Scenario {
   label: string;
@@ -12,6 +17,22 @@ export interface Scenario {
   defaultDexDotDrag: number;
   /** For near-circular orbits (e < 0.05), dey derivative is required */
   defaultDeyDotDrag: number;
+
+  // Visualization scale parameters
+  /** Total grid extent in meters (e.g., 2000 for ±1000m view) */
+  gridSize: number;
+  /** Small grid cell size in meters */
+  gridCellSize: number;
+  /** Major grid line interval in meters */
+  gridSectionSize: number;
+  /** Initial camera Z distance in meters */
+  cameraDistance: number;
+  /** Maximum zoom out distance for OrbitControls */
+  maxZoomOut: number;
+  /** Scale factor for spacecraft models (1 = normal, higher for large-scale views) */
+  spacecraftScale: number;
+  /** Number of trajectory points per leg for visualization smoothness */
+  trajectoryPointsPerLeg: number;
 }
 
 export const SCENARIOS: Record<ScenarioKey, Scenario> = {
@@ -31,6 +52,14 @@ export const SCENARIOS: Record<ScenarioKey, Scenario> = {
     defaultDaDotDrag: -1e-10, // ~400 km altitude - moderate drag
     defaultDexDotDrag: 0, // Near-circular: arbitrary model uses these
     defaultDeyDotDrag: 0,
+    // Visualization (standard scale)
+    gridSize: 2000,
+    gridCellSize: 50,
+    gridSectionSize: 250,
+    cameraDistance: 1500,
+    maxZoomOut: 5000,
+    spacecraftScale: 1,
+    trajectoryPointsPerLeg: 200,
   },
   eccentric: {
     label: "High-Alt Eccentric",
@@ -48,6 +77,14 @@ export const SCENARIOS: Record<ScenarioKey, Scenario> = {
     defaultDaDotDrag: -1e-12, // 3600+ km altitude - drag negligible
     defaultDexDotDrag: 0, // Eccentric: not used (eccentric model)
     defaultDeyDotDrag: 0,
+    // Visualization (standard scale)
+    gridSize: 2000,
+    gridCellSize: 50,
+    gridSectionSize: 250,
+    cameraDistance: 1500,
+    maxZoomOut: 5000,
+    spacecraftScale: 1,
+    trajectoryPointsPerLeg: 200,
   },
   lowAltEccentric: {
     label: "Low-Alt Eccentric",
@@ -65,6 +102,64 @@ export const SCENARIOS: Record<ScenarioKey, Scenario> = {
     defaultDaDotDrag: -5e-10, // 372-1872 km perigee/apogee - strong drag at perigee
     defaultDexDotDrag: 0, // Eccentric: not used (eccentric model)
     defaultDeyDotDrag: 0,
+    // Visualization (standard scale)
+    gridSize: 2000,
+    gridCellSize: 50,
+    gridSectionSize: 250,
+    cameraDistance: 1500,
+    maxZoomOut: 5000,
+    spacecraftScale: 1,
+    trajectoryPointsPerLeg: 200,
+  },
+  longDurationHold: {
+    label: "Long-Duration Hold",
+    chief: {
+      semiMajorAxis: 7_000_000, // ~622 km altitude
+      eccentricity: 0.001, // Near-circular
+      inclination: (51.6 * Math.PI) / 180, // ISS-like, safe from singularity
+      raan: (45 * Math.PI) / 180,
+      argumentOfPerigee: (30 * Math.PI) / 180,
+      meanAnomaly: 0,
+      angularMomentum: Math.sqrt(MU_EARTH * 7_000_000 * (1 - 0.001 ** 2)),
+      gravitationalParameter: MU_EARTH,
+    },
+    initialPosition: [0, -500, 0], // 500m behind (hold position)
+    defaultDaDotDrag: -2e-10, // ~622 km altitude - moderate drag
+    defaultDexDotDrag: 0,
+    defaultDeyDotDrag: 0,
+    // Visualization (standard scale)
+    gridSize: 2000,
+    gridCellSize: 50,
+    gridSectionSize: 250,
+    cameraDistance: 1500,
+    maxZoomOut: 5000,
+    spacecraftScale: 1,
+    trajectoryPointsPerLeg: 200,
+  },
+  largeFormation: {
+    label: "Large Formation (10km)",
+    chief: {
+      semiMajorAxis: 7_200_000, // ~822 km altitude
+      eccentricity: 0.0005, // Near-circular
+      inclination: (45 * Math.PI) / 180, // Mid-inclination, safe
+      raan: (45 * Math.PI) / 180,
+      argumentOfPerigee: (30 * Math.PI) / 180,
+      meanAnomaly: 0,
+      angularMomentum: Math.sqrt(MU_EARTH * 7_200_000 * (1 - 0.0005 ** 2)),
+      gravitationalParameter: MU_EARTH,
+    },
+    initialPosition: [0, -5000, 0], // 5km behind
+    defaultDaDotDrag: -1e-10, // ~822 km altitude
+    defaultDexDotDrag: 0,
+    defaultDeyDotDrag: 0,
+    // Visualization (large scale for km-scale formation)
+    gridSize: 20000, // ±10km
+    gridCellSize: 500, // 500m cells
+    gridSectionSize: 2500, // 2.5km major lines
+    cameraDistance: 15000, // Start zoomed out
+    maxZoomOut: 50000, // Allow 50km zoom
+    spacecraftScale: 10, // Scale up spacecraft to be visible at km-scale
+    trajectoryPointsPerLeg: 1000, // More points for smoother km-scale trajectories
   },
 };
 

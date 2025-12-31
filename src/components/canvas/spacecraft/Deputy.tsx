@@ -1,13 +1,18 @@
 import { useMissionStore } from "../../../stores/mission";
+import { ricToThreePosition } from "../../../utils/coordinates";
 import { Spacecraft } from "./Spacecraft";
 
-export default function Deputy() {
+interface DeputyProps {
+  scale?: number;
+}
+
+export default function Deputy({ scale = 1 }: DeputyProps) {
   const position = useMissionStore((state) => state.initialPosition);
 
   return (
     <Spacecraft
-      position={position}
-      scale={1.8}
+      position={ricToThreePosition(position).toArray()}
+      scale={1.8 * scale}
       label="Deputy"
       labelColor="#6688ff"
       mainBody={{
