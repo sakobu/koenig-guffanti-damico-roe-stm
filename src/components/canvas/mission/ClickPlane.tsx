@@ -1,6 +1,7 @@
 import { Plane } from "@react-three/drei";
 import type { ThreeEvent } from "@react-three/fiber";
 import { Vector3 } from "three";
+import { useCameraDistance } from "../../../hooks/useZoomScale";
 import { useMissionStore } from "../../../stores/mission";
 import { threeToRicPosition } from "../../../utils/coordinates";
 
@@ -11,6 +12,11 @@ interface ClickPlaneProps {
 export default function ClickPlane({ size = 4000 }: ClickPlaneProps) {
   const addWaypoint = useMissionStore((state) => state.addWaypoint);
   const selectWaypoint = useMissionStore((state) => state.selectWaypoint);
+
+  // Scale clickable area based on camera distance to ensure
+  // users can always click within the viewport when zoomed out
+  const cameraDistance = useCameraDistance();
+  const effectiveSize = Math.max(size, cameraDistance * 3);
 
   const handleClick = (e: ThreeEvent<MouseEvent>) => {
     e.stopPropagation();
@@ -27,7 +33,7 @@ export default function ClickPlane({ size = 4000 }: ClickPlaneProps) {
 
   return (
     <Plane
-      args={[size, size]}
+      args={[effectiveSize, effectiveSize]}
       position={[0, 0, 0]}
       onClick={handleClick}
       visible={false}

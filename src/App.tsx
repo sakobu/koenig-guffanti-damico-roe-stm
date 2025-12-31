@@ -29,9 +29,9 @@ export default function App() {
           sectionSize={scenarioConfig.gridSectionSize}
         />
         <RICAxes />
-        <Chief scale={scenarioConfig.spacecraftScale} />
-        <Deputy scale={scenarioConfig.spacecraftScale} />
-        <Waypoints scale={scenarioConfig.spacecraftScale} />
+        <Chief />
+        <Deputy />
+        <Waypoints />
         <Trajectory />
       </Scene>
       <Sidebar />

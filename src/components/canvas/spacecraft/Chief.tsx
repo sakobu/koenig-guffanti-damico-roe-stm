@@ -1,14 +1,13 @@
+import { useZoomScale } from "../../../hooks/useZoomScale";
 import { Spacecraft } from "./Spacecraft";
 
-interface ChiefProps {
-  scale?: number;
-}
+export default function Chief() {
+  const zoomScale = useZoomScale();
 
-export default function Chief({ scale = 1 }: ChiefProps) {
   return (
     <Spacecraft
       position={[0, 0, 0]}
-      scale={2 * scale}
+      scale={2 * zoomScale}
       label="Chief"
       labelColor="#ff6666"
       mainBody={{

@@ -15,7 +15,7 @@ export default function Grid({
   // Use sectionSize as marker interval
   const markerInterval = sectionSize;
 
-  // Scale font size based on grid scale (larger grid = larger text)
+  // Scale font size based on grid scale (not zoom - grid already accounts for scale)
   const fontSize = Math.max(7, size / 300);
   const markerOffset = Math.max(8, size / 250);
 

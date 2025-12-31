@@ -29,8 +29,6 @@ export interface Scenario {
   cameraDistance: number;
   /** Maximum zoom out distance for OrbitControls */
   maxZoomOut: number;
-  /** Scale factor for spacecraft models (1 = normal, higher for large-scale views) */
-  spacecraftScale: number;
   /** Number of trajectory points per leg for visualization smoothness */
   trajectoryPointsPerLeg: number;
 }
@@ -58,8 +56,7 @@ export const SCENARIOS: Record<ScenarioKey, Scenario> = {
     gridSectionSize: 250,
     cameraDistance: 1500,
     maxZoomOut: 5000,
-    spacecraftScale: 1,
-    trajectoryPointsPerLeg: 200,
+    trajectoryPointsPerLeg: 500,
   },
   eccentric: {
     label: "High-Alt Eccentric",
@@ -83,8 +80,7 @@ export const SCENARIOS: Record<ScenarioKey, Scenario> = {
     gridSectionSize: 250,
     cameraDistance: 1500,
     maxZoomOut: 5000,
-    spacecraftScale: 1,
-    trajectoryPointsPerLeg: 200,
+    trajectoryPointsPerLeg: 500,
   },
   lowAltEccentric: {
     label: "Low-Alt Eccentric",
@@ -108,8 +104,7 @@ export const SCENARIOS: Record<ScenarioKey, Scenario> = {
     gridSectionSize: 250,
     cameraDistance: 1500,
     maxZoomOut: 5000,
-    spacecraftScale: 1,
-    trajectoryPointsPerLeg: 200,
+    trajectoryPointsPerLeg: 500,
   },
   longDurationHold: {
     label: "Long-Duration Hold",
@@ -133,8 +128,7 @@ export const SCENARIOS: Record<ScenarioKey, Scenario> = {
     gridSectionSize: 250,
     cameraDistance: 1500,
     maxZoomOut: 5000,
-    spacecraftScale: 1,
-    trajectoryPointsPerLeg: 200,
+    trajectoryPointsPerLeg: 500,
   },
   largeFormation: {
     label: "Large Formation (10km)",
@@ -153,13 +147,13 @@ export const SCENARIOS: Record<ScenarioKey, Scenario> = {
     defaultDexDotDrag: 0,
     defaultDeyDotDrag: 0,
     // Visualization (large scale for km-scale formation)
-    gridSize: 20000, // ±10km
+    // Note: spacecraft/waypoints auto-scale via zoom-responsive scaling based on cameraDistance
+    gridSize: 20000, // +/-10km
     gridCellSize: 500, // 500m cells
     gridSectionSize: 2500, // 2.5km major lines
-    cameraDistance: 15000, // Start zoomed out
+    cameraDistance: 15000,
     maxZoomOut: 50000, // Allow 50km zoom
-    spacecraftScale: 10, // Scale up spacecraft to be visible at km-scale
-    trajectoryPointsPerLeg: 1000, // More points for smoother km-scale trajectories
+    trajectoryPointsPerLeg: 5000, // More points for smoother km-scale trajectories
   },
 };
 
