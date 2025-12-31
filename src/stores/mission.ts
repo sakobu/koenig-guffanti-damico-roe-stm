@@ -11,6 +11,7 @@ import type {
 import {
   generateMissionTrajectory,
   planMission,
+  replanFromWaypoint,
   validateTargetingConfig,
 } from "@orbital";
 import { SCENARIOS, type ScenarioKey } from "../config/scenarios";
@@ -137,6 +138,89 @@ function computeMission(
   }
 }
 
+// Incremental replanning for waypoint updates - reuses unchanged legs
+function computeMissionIncremental(
+  existingPlan: MissionPlan | null,
+  modifiedIndex: number,
+  waypoints: Waypoint[],
+  chief: ClassicalOrbitalElements,
+  initialPosition: Vector3,
+  includeJ2: boolean,
+  includeDrag: boolean,
+  daDotDrag: number,
+  dexDotDrag: number,
+  deyDotDrag: number
+): {
+  missionPlan: MissionPlan | null;
+  trajectoryPoints: readonly TrajectoryPoint[];
+} {
+  // Fall back to full replan if no existing plan or modifying first waypoint
+  if (!existingPlan || modifiedIndex === 0) {
+    return computeMission(
+      waypoints,
+      chief,
+      initialPosition,
+      includeJ2,
+      includeDrag,
+      daDotDrag,
+      dexDotDrag,
+      deyDotDrag
+    );
+  }
+
+  if (waypoints.length === 0) {
+    return { missionPlan: null, trajectoryPoints: [] };
+  }
+
+  const initialState: RelativeState = {
+    position: initialPosition,
+    velocity: [0, 0, 0],
+  };
+
+  try {
+    const isNearCircular = chief.eccentricity < ECCENTRICITY_THRESHOLD;
+    const dragConfig: DragConfig = isNearCircular
+      ? { type: "arbitrary", daDotDrag, dexDotDrag, deyDotDrag }
+      : { type: "eccentric", daDotDrag };
+
+    const options = {
+      includeJ2,
+      includeDrag,
+      dragConfig,
+    };
+
+    const validation = validateTargetingConfig(chief, options);
+    if (!validation.valid) {
+      console.warn("Targeting validation failed:", validation.message);
+      return { missionPlan: null, trajectoryPoints: [] };
+    }
+
+    // Use incremental replanning - reuses legs before modifiedIndex
+    const plan = replanFromWaypoint(
+      existingPlan,
+      modifiedIndex,
+      waypoints,
+      chief,
+      initialState,
+      options
+    );
+
+    const trajectory = generateMissionTrajectory(
+      plan,
+      chief,
+      initialPosition,
+      [0, 0, 0],
+      options,
+      200
+    );
+
+    return { missionPlan: plan, trajectoryPoints: trajectory };
+  } catch (error) {
+    console.error("Incremental mission planning failed:", error);
+    return { missionPlan: null, trajectoryPoints: [] };
+  }
+}
+
 export const useMissionStore = create<MissionStore>((set, get) => ({
   // Initial state
   chief: SCENARIOS[DEFAULT_SCENARIO].chief,
@@ -175,7 +259,10 @@ export const useMissionStore = create<MissionStore>((set, get) => ({
     const newWaypoints = state.waypoints.map((wp, i) =>
       i === index ? { ...wp, position } : wp
     );
-    const { missionPlan, trajectoryPoints } = computeMission(
+    // Use incremental replanning to reuse unchanged legs
+    const { missionPlan, trajectoryPoints } = computeMissionIncremental(
+      state.missionPlan,
+      index,
       newWaypoints,
       state.chief,
       state.initialPosition,

@@ -5,7 +5,6 @@ export type ScenarioKey = "iss" | "eccentric" | "lowAltEccentric";
 
 export interface Scenario {
   label: string;
-  description: string;
   chief: ClassicalOrbitalElements;
   initialPosition: Vector3;
   defaultDaDotDrag: number;
@@ -18,7 +17,6 @@ export interface Scenario {
 export const SCENARIOS: Record<ScenarioKey, Scenario> = {
   iss: {
     label: "ISS Circular",
-    description: "a=6,778 km, e=0.0005",
     chief: {
       semiMajorAxis: 6_778_000,
       eccentricity: 0.0005,
@@ -36,7 +34,6 @@ export const SCENARIOS: Record<ScenarioKey, Scenario> = {
   },
   eccentric: {
     label: "High-Alt Eccentric",
-    description: "a=10,000 km, e=0.1",
     chief: {
       semiMajorAxis: 10_000_000,
       eccentricity: 0.1,
@@ -54,7 +51,6 @@ export const SCENARIOS: Record<ScenarioKey, Scenario> = {
   },
   lowAltEccentric: {
     label: "Low-Alt Eccentric",
-    description: "a=7,500 km, e=0.1",
     chief: {
       semiMajorAxis: 7_500_000,
       eccentricity: 0.1,

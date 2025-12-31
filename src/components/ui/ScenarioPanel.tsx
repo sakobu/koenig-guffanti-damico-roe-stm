@@ -1,5 +1,5 @@
 import { useMissionStore } from "../../stores/mission";
-import { SCENARIOS, SCENARIO_OPTIONS } from "../../config/scenarios";
+import { SCENARIO_OPTIONS } from "../../config/scenarios";
 import Panel from "./Panel";
 import Select from "../shared/Select";
 
@@ -7,8 +7,6 @@ export default function ScenarioPanel() {
   const scenario = useMissionStore((state) => state.scenario);
   const chief = useMissionStore((state) => state.chief);
   const setScenario = useMissionStore((state) => state.setScenario);
-
-  const currentScenario = SCENARIOS[scenario];
 
   return (
     <Panel title="Orbit Scenario" defaultOpen>
@@ -19,10 +17,6 @@ export default function ScenarioPanel() {
           onChange={(value) => setScenario(value as typeof scenario)}
           options={SCENARIO_OPTIONS}
         />
-
-        <div className="text-xs text-zinc-500 italic">
-          {currentScenario.description}
-        </div>
 
         {/* Orbit parameters (read-only) */}
         <div className="pt-2 border-t border-zinc-800 space-y-1">
