@@ -6,7 +6,10 @@
  */
 
 // Types
-export type { ClassicalOrbitalElements } from "./types/orbital-elements";
+export type {
+  ClassicalOrbitalElements,
+  QuasiNonsingularROE,
+} from "./types/orbital-elements";
 export type { RelativeState, Vector3 } from "./types/vectors";
 export type {
   DragConfig,
@@ -55,3 +58,6 @@ export {
   generateTrajectoryWithManeuvers,
   sampleTrajectoryUniform,
 } from "./targeting/trajectory";
+
+// ROE transforms
+export { ricToROE, roeToRIC } from "./transforms/roe-ric";

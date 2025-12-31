@@ -6,7 +6,9 @@ import Deputy from './components/canvas/spacecraft/Deputy'
 import Waypoints from './components/canvas/mission/Waypoints'
 import Trajectory from './components/canvas/mission/Trajectory'
 import ClickPlane from './components/canvas/mission/ClickPlane'
+import AnimationController from './components/canvas/AnimationController'
 import Sidebar from './components/ui/Sidebar'
+import HUD from './components/ui/HUD'
 import { useMissionStore } from './stores/mission'
 import { SCENARIOS } from './config/scenarios'
 
@@ -33,8 +35,10 @@ export default function App() {
         <Deputy />
         <Waypoints />
         <Trajectory />
+        <AnimationController />
       </Scene>
       <Sidebar />
+      <HUD />
     </div>
   )
 }

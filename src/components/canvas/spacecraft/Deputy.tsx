@@ -1,11 +1,29 @@
 import { useZoomScale } from "../../../hooks/useZoomScale";
 import { useMissionStore } from "../../../stores/mission";
+import { useSimulationStore } from "../../../stores/simulation";
 import { ricToThreePosition } from "../../../utils/coordinates";
 import { Spacecraft } from "./Spacecraft";
 
 export default function Deputy() {
   const zoomScale = useZoomScale();
-  const position = useMissionStore((state) => state.initialPosition);
+  const initialPosition = useMissionStore((state) => state.initialPosition);
+  const trajectoryPoints = useMissionStore((state) => state.trajectoryPoints);
+
+  const playing = useSimulationStore((state) => state.playing);
+  const currentPointIndex = useSimulationStore((state) => state.currentPointIndex);
+  const time = useSimulationStore((state) => state.time);
+
+  // When simulation is active (time > 0 or playing), use trajectory position
+  // Otherwise use initial position
+  const isSimulating = time > 0 || playing;
+  const hasTrajectory = trajectoryPoints.length > 0;
+  const validIndex =
+    currentPointIndex >= 0 && currentPointIndex < trajectoryPoints.length;
+
+  const position =
+    isSimulating && hasTrajectory && validIndex
+      ? trajectoryPoints[currentPointIndex].position
+      : initialPosition;
 
   return (
     <Spacecraft
