@@ -7,6 +7,7 @@
 
 import {
   generateTrajectoryWithManeuvers,
+  ricToROE,
   type ClassicalOrbitalElements,
   type MissionPlan,
   type TargetingOptions,
@@ -42,11 +43,24 @@ interface ExportLegData {
 }
 
 /**
+ * ROE (Relative Orbital Elements) for export
+ */
+interface ExportROE {
+  da: number;
+  dlambda: number;
+  dex: number;
+  dey: number;
+  dix: number;
+  diy: number;
+}
+
+/**
  * Waypoint with guaranteed velocity (normalized for export)
  */
 interface ExportWaypoint {
   position: Vector3;
   velocity: Vector3; // Always present (defaults to [0,0,0] for stationary)
+  roe: ExportROE;
 }
 
 /**
@@ -151,11 +165,23 @@ export function exportMissionJSON(
       scenario,
     },
     chief,
-    // Normalize velocity to [0,0,0] for stationary waypoints (consistent structure)
-    waypoints: waypoints.map((wp) => ({
-      position: wp.position,
-      velocity: wp.velocity ?? [0, 0, 0],
-    })),
+    // Normalize velocity and compute ROE for each waypoint
+    waypoints: waypoints.map((wp) => {
+      const velocity = wp.velocity ?? ([0, 0, 0] as Vector3);
+      const roe = ricToROE(chief, { position: wp.position, velocity });
+      return {
+        position: wp.position,
+        velocity,
+        roe: {
+          da: roe.da,
+          dlambda: roe.dlambda,
+          dex: roe.dex,
+          dey: roe.dey,
+          dix: roe.dix,
+          diy: roe.diy,
+        },
+      };
+    }),
     mission: {
       totalDeltaV: missionPlan.totalDeltaV,
       totalTime: missionPlan.totalTime,
@@ -255,8 +281,13 @@ export function exportTrajectoryCSV(
     });
   }
 
-  // Sort by time
-  allRows.sort((a, b) => a.time - b.time);
+  // Sort by time, with arrival before departure at same timestamp
+  const eventOrder: Record<string, number> = { arrival: 0, coast: 1, departure: 2 };
+  allRows.sort((a, b) => {
+    const timeDiff = a.time - b.time;
+    if (timeDiff !== 0) return timeDiff;
+    return (eventOrder[a.eventType] ?? 1) - (eventOrder[b.eventType] ?? 1);
+  });
 
   // Format rows
   const csvRows = allRows.map((row) => [

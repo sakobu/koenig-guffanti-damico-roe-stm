@@ -262,21 +262,21 @@ export default function HUD() {
               {coordMode === "ric" ? (
                 <>
                   <div className="grid grid-cols-3 gap-1 text-xs">
-                    <div className="bg-zinc-800/50 rounded px-2 py-1">
+                    <div className="bg-zinc-800/50 rounded px-2 py-1 flex justify-between">
                       <span className="text-zinc-500">R</span>
-                      <span className="ml-1 font-mono text-zinc-200">
+                      <span className="font-mono text-zinc-200">
                         {formatValue(currentPosition[0])}
                       </span>
                     </div>
-                    <div className="bg-zinc-800/50 rounded px-2 py-1">
+                    <div className="bg-zinc-800/50 rounded px-2 py-1 flex justify-between">
                       <span className="text-zinc-500">I</span>
-                      <span className="ml-1 font-mono text-zinc-200">
+                      <span className="font-mono text-zinc-200">
                         {formatValue(currentPosition[1])}
                       </span>
                     </div>
-                    <div className="bg-zinc-800/50 rounded px-2 py-1">
+                    <div className="bg-zinc-800/50 rounded px-2 py-1 flex justify-between">
                       <span className="text-zinc-500">C</span>
-                      <span className="ml-1 font-mono text-zinc-200">
+                      <span className="font-mono text-zinc-200">
                         {formatValue(currentPosition[2])}
                       </span>
                     </div>
@@ -285,39 +285,39 @@ export default function HUD() {
                 </>
               ) : roe ? (
                 <div className="grid grid-cols-2 gap-1 text-xs">
-                  <div className="bg-zinc-800/50 rounded px-2 py-1">
+                  <div className="bg-zinc-800/50 rounded px-2 py-1 flex justify-between">
                     <span className="text-zinc-500">δa</span>
-                    <span className="ml-1 font-mono text-zinc-200">
-                      {formatValue(roe.da, 4)}
+                    <span className="font-mono text-zinc-200">
+                      {formatValue(roe.da, 6)}
                     </span>
                   </div>
-                  <div className="bg-zinc-800/50 rounded px-2 py-1">
+                  <div className="bg-zinc-800/50 rounded px-2 py-1 flex justify-between">
                     <span className="text-zinc-500">δλ</span>
-                    <span className="ml-1 font-mono text-zinc-200">
-                      {formatValue(roe.dlambda, 4)}
+                    <span className="font-mono text-zinc-200">
+                      {formatValue(roe.dlambda, 6)}
                     </span>
                   </div>
-                  <div className="bg-zinc-800/50 rounded px-2 py-1">
+                  <div className="bg-zinc-800/50 rounded px-2 py-1 flex justify-between">
                     <span className="text-zinc-500">δex</span>
-                    <span className="ml-1 font-mono text-zinc-200">
+                    <span className="font-mono text-zinc-200">
                       {formatValue(roe.dex, 6)}
                     </span>
                   </div>
-                  <div className="bg-zinc-800/50 rounded px-2 py-1">
+                  <div className="bg-zinc-800/50 rounded px-2 py-1 flex justify-between">
                     <span className="text-zinc-500">δey</span>
-                    <span className="ml-1 font-mono text-zinc-200">
+                    <span className="font-mono text-zinc-200">
                       {formatValue(roe.dey, 6)}
                     </span>
                   </div>
-                  <div className="bg-zinc-800/50 rounded px-2 py-1">
+                  <div className="bg-zinc-800/50 rounded px-2 py-1 flex justify-between">
                     <span className="text-zinc-500">δix</span>
-                    <span className="ml-1 font-mono text-zinc-200">
+                    <span className="font-mono text-zinc-200">
                       {formatValue(roe.dix, 6)}
                     </span>
                   </div>
-                  <div className="bg-zinc-800/50 rounded px-2 py-1">
+                  <div className="bg-zinc-800/50 rounded px-2 py-1 flex justify-between">
                     <span className="text-zinc-500">δiy</span>
-                    <span className="ml-1 font-mono text-zinc-200">
+                    <span className="font-mono text-zinc-200">
                       {formatValue(roe.diy, 6)}
                     </span>
                   </div>
@@ -335,21 +335,21 @@ export default function HUD() {
                 Velocity
               </span>
               <div className="grid grid-cols-3 gap-1 text-xs">
-                <div className="bg-zinc-800/50 rounded px-2 py-1">
+                <div className="bg-zinc-800/50 rounded px-2 py-1 flex justify-between">
                   <span className="text-zinc-500">Ṙ</span>
-                  <span className="ml-1 font-mono text-zinc-200">
+                  <span className="font-mono text-zinc-200">
                     {formatValue(currentVelocity[0], 4)}
                   </span>
                 </div>
-                <div className="bg-zinc-800/50 rounded px-2 py-1">
+                <div className="bg-zinc-800/50 rounded px-2 py-1 flex justify-between">
                   <span className="text-zinc-500">İ</span>
-                  <span className="ml-1 font-mono text-zinc-200">
+                  <span className="font-mono text-zinc-200">
                     {formatValue(currentVelocity[1], 4)}
                   </span>
                 </div>
-                <div className="bg-zinc-800/50 rounded px-2 py-1">
+                <div className="bg-zinc-800/50 rounded px-2 py-1 flex justify-between">
                   <span className="text-zinc-500">Ċ</span>
-                  <span className="ml-1 font-mono text-zinc-200">
+                  <span className="font-mono text-zinc-200">
                     {formatValue(currentVelocity[2], 4)}
                   </span>
                 </div>

@@ -74,7 +74,7 @@ export default function ExportPanel() {
             onClick={handleExportJSON}
             className="flex-1"
           >
-            JSON
+            Mission
           </Button>
           <Button
             variant="secondary"
@@ -82,7 +82,7 @@ export default function ExportPanel() {
             disabled={!hasTrajectory}
             className="flex-1"
           >
-            CSV
+            Ephemeris
           </Button>
         </div>
       ) : (
