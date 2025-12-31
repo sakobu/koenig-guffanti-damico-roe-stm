@@ -1,20 +1,63 @@
 /**
- * Mission planning and targeting for spacecraft rendezvous.
+ * Targeting Module
+ *
+ * Multi-waypoint RPO trajectory planning with J2+Drag support.
+ * Computes impulsive maneuvers for waypoint-based mission planning.
+ *
+ * Main API:
+ * - planMission: Plan a complete multi-waypoint mission
+ * - solveRendezvous: Solve a single two-burn rendezvous leg
+ * - optimizeTOF: Find optimal time-of-flight for minimum delta-v
+ * - generateMissionTrajectory: Generate dense output for visualization
+ *
+ * Reference: D'Amico, S., "Autonomous Formation Flying in Low Earth Orbit,"
+ * PhD Thesis, TU Delft, 2010
  */
 
-export { computeControlMatrix, applyDeltaV, computeApproximateDeltaV } from "./control-matrix";
-export { solveRendezvous } from "./rendezvous";
-export { optimizeTOF, optimizeTOFMultiStart } from "./tof-optimizer";
+// Main mission planning API
 export {
   planMission,
   replanFromWaypoint,
   getMissionStateAtTime,
-  extractWaypointPositions,
   getMissionSummary,
+  extractWaypointPositions,
 } from "./planner";
+
+// Single-leg rendezvous solver
+export { solveRendezvous } from "./rendezvous";
+
+// TOF optimization
+export { optimizeTOF, optimizeTOFMultiStart } from "./tof-optimizer";
+
+// Trajectory output for visualization
 export {
   generateLegTrajectory,
   generateMissionTrajectory,
   generateTrajectoryWithManeuvers,
   sampleTrajectoryUniform,
 } from "./trajectory";
+
+// Control matrix (for advanced users)
+export {
+  computeControlMatrix,
+  applyDeltaV,
+  computeApproximateDeltaV,
+} from "./control-matrix";
+
+// Validation (for UI-friendly error handling)
+export { validateTargetingConfig } from "./validation";
+
+// Types (re-exported from centralized types)
+export type {
+  ControlMatrix6x3,
+  Matrix3x3,
+  Matrix3x6,
+  Waypoint,
+  Maneuver,
+  ManeuverLeg,
+  MissionPlan,
+  TargetingOptions,
+  TrajectoryPoint,
+  TargetingValidationCode,
+  TargetingValidationResult,
+} from "../types/targeting";

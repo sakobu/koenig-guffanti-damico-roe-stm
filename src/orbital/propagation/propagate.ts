@@ -17,8 +17,12 @@ import type { ROEVector } from "../types/vectors";
 import { J2, R_EARTH } from "../constants";
 import { matVecMul6 } from "../math/matrices";
 import { computeKappa } from "../math/orbital-factors";
-import { meanMotion, normalizeAngle } from "../math/kepler";
-import { roeToVector, vectorToROE } from "../transforms/roe-vector";
+import { meanMotion } from "../math/kepler";
+import {
+  normalizeAngle,
+  roeToVector,
+  vectorToROE,
+} from "../transforms/roe-vector";
 import { propagateWithDrag } from "./drag-dispatch";
 import { computeJ2STM } from "../stm/j2";
 import { computeKeplerianSTM } from "../stm/keplerian";
@@ -50,20 +54,14 @@ import { computeKeplerianSTM } from "../stm/keplerian";
  *   includeJ2: false,
  * });
  *
- * // With differential drag - auto model selection (recommended)
- * const finalROE = propagateROE(initialROE, chiefElements, 3600, {
- *   includeDrag: true,
- *   dragConfig: { type: "auto", daDotDrag: -1e-10 },
- * });
- *
- * // With differential drag - explicit eccentric model (e >= 0.05)
+ * // With differential drag - eccentric model (e >= 0.05)
  * const finalROE = propagateROE(initialROE, chiefElements, 3600, {
  *   includeDrag: true,
  *   dragConfig: { type: "eccentric", daDotDrag: -1e-10 },
  * });
  * ```
  */
-const propagateROE = (
+export const propagateROE = (
   initialROE: QuasiNonsingularROE,
   chief: ClassicalOrbitalElements,
   deltaTime: number,
@@ -161,6 +159,10 @@ const propagateROE = (
  *
  * The chief's mean anomaly, argument of perigee, and RAAN are updated
  * according to Keplerian motion and J2 secular rates.
+ *
+ * **Chief semi-major axis decay:** If `options.chiefAbsoluteDaDot` is provided,
+ * the chief's semi-major axis will be updated. Note that this is an implementation
+ * convenience NOT from Koenig et al. (2017) - the paper models relative dynamics only.
  * @param initialROE - Initial relative orbital elements
  * @param chief - Chief orbital elements at initial time
  * @param deltaTime - Propagation duration [seconds]
@@ -220,13 +222,97 @@ export const propagateROEWithChief = (
     newRaan = normalizeAngle(chief.raan - 2 * kappa * R * deltaTime);
   }
 
+  // Update semi-major axis if chief absolute drag rate is provided
+  // NOTE: chiefAbsoluteDaDot is an implementation convenience, NOT from Koenig et al. (2017)
+  let newA = chief.semiMajorAxis;
+  let newH = chief.angularMomentum;
+
+  if (options.chiefAbsoluteDaDot !== undefined) {
+    newA = chief.semiMajorAxis + options.chiefAbsoluteDaDot * deltaTime;
+
+    // Update angular momentum consistently: h = sqrt(mu * a * (1 - e^2))
+    if (chief.angularMomentum !== undefined) {
+      newH = Math.sqrt(
+        chief.gravitationalParameter * newA * (1 - chief.eccentricity ** 2)
+      );
+    }
+  }
+
   return {
     roe: propagatedROE,
     chief: {
       ...chief,
+      semiMajorAxis: newA,
+      angularMomentum: newH,
       meanAnomaly: newM,
       argumentOfPerigee: newOmega,
       raan: newRaan,
     },
   };
+};
+
+/**
+ * Generate a trajectory of ROE states over time.
+ *
+ * Propagates the ROE state at regular intervals and returns an array
+ * of timestamped states. Useful for visualization and analysis.
+ * @param initialROE - Initial relative orbital elements
+ * @param chief - Chief orbital elements at initial time
+ * @param totalTime - Total propagation time [seconds]
+ * @param numSteps - Number of output steps
+ * @param options - Propagation options
+ * @returns Array of { time, roe, chief } objects
+ * @example
+ * ```typescript
+ * const trajectory = generateROETrajectory(
+ *   initialROE,
+ *   chiefElements,
+ *   86400, // 1 day
+ *   100,   // 100 points
+ *   { includeJ2: true }
+ * );
+ *
+ * // Plot delta-lambda over time
+ * trajectory.forEach(pt => console.log(pt.time, pt.roe.dlambda));
+ * ```
+ */
+export const generateROETrajectory = (
+  initialROE: QuasiNonsingularROE,
+  chief: ClassicalOrbitalElements,
+  totalTime: number,
+  numSteps: number,
+  options: ROEPropagationOptions = {}
+): Array<{
+  time: number;
+  roe: QuasiNonsingularROE;
+  chief: ClassicalOrbitalElements;
+}> => {
+  const dt = totalTime / numSteps;
+  const trajectory: Array<{
+    time: number;
+    roe: QuasiNonsingularROE;
+    chief: ClassicalOrbitalElements;
+  }> = [{ time: 0, roe: initialROE, chief }];
+
+  // Initial state
+
+  // Propagate step by step
+  let currentROE = initialROE;
+  let currentChief = chief;
+
+  for (let i = 1; i <= numSteps; i++) {
+    const { roe, chief: updatedChief } = propagateROEWithChief(
+      currentROE,
+      currentChief,
+      dt,
+      options
+    );
+
+    trajectory.push({ time: i * dt, roe, chief: updatedChief });
+
+    currentROE = roe;
+    currentChief = updatedChief;
+  }
+
+  return trajectory;
 };

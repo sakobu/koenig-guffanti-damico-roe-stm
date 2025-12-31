@@ -8,7 +8,11 @@
 // Types
 export type { ClassicalOrbitalElements } from "./types/orbital-elements";
 export type { RelativeState, Vector3 } from "./types/vectors";
-export type { DragConfigAuto } from "./types/config";
+export type {
+  DragConfig,
+  DragConfigEccentric,
+  DragConfigArbitrary,
+} from "./types/config";
 export type {
   Waypoint,
   Maneuver,
@@ -16,7 +20,12 @@ export type {
   MissionPlan,
   TargetingOptions,
   TrajectoryPoint,
+  TargetingValidationCode,
+  TargetingValidationResult,
 } from "./types/targeting";
+
+// Validation
+export { validateTargetingConfig } from "./targeting/validation";
 
 // Constants
 export { J2, MU_EARTH, R_EARTH, SECONDS_PER_DAY } from "./constants";

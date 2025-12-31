@@ -1,12 +1,30 @@
 /**
- * State Transition Matrices for ROE propagation.
+ * State Transition Matrices
  *
- * Reference: Koenig, Guffanti, D'Amico (2017) "New State Transition Matrices
- * for Spacecraft Relative Motion in Perturbed Orbits", JGCD Vol. 40, No. 7
+ * STM implementations for Keplerian, J2, and J2+Drag propagation.
+ *
+ * Reference: Koenig, Guffanti, D'Amico (2017)
+ * "New State Transition Matrices for Spacecraft Relative Motion in Perturbed Orbits"
+ * Journal of Guidance, Control, and Dynamics, Vol. 40, No. 7
  */
 
+// Keplerian STM (Paper Eq. 12)
 export { computeKeplerianSTM } from "./keplerian";
-export { buildJ2Matrix, computeJ2STM } from "./j2";
+
+// J2-perturbed STM (Paper Appendix A, Eq. A6)
+export { computeJ2STM, buildJ2Matrix } from "./j2";
+
+// J2+Drag STM for eccentric orbits (Paper Section VII, Appendix C)
 export { computeJ2DragSTMEccentric } from "./drag-eccentric";
-export { computeJ2DragSTMArbitrary, eccentricToArbitraryConfig } from "./drag-arbitrary";
-export { estimateDaDot, estimateDragDerivativesWithJ2Correction } from "./drag-estimation";
+
+// J2+Drag STM for arbitrary eccentricity (Paper Section VIII, Appendix D)
+export {
+  computeJ2DragSTMArbitrary,
+  eccentricToArbitraryConfig,
+} from "./drag-arbitrary";
+
+// Drag estimation utilities
+export {
+  estimateDaDot,
+  estimateDragDerivativesWithJ2Correction,
+} from "./drag-estimation";

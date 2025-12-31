@@ -53,20 +53,28 @@ export const vectorToROE = (v: ROEVector): QuasiNonsingularROE => ({
   diy: v[5],
 });
 
+// ============================================================================
+// J TRANSFORMATION MATRICES (Equation 20)
+// ============================================================================
+
 /**
  * Compute the J transformation matrix for the modified quasi-nonsingular state.
  *
  * Paper Reference: Koenig et al. (2017), Equation 20
  *
- * The J matrix rotates the relative eccentricity vector by -omega (argument of perigee),
- * decoupling the effects of eccentricity and argument of perigee changes.
+ * **Purpose**: Converts between nominal and modified ROE representations:
+ * - Nominal state: [da, dlambda, dex, dey, dix, diy]
+ * - Modified state: [da, dlambda, dex', dey', dix, diy]
  *
- * J(omega) = | I2x2   0         0    |
- *            | 0      R(-omega) 0    |
- *            | 0      0         I2x2 |
+ * The modified state rotates the eccentricity vector by -omega, decoupling
+ * eccentricity magnitude from argument of perigee changes:
+ * - dex' = dex cos(omega) + dey sin(omega)  (approximately = de)
+ * - dey' = -dex sin(omega) + dey cos(omega) (approximately = e * d-omega)
  *
- * where R(-omega) = |  cos(omega)  sin(omega) |
- *                   | -sin(omega)  cos(omega) |
+ * **Usage**: This is an optional utility for physical interpretation.
+ * The library's STM propagation functions work entirely in the nominal state
+ * and do not require this transformation. Use this when you want to analyze
+ * ROE in terms of eccentricity magnitude vs apsidal changes.
  * @param omega - Argument of perigee [rad]
  * @returns 6x6 J transformation matrix
  */
@@ -87,10 +95,8 @@ export const computeJMatrix = (omega: number): STM6 => {
 /**
  * Compute the inverse J transformation matrix.
  *
- * The inverse simply uses the opposite rotation angle:
- * J^(-1)(omega) = J(-omega)
- *
- * This transforms from the modified state back to the nominal state.
+ * Transforms from the modified quasi-nonsingular state back to the nominal state.
+ * The inverse simply uses the opposite rotation: J^(-1)(omega) = J(-omega)
  * @param omega - Argument of perigee [rad]
  * @returns 6x6 inverse J transformation matrix
  */
@@ -107,4 +113,18 @@ export const computeInverseJMatrix = (omega: number): STM6 => {
     [0, 0, 0, 0, 1, 0],
     [0, 0, 0, 0, 0, 1],
   ];
+};
+
+/**
+ * Normalize an angle to the range [0, 2*PI).
+ *
+ * JavaScript's modulo operator returns negative values for negative inputs,
+ * so this function properly normalizes angles to the standard range.
+ * @param angle - Input angle [rad]
+ * @returns Normalized angle in [0, 2*PI)
+ */
+export const normalizeAngle = (angle: number): number => {
+  const TWO_PI = 2 * Math.PI;
+  const result = angle % TWO_PI;
+  return result < 0 ? result + TWO_PI : result;
 };

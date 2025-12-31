@@ -21,21 +21,23 @@ export default function Slider({
 }: SliderProps) {
   return (
     <div className="space-y-1">
-      <div className="flex items-center justify-between">
-        <span
-          className={`text-sm ${disabled ? "text-zinc-600" : "text-zinc-400"}`}
-        >
-          {label}
-        </span>
-        <span
-          className={`text-sm font-mono ${
-            disabled ? "text-zinc-600" : "text-cyan-400"
-          }`}
-        >
-          {value}
-          {unit && <span className="text-zinc-500 ml-0.5">{unit}</span>}
-        </span>
-      </div>
+      {label && (
+        <div className="flex items-center justify-between">
+          <span
+            className={`text-sm ${disabled ? "text-zinc-600" : "text-zinc-400"}`}
+          >
+            {label}
+          </span>
+          <span
+            className={`text-sm font-mono ${
+              disabled ? "text-zinc-600" : "text-cyan-400"
+            }`}
+          >
+            {value}
+            {unit && <span className="text-zinc-500 ml-0.5">{unit}</span>}
+          </span>
+        </div>
+      )}
       <input
         type="range"
         min={min}

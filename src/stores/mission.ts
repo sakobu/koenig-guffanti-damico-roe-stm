@@ -1,14 +1,18 @@
 import { create } from "zustand";
 import type {
   ClassicalOrbitalElements,
-  DragConfigAuto,
+  DragConfig,
   MissionPlan,
   RelativeState,
   TrajectoryPoint,
   Vector3,
   Waypoint,
 } from "@orbital";
-import { generateMissionTrajectory, planMission } from "@orbital";
+import {
+  generateMissionTrajectory,
+  planMission,
+  validateTargetingConfig,
+} from "@orbital";
 import { SCENARIOS, type ScenarioKey } from "../config/scenarios";
 
 // Default scenario
@@ -34,6 +38,10 @@ interface MissionState {
   includeJ2: boolean;
   includeDrag: boolean;
   daDotDrag: number;
+  /** For near-circular orbits (e < 0.05), eccentricity x-component derivative */
+  dexDotDrag: number;
+  /** For near-circular orbits (e < 0.05), eccentricity y-component derivative */
+  deyDotDrag: number;
 
   // Scenario
   scenario: ScenarioKey;
@@ -54,11 +62,16 @@ interface MissionActions {
   setIncludeJ2: (value: boolean) => void;
   setIncludeDrag: (value: boolean) => void;
   setDaDotDrag: (value: number) => void;
+  setDexDotDrag: (value: number) => void;
+  setDeyDotDrag: (value: number) => void;
   setScenario: (key: ScenarioKey) => void;
   setDraggingWaypoint: (value: boolean) => void;
 }
 
 type MissionStore = MissionState & MissionActions;
+
+/** Eccentricity threshold for eccentric drag model (from Koenig et al. 2017) */
+const ECCENTRICITY_THRESHOLD = 0.05;
 
 // Recompute mission plan and trajectory
 function computeMission(
@@ -67,7 +80,9 @@ function computeMission(
   initialPosition: Vector3,
   includeJ2: boolean,
   includeDrag: boolean,
-  daDotDrag: number
+  daDotDrag: number,
+  dexDotDrag: number,
+  deyDotDrag: number
 ): {
   missionPlan: MissionPlan | null;
   trajectoryPoints: readonly TrajectoryPoint[];
@@ -82,15 +97,27 @@ function computeMission(
   };
 
   try {
-    const dragConfig: DragConfigAuto = {
-      type: "auto",
-      daDotDrag,
-    };
+    // Auto-select drag model based on eccentricity
+    const isNearCircular = chief.eccentricity < ECCENTRICITY_THRESHOLD;
+    const dragConfig: DragConfig = isNearCircular
+      ? { type: "arbitrary", daDotDrag, dexDotDrag, deyDotDrag }
+      : { type: "eccentric", daDotDrag };
+
     const options = {
       includeJ2,
       includeDrag,
       dragConfig,
     };
+
+    // Validate configuration before planning
+    const validation = validateTargetingConfig(chief, options);
+    if (!validation.valid) {
+      console.warn("Targeting validation failed:", validation.message);
+      if (validation.suggestion) {
+        console.info("Suggestion:", validation.suggestion);
+      }
+      return { missionPlan: null, trajectoryPoints: [] };
+    }
 
     const plan = planMission(initialState, waypoints, chief, options);
 
@@ -120,6 +147,8 @@ export const useMissionStore = create<MissionStore>((set, get) => ({
   includeJ2: true,
   includeDrag: false,
   daDotDrag: SCENARIOS[DEFAULT_SCENARIO].defaultDaDotDrag,
+  dexDotDrag: SCENARIOS[DEFAULT_SCENARIO].defaultDexDotDrag,
+  deyDotDrag: SCENARIOS[DEFAULT_SCENARIO].defaultDeyDotDrag,
   scenario: DEFAULT_SCENARIO,
   selectedWaypointIndex: null,
   isDraggingWaypoint: false,
@@ -134,7 +163,9 @@ export const useMissionStore = create<MissionStore>((set, get) => ({
       state.initialPosition,
       state.includeJ2,
       state.includeDrag,
-      state.daDotDrag
+      state.daDotDrag,
+      state.dexDotDrag,
+      state.deyDotDrag
     );
     set({ waypoints: newWaypoints, missionPlan, trajectoryPoints });
   },
@@ -150,7 +181,9 @@ export const useMissionStore = create<MissionStore>((set, get) => ({
       state.initialPosition,
       state.includeJ2,
       state.includeDrag,
-      state.daDotDrag
+      state.daDotDrag,
+      state.dexDotDrag,
+      state.deyDotDrag
     );
     set({ waypoints: newWaypoints, missionPlan, trajectoryPoints });
   },
@@ -164,7 +197,9 @@ export const useMissionStore = create<MissionStore>((set, get) => ({
       state.initialPosition,
       state.includeJ2,
       state.includeDrag,
-      state.daDotDrag
+      state.daDotDrag,
+      state.dexDotDrag,
+      state.deyDotDrag
     );
     // Clear selection if deleted waypoint was selected, or adjust index if needed
     let newSelectedIndex = state.selectedWaypointIndex;
@@ -204,7 +239,9 @@ export const useMissionStore = create<MissionStore>((set, get) => ({
       state.initialPosition,
       value,
       state.includeDrag,
-      state.daDotDrag
+      state.daDotDrag,
+      state.dexDotDrag,
+      state.deyDotDrag
     );
     set({ includeJ2: value, missionPlan, trajectoryPoints });
   },
@@ -217,7 +254,9 @@ export const useMissionStore = create<MissionStore>((set, get) => ({
       state.initialPosition,
       state.includeJ2,
       value,
-      state.daDotDrag
+      state.daDotDrag,
+      state.dexDotDrag,
+      state.deyDotDrag
     );
     set({ includeDrag: value, missionPlan, trajectoryPoints });
   },
@@ -230,9 +269,41 @@ export const useMissionStore = create<MissionStore>((set, get) => ({
       state.initialPosition,
       state.includeJ2,
       state.includeDrag,
-      value
+      value,
+      state.dexDotDrag,
+      state.deyDotDrag
     );
     set({ daDotDrag: value, missionPlan, trajectoryPoints });
+  },
+
+  setDexDotDrag: (value) => {
+    const state = get();
+    const { missionPlan, trajectoryPoints } = computeMission(
+      state.waypoints,
+      state.chief,
+      state.initialPosition,
+      state.includeJ2,
+      state.includeDrag,
+      state.daDotDrag,
+      value,
+      state.deyDotDrag
+    );
+    set({ dexDotDrag: value, missionPlan, trajectoryPoints });
+  },
+
+  setDeyDotDrag: (value) => {
+    const state = get();
+    const { missionPlan, trajectoryPoints } = computeMission(
+      state.waypoints,
+      state.chief,
+      state.initialPosition,
+      state.includeJ2,
+      state.includeDrag,
+      state.daDotDrag,
+      state.dexDotDrag,
+      value
+    );
+    set({ deyDotDrag: value, missionPlan, trajectoryPoints });
   },
 
   setScenario: (key) => {
@@ -243,6 +314,8 @@ export const useMissionStore = create<MissionStore>((set, get) => ({
       chief: scenario.chief,
       initialPosition: scenario.initialPosition,
       daDotDrag: scenario.defaultDaDotDrag,
+      dexDotDrag: scenario.defaultDexDotDrag,
+      deyDotDrag: scenario.defaultDeyDotDrag,
       waypoints: [],
       missionPlan: null,
       trajectoryPoints: [],

@@ -13,21 +13,25 @@
 import type { ROEPropagationOptions } from "../types/config";
 import type { ClassicalOrbitalElements } from "../types/orbital-elements";
 import type { RelativeState, ROEVector, Vector3 } from "../types/vectors";
-import type { ManeuverLeg, TargetingOptions } from "../types/targeting";
-import type { Matrix3x3 } from "../types/matrices";
+import type {
+  ManeuverLeg,
+  Matrix3x3,
+  TargetingOptions,
+} from "../types/targeting";
 
 import { ricToROE, roeToRIC } from "../transforms/roe-ric";
 import { propagateROEWithChief } from "../propagation/propagate";
 import { roeToVector, vectorToROE } from "../transforms/roe-vector";
 import { applyDeltaV } from "./control-matrix";
+// Note: applyDeltaV is used only for dv1 in propagateWithBurn, not for dv2
 import {
   add3,
-  negate3,
+  invert3x3,
+  matMul3x3_3x1,
   norm3,
   sub3,
   ZERO_VECTOR3,
 } from "../math/vectors";
-import { invert3x3, matMul3x3_3x1 } from "../math/matrices";
 
 // Default solver parameters
 const DEFAULT_MAX_ITERATIONS = 50;
@@ -148,8 +152,9 @@ export const solveRendezvous = (
     ]);
   }
 
-  // Compute dv2 AFTER convergence to null arrival velocity
-  dv2 = negate3(arrivalRIC.velocity);
+  // Compute dv2 to achieve target velocity (default: zero = stationary)
+  const targetVelocity = options?.targetVelocity ?? ZERO_VECTOR3;
+  dv2 = sub3(targetVelocity, arrivalRIC.velocity);
 
   // Compute final position error for diagnostics
   const finalPositionError = norm3(sub3(targetPosition, finalPosition));
@@ -157,6 +162,7 @@ export const solveRendezvous = (
   return {
     from: initialState.position,
     to: targetPosition,
+    targetVelocity,
     tof,
     burn1: {
       deltaV: dv1,

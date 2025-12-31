@@ -1,35 +1,32 @@
 /**
- * Differential Drag Model Dispatch
+ * Drag Model Dispatcher
  *
- * Provides automatic model selection for drag propagation based on
- * eccentricity and configuration type.
+ * Provides a unified interface for applying drag STMs regardless of model type.
+ * Model selection is explicit via the drag configuration.
  *
- * Reference: Koenig, Guffanti, D'Amico (2017), Sections VII-VIII
+ * **Available Models:**
+ * - `eccentric`: 7x7 STM for orbits with e >= 0.05 (Section VII, Appendix C)
+ * - `arbitrary`: 9x9 STM for any eccentricity including near-circular (Section VIII, Appendix D)
+ *
+ * Reference: Koenig, Guffanti, D'Amico (2017) "New State Transition Matrices
+ * for Spacecraft Relative Motion in Perturbed Orbits", JGCD Vol. 40, No. 7
  */
 
-import type {
-  DragConfig,
-  DragConfigArbitrary,
-} from "../types/config";
+import type { DragConfig } from "../types/config";
 import type { ClassicalOrbitalElements } from "../types/orbital-elements";
 import type { ROEVector } from "../types/vectors";
 
-import {
-  computeJ2DragSTMArbitrary,
-  eccentricToArbitraryConfig,
-} from "../stm/drag-arbitrary";
+import { computeJ2DragSTMArbitrary } from "../stm/drag-arbitrary";
 import { computeJ2DragSTMEccentric } from "../stm/drag-eccentric";
 
 /** Eccentricity threshold for model selection (Section VII) */
 const ECCENTRICITY_THRESHOLD = 0.05;
 
 /**
- * Propagate ROE with J2 and differential drag using automatic model selection.
+ * Propagate ROE with J2 and differential drag.
  *
- * This is the recommended entry point for drag propagation. It automatically
- * selects the appropriate STM based on the config type and chief eccentricity:
+ * Entry point for drag propagation. Model selection is explicit:
  *
- * - `type: 'auto'`: Selects eccentric model for e >= 0.05, arbitrary for e < 0.05
  * - `type: 'eccentric'`: Uses 7x7 STM with circularization constraint (e >= 0.05 required)
  * - `type: 'arbitrary'`: Uses 9x9 STM for any eccentricity
  *
@@ -42,19 +39,13 @@ const ECCENTRICITY_THRESHOLD = 0.05;
  * @throws {Error} If eccentric model used with e < 0.05
  * @example
  * ```typescript
- * // Automatic model selection (recommended)
- * const result = propagateWithDrag(roe, chief, 3600, {
- *   type: 'auto',
- *   daDotDrag: -1e-10,
- * });
- *
- * // Explicit eccentric model (e >= 0.05)
+ * // Eccentric model (e >= 0.05)
  * const result = propagateWithDrag(roe, chief, 3600, {
  *   type: 'eccentric',
  *   daDotDrag: -1e-10,
  * });
  *
- * // Explicit arbitrary model (any eccentricity)
+ * // Arbitrary model (any eccentricity)
  * const result = propagateWithDrag(roe, chief, 3600, {
  *   type: 'arbitrary',
  *   daDotDrag: -1e-10,
@@ -69,33 +60,16 @@ export const propagateWithDrag = (
   tau: number,
   dragConfig: DragConfig
 ): ROEVector => {
-  // Handle auto model selection
-  if (dragConfig.type === "auto") {
-    if (chief.eccentricity >= ECCENTRICITY_THRESHOLD) {
-      // Use eccentric model for e >= 0.05
-      const { propagate } = computeJ2DragSTMEccentric(chief, tau);
-      return propagate(roe, dragConfig.daDotDrag);
-    } else {
-      // Use arbitrary model for near-circular orbits
-      // Derive eccentricity derivatives from daDotDrag using circularization constraint
-      // if not explicitly provided
-      const config: Omit<DragConfigArbitrary, "type"> =
-        dragConfig.dexDotDrag !== undefined &&
-        dragConfig.deyDotDrag !== undefined
-          ? {
-              daDotDrag: dragConfig.daDotDrag,
-              dexDotDrag: dragConfig.dexDotDrag,
-              deyDotDrag: dragConfig.deyDotDrag,
-            }
-          : eccentricToArbitraryConfig(dragConfig.daDotDrag, chief);
-
-      const { propagate } = computeJ2DragSTMArbitrary(chief, tau);
-      return propagate(roe, config);
-    }
-  }
-
-  // Handle explicit model selection
   if (dragConfig.type === "eccentric") {
+    // Validate eccentricity threshold
+    if (chief.eccentricity < ECCENTRICITY_THRESHOLD) {
+      throw new Error(
+        `[drag]: Eccentric model requires e >= ${ECCENTRICITY_THRESHOLD} ` +
+          `(e=${chief.eccentricity.toFixed(
+            6
+          )}). Use 'arbitrary' model for near-circular orbits.`
+      );
+    }
     const { propagate } = computeJ2DragSTMEccentric(chief, tau);
     return propagate(roe, dragConfig.daDotDrag);
   } else {

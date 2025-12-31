@@ -10,11 +10,10 @@
 
 import type { ClassicalOrbitalElements } from "../types/orbital-elements";
 import type { ROEVector, Vector3 } from "../types/vectors";
-import type { ControlMatrix6x3 } from "../types/matrices";
+import type { ControlMatrix6x3 } from "../types/targeting";
 
 import { meanMotion, trueAnomalyFromMean } from "../math/kepler";
-import { addROE } from "../math/vectors";
-import { matMul6x3_3x1 } from "../math/matrices";
+import { addROE, matMul6x3_3x1 } from "../math/vectors";
 
 /**
  * Compute the Control Influence Matrix B at given chief state.

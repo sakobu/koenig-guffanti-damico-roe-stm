@@ -2,7 +2,7 @@
  * Multi-Waypoint Mission Planner
  *
  * Plans complete RPO missions by chaining two-burn rendezvous legs
- * between sequential waypoints. Each waypoint is reached stationary.
+ * between sequential waypoints. Each waypoint specifies target position and velocity.
  *
  * Architecture:
  *   [Deputy] --dv1--> coast --dv2--> [WP1] --dv1--> coast --dv2--> [WP2] ...
@@ -56,16 +56,22 @@ export const planMission = (
   let allConverged = true;
 
   for (const waypoint of waypoints) {
+    // Build options with target velocity for this waypoint (default: stationary arrival)
+    const legOptions = {
+      ...options,
+      targetVelocity: waypoint.velocity ?? ZERO_VECTOR3,
+    };
+
     // Solve this leg (optimize TOF if no hint provided)
     const leg: ManeuverLeg =
       waypoint.tofHint === undefined
-        ? optimizeTOF(currentState, waypoint.position, currentChief, options)
+        ? optimizeTOF(currentState, waypoint.position, currentChief, legOptions)
         : solveRendezvous(
             currentState,
             waypoint.position,
             currentChief,
             waypoint.tofHint,
-            options
+            legOptions
           );
 
     legs.push(leg);
@@ -73,11 +79,10 @@ export const planMission = (
     totalTime += leg.tof;
     allConverged = allConverged && leg.converged;
 
-    // Update state for next leg:
-    // After arriving and nulling velocity, deputy is stationary at waypoint
+    // Update state for next leg (use target velocity or default to stationary)
     currentState = {
       position: waypoint.position,
-      velocity: ZERO_VECTOR3,
+      velocity: waypoint.velocity ?? ZERO_VECTOR3,
     };
 
     // Chief state at arrival becomes starting chief for next leg
@@ -130,7 +135,7 @@ export const replanFromWaypoint = (
     if (leg) {
       priorState = {
         position: leg.to,
-        velocity: ZERO_VECTOR3,
+        velocity: leg.targetVelocity,
       };
       priorChief = leg.burn2.chief;
     }

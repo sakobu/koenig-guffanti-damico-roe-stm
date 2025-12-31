@@ -57,9 +57,6 @@ export const computeJ2DragSTMEccentric = (
   propagate: (roe: ROEVector, daDotDrag: number) => ROEVector;
   dragColumn: ROEVector;
 } => {
-  // Note: Eccentricity validation (e >= 0.05) is done by validateDragModel()
-  // called from propagateROE(). Direct callers should validate separately.
-
   const {
     semiMajorAxis: a,
     eccentricity: e,

@@ -30,7 +30,7 @@ export type ROEVector = readonly [
   dex: number,
   dey: number,
   dix: number,
-  diy: number,
+  diy: number
 ];
 
 /**
@@ -44,7 +44,7 @@ export type ROEVector7 = readonly [
   dey: number,
   dix: number,
   diy: number,
-  daDotDrag: number,
+  daDotDrag: number
 ];
 
 /**
@@ -60,5 +60,5 @@ export type ROEVector9 = readonly [
   diy: number,
   daDotDrag: number,
   dexDotDrag: number,
-  deyDotDrag: number,
+  deyDotDrag: number
 ];

@@ -70,65 +70,22 @@ export type DragConfigArbitrary = {
 };
 
 /**
- * Automatic drag model selection based on eccentricity.
+ * Drag model configuration - discriminated union of supported drag model types.
  *
- * When type is 'auto', the library automatically selects:
- * - `eccentric` model for orbits with e >= 0.05 (uses circularization constraint)
- * - `arbitrary` model for near-circular orbits (e < 0.05)
+ * You must explicitly choose a model based on your orbit's eccentricity:
  *
- * This is the recommended configuration for most use cases.
+ * - `eccentric`: For orbits with e >= 0.05. Uses the circularization constraint
+ *   (Eq. 69) to derive eccentricity derivatives from daDotDrag alone.
+ *   Reference: Koenig et al. (2017), Section VII / Appendix C.
  *
- * Reference: Koenig et al. (2017), Sections VII-VIII.
- * @example
- * ```typescript
- * // Let the library choose the appropriate model
- * const config: DragConfigAuto = {
- *   type: 'auto',
- *   daDotDrag: -1e-10,  // Required for all orbits
- * };
- *
- * // For near-circular orbits, you can optionally provide eccentricity derivatives
- * const configWithEcc: DragConfigAuto = {
- *   type: 'auto',
- *   daDotDrag: -1e-10,
- *   dexDotDrag: -5e-12,  // Optional, defaults to 0
- *   deyDotDrag: 3e-12,   // Optional, defaults to 0
- * };
- * ```
- */
-export type DragConfigAuto = {
-  readonly type: "auto";
-  /** Time derivative of relative semi-major axis due to drag [1/s] */
-  readonly daDotDrag: number;
-  /**
-   * Time derivative of relative eccentricity vector x-component due to drag [1/s].
-   * Optional. Used only for near-circular orbits (e < 0.05). Defaults to 0.
-   */
-  readonly dexDotDrag?: number;
-  /**
-   * Time derivative of relative eccentricity vector y-component due to drag [1/s].
-   * Optional. Used only for near-circular orbits (e < 0.05). Defaults to 0.
-   */
-  readonly deyDotDrag?: number;
-};
-
-/**
- * Drag model configuration - discriminated union of all drag model types.
- *
- * **How to choose:**
- * - `auto`: Recommended. Automatically selects the appropriate model based on eccentricity.
- * - `eccentric`: Use for orbits with e >= 0.05. Simpler model requiring only 1 parameter
- *   (daDotDrag). Uses the circularization constraint to derive eccentricity derivatives.
- * - `arbitrary`: Use for near-circular orbits (e < 0.05) or when you have estimates
- *   of all 3 derivatives from navigation data. More accurate but requires more data.
+ * - `arbitrary`: For near-circular orbits (e < 0.05) or when the circularization
+ *   assumption doesn't apply. Requires all 3 drag derivatives explicitly.
+ *   Reference: Koenig et al. (2017), Section VIII / Appendix D.
  *
  * The library validates that the eccentric model is only used with e >= 0.05 and
  * throws an error otherwise.
  */
-export type DragConfig =
-  | DragConfigEccentric
-  | DragConfigArbitrary
-  | DragConfigAuto;
+export type DragConfig = DragConfigEccentric | DragConfigArbitrary;
 
 /**
  * Options for ROE propagation.
@@ -159,4 +116,23 @@ export type ROEPropagationOptions = {
    * Required if includeDrag is true.
    */
   readonly dragConfig?: DragConfig;
+
+  /**
+   * Chief spacecraft ABSOLUTE semi-major axis decay rate [m/s].
+   *
+   * **NOTE:** This is an implementation convenience, NOT from Koenig et al. (2017).
+   * The paper's STMs model relative dynamics only. This parameter enables
+   * chief element updates for multi-step propagation scenarios.
+   *
+   * When provided, `propagateROEWithChief` will update the chief's
+   * semi-major axis to account for drag-induced decay. This is separate
+   * from `daDotDrag` in the drag config, which is the *relative* (differential)
+   * drag rate between deputy and chief per the paper's formulation.
+   *
+   * Typical LEO decay rates are -0.5 to -5 m/day for the ISS class.
+   * Convert to m/s: -1 m/day = -1.16e-5 m/s
+   *
+   * If not provided, chief semi-major axis remains constant during propagation.
+   */
+  readonly chiefAbsoluteDaDot?: number;
 };
