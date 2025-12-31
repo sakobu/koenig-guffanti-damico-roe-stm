@@ -57,6 +57,7 @@ interface MissionState {
 interface MissionActions {
   addWaypoint: (position: Vector3) => void;
   updateWaypoint: (index: number, position: Vector3) => void;
+  updateWaypointVelocity: (index: number, velocity: Vector3 | undefined) => void;
   removeWaypoint: (index: number) => void;
   clearWaypoints: () => void;
   selectWaypoint: (index: number | null) => void;
@@ -241,7 +242,35 @@ export const useMissionStore = create<MissionStore>((set, get) => ({
   addWaypoint: (position) => {
     const state = get();
     const newWaypoints = [...state.waypoints, { position }];
+    const newIndex = newWaypoints.length - 1;
     const { missionPlan, trajectoryPoints } = computeMission(
+      newWaypoints,
+      state.chief,
+      state.initialPosition,
+      state.includeJ2,
+      state.includeDrag,
+      state.daDotDrag,
+      state.dexDotDrag,
+      state.deyDotDrag
+    );
+    // Auto-select the newly added waypoint
+    set({
+      waypoints: newWaypoints,
+      missionPlan,
+      trajectoryPoints,
+      selectedWaypointIndex: newIndex,
+    });
+  },
+
+  updateWaypoint: (index, position) => {
+    const state = get();
+    const newWaypoints = state.waypoints.map((wp, i) =>
+      i === index ? { ...wp, position } : wp
+    );
+    // Use incremental replanning to reuse unchanged legs
+    const { missionPlan, trajectoryPoints } = computeMissionIncremental(
+      state.missionPlan,
+      index,
       newWaypoints,
       state.chief,
       state.initialPosition,
@@ -254,15 +283,13 @@ export const useMissionStore = create<MissionStore>((set, get) => ({
     set({ waypoints: newWaypoints, missionPlan, trajectoryPoints });
   },
 
-  updateWaypoint: (index, position) => {
+  updateWaypointVelocity: (index, velocity) => {
     const state = get();
     const newWaypoints = state.waypoints.map((wp, i) =>
-      i === index ? { ...wp, position } : wp
+      i === index ? { ...wp, velocity } : wp
     );
-    // Use incremental replanning to reuse unchanged legs
-    const { missionPlan, trajectoryPoints } = computeMissionIncremental(
-      state.missionPlan,
-      index,
+    // Velocity change affects the leg, use full recompute
+    const { missionPlan, trajectoryPoints } = computeMission(
       newWaypoints,
       state.chief,
       state.initialPosition,

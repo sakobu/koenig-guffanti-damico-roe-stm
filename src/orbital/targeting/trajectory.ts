@@ -19,7 +19,6 @@ import { ricToROE, roeToRIC } from "../transforms/roe-ric";
 import { propagateROEWithChief } from "../propagation/propagate";
 import { roeToVector, vectorToROE } from "../transforms/roe-vector";
 import { applyDeltaV } from "./control-matrix";
-import { ZERO_VECTOR3 } from "../math/vectors";
 
 /**
  * Generate dense trajectory points for a single maneuver leg.
@@ -143,7 +142,7 @@ export const generateMissionTrajectory = (
     timeOffset += leg.tof;
     currentChief = leg.burn2.chief;
     currentPosition = leg.to;
-    currentVelocity = ZERO_VECTOR3; // Stationary after arrival
+    currentVelocity = leg.targetVelocity;
   }
 
   return trajectory;
