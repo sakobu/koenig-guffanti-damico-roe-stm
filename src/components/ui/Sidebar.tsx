@@ -1,8 +1,9 @@
 import { useUIStore } from "../../stores/ui";
-import WaypointPanel from "./WaypointPanel";
-import PhysicsPanel from "./PhysicsPanel";
-import ScenarioPanel from "./ScenarioPanel";
-import MissionSummaryPanel from "./MissionSummaryPanel";
+import WaypointPanel from "./panels/WaypointPanel";
+import PhysicsPanel from "./panels/PhysicsPanel";
+import ScenarioPanel from "./panels/ScenarioPanel";
+import ResultsPanel from "./panels/ResultsPanel";
+import ExportPanel from "./panels/ExportPanel";
 
 export default function Sidebar() {
   const isOpen = useUIStore((state) => state.sidebarOpen);
@@ -28,7 +29,8 @@ export default function Sidebar() {
           <ScenarioPanel />
           <PhysicsPanel />
           <WaypointPanel />
-          <MissionSummaryPanel />
+          <ResultsPanel />
+          <ExportPanel />
         </div>
       </div>
 

@@ -1,7 +1,7 @@
-import { useMissionStore } from "../../stores/mission";
-import Panel from "./Panel";
-import Toggle from "../shared/Toggle";
-import Slider from "../shared/Slider";
+import { useMissionStore } from "../../../stores/mission";
+import Panel from "../Panel";
+import Toggle from "../../shared/Toggle";
+import Slider from "../../shared/Slider";
 
 /** Eccentricity threshold for eccentric drag model (from Koenig et al. 2017) */
 const ECCENTRICITY_THRESHOLD = 0.05;

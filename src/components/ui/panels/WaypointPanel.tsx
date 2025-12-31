@@ -1,8 +1,8 @@
 import { useEffect } from "react";
 import type { Vector3 } from "@orbital";
-import { useMissionStore } from "../../stores/mission";
-import Panel from "./Panel";
-import Button from "../shared/Button";
+import { useMissionStore } from "../../../stores/mission";
+import Panel from "../Panel";
+import Button from "../../shared/Button";
 import WaypointEditor from "./WaypointEditor";
 
 function hasVelocity(velocity: Vector3 | undefined): boolean {
