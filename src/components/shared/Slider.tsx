@@ -1,5 +1,5 @@
 interface SliderProps {
-  label: string;
+  label?: string;
   value: number;
   onChange: (value: number) => void;
   min: number;
@@ -7,6 +7,8 @@ interface SliderProps {
   step?: number;
   unit?: string;
   disabled?: boolean;
+  formatValue?: (value: number) => string;
+  showEndLabels?: boolean;
 }
 
 export default function Slider({
@@ -18,10 +20,16 @@ export default function Slider({
   step = 1,
   unit = "",
   disabled = false,
+  formatValue,
+  showEndLabels = false,
 }: SliderProps) {
+  const displayValue = formatValue ? formatValue(value) : value.toString();
+  const displayMin = formatValue ? formatValue(min) : min.toString();
+  const displayMax = formatValue ? formatValue(max) : max.toString();
+
   return (
     <div className="space-y-1">
-      {label && (
+      {label && !showEndLabels && (
         <div className="flex items-center justify-between">
           <span
             className={`text-sm ${disabled ? "text-zinc-600" : "text-zinc-400"}`}
@@ -33,8 +41,8 @@ export default function Slider({
               disabled ? "text-zinc-600" : "text-cyan-400"
             }`}
           >
-            {value}
-            {unit && <span className="text-zinc-500 ml-0.5">{unit}</span>}
+            {displayValue}
+            {unit && !formatValue && <span className="text-zinc-500 ml-0.5">{unit}</span>}
           </span>
         </div>
       )}
@@ -63,6 +71,12 @@ export default function Slider({
           [&::-moz-range-thumb]:border-0
           [&::-moz-range-thumb]:cursor-pointer"
       />
+      {showEndLabels && (
+        <div className="flex justify-between text-xs font-mono text-zinc-400">
+          <span>{displayMin}</span>
+          <span>{displayMax}</span>
+        </div>
+      )}
     </div>
   );
 }

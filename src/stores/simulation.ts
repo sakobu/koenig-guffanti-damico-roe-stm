@@ -98,6 +98,7 @@ export const useSimulationStore = create<SimulationStore>((set, get) => ({
     set({
       time: 0,
       playing: false,
+      speed: 1,
       currentPointIndex: 0,
     }),
 

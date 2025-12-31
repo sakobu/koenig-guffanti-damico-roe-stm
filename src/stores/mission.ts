@@ -15,6 +15,7 @@ import {
   validateTargetingConfig,
 } from "@orbital";
 import { SCENARIOS, type ScenarioKey } from "../config/scenarios";
+import { useSimulationStore } from "./simulation";
 
 // Default scenario
 const DEFAULT_SCENARIO: ScenarioKey = "iss";
@@ -434,6 +435,8 @@ export const useMissionStore = create<MissionStore>((set, get) => ({
 
   setScenario: (key) => {
     const scenario = SCENARIOS[key];
+    // Reset simulation state immediately (avoids timing issues with useEffect)
+    useSimulationStore.getState().reset();
     // Clear waypoints and reset ALL physics settings when scenario changes
     set({
       scenario: key,

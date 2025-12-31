@@ -1,25 +1,26 @@
 import { useState, useMemo, useEffect } from "react";
-import {
-  Play,
-  Pause,
-  RotateCcw,
-  Minus,
-  GripHorizontal,
-  ChevronDown,
-} from "lucide-react";
+import { Play, Pause, RotateCcw, Minus, GripHorizontal } from "lucide-react";
 import { useMissionStore } from "../../stores/mission";
 import { useSimulationStore, formatTime } from "../../stores/simulation";
 import { useUIStore } from "../../stores/ui";
 import { ricToROE } from "@orbital";
 import type { QuasiNonsingularROE, RelativeState, Vector3 } from "@orbital";
+import Button from "../shared/Button";
+import Select from "../shared/Select";
+import Slider from "../shared/Slider";
 
 type CoordinateMode = "ric" | "roe";
 
 const SPEED_OPTIONS = [
   { value: "1", label: "1x" },
-  { value: "2", label: "2x" },
-  { value: "5", label: "5x" },
-  { value: "10", label: "10x" },
+  { value: "50", label: "50x" },
+  { value: "100", label: "100x" },
+  { value: "500", label: "500x" },
+];
+
+const COORD_OPTIONS = [
+  { value: "ric", label: "RIC" },
+  { value: "roe", label: "ROE" },
 ];
 
 /**
@@ -159,8 +160,7 @@ export default function HUD() {
   if (!hudVisible) return null;
 
   // Handle scrubbing
-  const handleScrub = (e: React.ChangeEvent<HTMLInputElement>) => {
-    const newTime = parseFloat(e.target.value);
+  const handleScrub = (newTime: number) => {
     setTime(newTime, trajectoryPoints);
   };
 
@@ -189,24 +189,21 @@ export default function HUD() {
           className={`overflow-hidden transition-all duration-200 ease-in-out
             ${minimized ? "max-h-0" : "max-h-125"}`}
         >
-          <div className="p-3 space-y-3">
+          <div className="p-3 space-y-2">
             {/* Playback Controls */}
             <div className="space-y-2">
               <div className="flex items-center gap-2">
                 {/* Reset */}
-                <button
-                  onClick={reset}
-                  className="p-2 bg-zinc-800 hover:bg-zinc-700 rounded transition-colors"
-                  title="Reset"
-                >
+                <Button size="icon" onClick={reset} title="Reset">
                   <RotateCcw size={14} className="text-zinc-300" />
-                </button>
+                </Button>
 
                 {/* Play/Pause */}
-                <button
+                <Button
+                  variant="primary"
+                  size="icon"
                   onClick={playing ? pause : play}
                   disabled={!missionPlan || trajectoryPoints.length === 0}
-                  className="p-2 bg-cyan-600 hover:bg-cyan-500 disabled:bg-zinc-700 disabled:opacity-50 rounded transition-colors"
                   title={playing ? "Pause" : "Play"}
                 >
                   {playing ? (
@@ -214,59 +211,32 @@ export default function HUD() {
                   ) : (
                     <Play size={14} className="text-white" />
                   )}
-                </button>
+                </Button>
 
                 {/* Speed Selector */}
                 <div className="flex-1">
-                  <div className="relative">
-                    <select
-                      value={speed.toString()}
-                      onChange={(e) => setSpeed(parseInt(e.target.value))}
-                      className="w-full px-2 py-2 text-xs bg-zinc-800 text-zinc-200 rounded
-                        border border-zinc-700 appearance-none cursor-pointer
-                        focus:outline-none focus-visible:ring-2 focus-visible:ring-cyan-500"
-                    >
-                      {SPEED_OPTIONS.map((opt) => (
-                        <option key={opt.value} value={opt.value}>
-                          Speed: {opt.label}
-                        </option>
-                      ))}
-                    </select>
-                    <div className="absolute inset-y-0 right-0 flex items-center pr-2 pointer-events-none">
-                      <ChevronDown size={12} className="text-zinc-400" />
-                    </div>
-                  </div>
+                  <Select
+                    variant="compact"
+                    value={speed.toString()}
+                    onChange={(v) => setSpeed(parseInt(v))}
+                    options={SPEED_OPTIONS}
+                    prefix="Speed:"
+                  />
                 </div>
               </div>
 
               {/* Progress Slider */}
-              <div className="space-y-1">
-                <input
-                  type="range"
-                  min={0}
-                  max={totalTime || 1}
-                  step={1}
-                  value={time}
-                  onChange={handleScrub}
-                  disabled={totalTime === 0}
-                  className="w-full h-1.5 bg-zinc-700 rounded-full appearance-none cursor-pointer
-                    disabled:opacity-50 disabled:cursor-not-allowed
-                    [&::-webkit-slider-thumb]:appearance-none
-                    [&::-webkit-slider-thumb]:w-3
-                    [&::-webkit-slider-thumb]:h-3
-                    [&::-webkit-slider-thumb]:rounded-full
-                    [&::-webkit-slider-thumb]:bg-cyan-500
-                    [&::-webkit-slider-thumb]:cursor-pointer
-                    [&::-moz-range-thumb]:w-3
-                    [&::-moz-range-thumb]:h-3
-                    [&::-moz-range-thumb]:rounded-full
-                    [&::-moz-range-thumb]:bg-cyan-500
-                    [&::-moz-range-thumb]:border-0"
-                />
-                <div className="flex justify-between text-xs font-mono text-zinc-400">
-                  <span>{formatTime(time)}</span>
-                  <span>{formatTime(totalTime)}</span>
-                </div>
+              <Slider
+                value={time}
+                onChange={handleScrub}
+                min={0}
+                max={totalTime || 1}
+                step={1}
+                disabled={totalTime === 0}
+              />
+              <div className="flex justify-between text-xs font-mono text-zinc-400">
+                <span>{formatTime(time)}</span>
+                <span>{formatTime(totalTime)}</span>
               </div>
             </div>
 
@@ -276,52 +246,43 @@ export default function HUD() {
             {/* Position Display */}
             <div className="space-y-1">
               <div className="flex items-center justify-between">
-                <span className="text-xs text-zinc-500 uppercase tracking-wider">
-                  Position
-                </span>
-                <div className="relative">
-                  <select
-                    value={coordMode}
-                    onChange={(e) =>
-                      setCoordMode(e.target.value as CoordinateMode)
-                    }
-                    className="px-2 py-0.5 text-xs bg-zinc-800 text-zinc-300 rounded
-                      border border-zinc-700 appearance-none cursor-pointer
-                      focus:outline-none focus-visible:ring-1 focus-visible:ring-cyan-500"
-                  >
-                    <option value="ric">RIC</option>
-                    <option value="roe">ROE</option>
-                  </select>
-                  <div className="absolute inset-y-0 right-0 flex items-center pr-1 pointer-events-none">
-                    <ChevronDown size={10} className="text-zinc-500" />
-                  </div>
-                </div>
+                <span className="text-xs text-zinc-500">RIC/ROE</span>
+                <Select
+                  variant="compact"
+                  size="sm"
+                  value={coordMode}
+                  onChange={(v) => setCoordMode(v as CoordinateMode)}
+                  options={COORD_OPTIONS}
+                />
               </div>
+              <span className="text-xs text-zinc-500 uppercase tracking-wider">
+                Position
+              </span>
 
               {coordMode === "ric" ? (
-                <div className="grid grid-cols-3 gap-1 text-xs">
-                  <div className="bg-zinc-800/50 rounded px-2 py-1">
-                    <span className="text-zinc-500">R</span>
-                    <span className="ml-1 font-mono text-zinc-200">
-                      {formatValue(currentPosition[0])}
-                    </span>
-                    <span className="text-zinc-600 ml-0.5">m</span>
+                <>
+                  <div className="grid grid-cols-3 gap-1 text-xs">
+                    <div className="bg-zinc-800/50 rounded px-2 py-1">
+                      <span className="text-zinc-500">R</span>
+                      <span className="ml-1 font-mono text-zinc-200">
+                        {formatValue(currentPosition[0])}
+                      </span>
+                    </div>
+                    <div className="bg-zinc-800/50 rounded px-2 py-1">
+                      <span className="text-zinc-500">I</span>
+                      <span className="ml-1 font-mono text-zinc-200">
+                        {formatValue(currentPosition[1])}
+                      </span>
+                    </div>
+                    <div className="bg-zinc-800/50 rounded px-2 py-1">
+                      <span className="text-zinc-500">C</span>
+                      <span className="ml-1 font-mono text-zinc-200">
+                        {formatValue(currentPosition[2])}
+                      </span>
+                    </div>
                   </div>
-                  <div className="bg-zinc-800/50 rounded px-2 py-1">
-                    <span className="text-zinc-500">I</span>
-                    <span className="ml-1 font-mono text-zinc-200">
-                      {formatValue(currentPosition[1])}
-                    </span>
-                    <span className="text-zinc-600 ml-0.5">m</span>
-                  </div>
-                  <div className="bg-zinc-800/50 rounded px-2 py-1">
-                    <span className="text-zinc-500">C</span>
-                    <span className="ml-1 font-mono text-zinc-200">
-                      {formatValue(currentPosition[2])}
-                    </span>
-                    <span className="text-zinc-600 ml-0.5">m</span>
-                  </div>
-                </div>
+                  <div className="text-[10px] text-zinc-600 text-right">m</div>
+                </>
               ) : roe ? (
                 <div className="grid grid-cols-2 gap-1 text-xs">
                   <div className="bg-zinc-800/50 rounded px-2 py-1">

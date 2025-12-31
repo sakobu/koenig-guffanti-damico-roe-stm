@@ -1,9 +1,11 @@
 interface ButtonProps {
   variant?: "primary" | "secondary" | "danger";
+  size?: "default" | "sm" | "icon";
   disabled?: boolean;
   onClick?: () => void;
   children: React.ReactNode;
   className?: string;
+  title?: string;
 }
 
 const variantStyles = {
@@ -12,20 +14,29 @@ const variantStyles = {
   danger: "bg-red-600 hover:bg-red-500 text-white",
 };
 
+const sizeStyles = {
+  default: "px-3 py-2 text-sm",
+  sm: "px-2 py-1.5 text-xs",
+  icon: "p-2",
+};
+
 export default function Button({
   variant = "secondary",
+  size = "default",
   disabled = false,
   onClick,
   children,
   className = "",
+  title,
 }: ButtonProps) {
   return (
     <button
       onClick={onClick}
       disabled={disabled}
-      className={`px-3 py-2 text-sm font-medium rounded transition-colors
+      title={title}
+      className={`font-medium rounded transition-colors
         disabled:opacity-50 disabled:cursor-not-allowed
-        ${variantStyles[variant]} ${className}`}
+        ${variantStyles[variant]} ${sizeStyles[size]} ${className}`}
     >
       {children}
     </button>
