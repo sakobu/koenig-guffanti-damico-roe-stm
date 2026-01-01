@@ -3,7 +3,7 @@ import Panel from "../Panel";
 export default function HelpWaypointsPanel() {
   return (
     <Panel title="Adding Waypoints" defaultOpen>
-      <div className="space-y-3 text-xs text-zinc-400">
+      <div className="space-y-3 text-xs text-zinc-500">
         <p>
           <kbd className="px-1.5 py-0.5 bg-zinc-800 text-cyan-400 rounded font-mono">
             Shift
@@ -11,11 +11,11 @@ export default function HelpWaypointsPanel() {
           {" + click"} on the grid plane to add a waypoint.
         </p>
         <p>
-          <span className="text-zinc-300">Drag</span> any waypoint to
+          <span className="text-zinc-400">Drag</span> any waypoint to
           reposition it in the R-I plane.
         </p>
         <p>
-          <span className="text-zinc-300">Scroll</span> to adjust the C
+          <span className="text-zinc-400">Scroll</span> to adjust the C
           (cross-track) axis — while selected (trackpad) or while dragging
           (mouse).
         </p>

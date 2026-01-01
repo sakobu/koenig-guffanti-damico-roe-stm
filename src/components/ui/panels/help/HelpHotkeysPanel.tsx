@@ -8,7 +8,7 @@ interface HotkeyRowProps {
 function HotkeyRow({ keys, description }: HotkeyRowProps) {
   return (
     <div className="flex items-center justify-between py-1.5">
-      <span className="text-zinc-400">{description}</span>
+      <span className="text-zinc-500">{description}</span>
       <div className="flex gap-1">
         {keys.map((key) => (
           <kbd

@@ -3,9 +3,9 @@ import Panel from "../Panel";
 export default function HelpScenariosPanel() {
   return (
     <Panel title="Scenarios" defaultOpen>
-      <div className="space-y-3 text-xs text-zinc-400">
+      <div className="space-y-3 text-xs text-zinc-500">
         <p>
-          Scenarios are <span className="text-zinc-300">presets</span> that
+          Scenarios are <span className="text-zinc-400">presets</span> that
           configure the chief orbit, initial deputy position, and visualization
           scale.
         </p>
