@@ -337,6 +337,7 @@ export const useMissionStore = create<MissionStore>((set, get) => ({
       missionPlan,
       trajectoryPoints,
       selectedWaypointIndex: newSelectedIndex,
+      isDraggingWaypoint: false,
     });
   },
 

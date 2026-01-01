@@ -30,6 +30,8 @@ export default function Waypoint({
   const camera = useThree((state) => state.camera);
   const gl = useThree((state) => state.gl);
   const [isDragging, setIsDragging] = useState(false);
+  const isDraggingRef = useRef(false);
+  const pointerIdRef = useRef<number | null>(null);
   const setDraggingWaypoint = useMissionStore((s) => s.setDraggingWaypoint);
   const dragPlane = useRef(new THREE.Plane(new THREE.Vector3(0, 0, 1), 0));
   const currentZ = useRef(position[2]);
@@ -64,6 +66,8 @@ export default function Waypoint({
 
   const handlePointerDown = (e: ThreeEvent<PointerEvent>) => {
     e.stopPropagation();
+    isDraggingRef.current = true;
+    pointerIdRef.current = e.pointerId;
     setIsDragging(true);
     setDraggingWaypoint(true);
     document.body.style.cursor = "grabbing";
@@ -81,8 +85,10 @@ export default function Waypoint({
   };
 
   const handlePointerUp = (e: ThreeEvent<PointerEvent>) => {
-    if (!isDragging) return;
+    if (!isDraggingRef.current) return;
     e.stopPropagation();
+    isDraggingRef.current = false;
+    pointerIdRef.current = null;
     setIsDragging(false);
     setDraggingWaypoint(false);
     document.body.style.cursor = "grab";
@@ -104,6 +110,16 @@ export default function Waypoint({
     gl.domElement.addEventListener("wheel", handleWheel, { passive: false });
     return () => gl.domElement.removeEventListener("wheel", handleWheel);
   }, [isDragging, gl, onDrag, position]);
+
+  // Cleanup on unmount - release pointer state if component is removed while dragging
+  useEffect(() => {
+    return () => {
+      if (isDraggingRef.current) {
+        setDraggingWaypoint(false);
+      }
+      document.body.style.cursor = "auto";
+    };
+  }, [setDraggingWaypoint]);
 
   const handleClick = (e: ThreeEvent<MouseEvent>) => {
     if (isDragging) return;
