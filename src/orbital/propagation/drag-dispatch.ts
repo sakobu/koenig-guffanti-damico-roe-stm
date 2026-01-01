@@ -8,8 +8,15 @@
  * - `eccentric`: 7x7 STM for orbits with e >= 0.05 (Section VII, Appendix C)
  * - `arbitrary`: 9x9 STM for any eccentricity including near-circular (Section VIII, Appendix D)
  *
+ * **Obtaining Drag Parameters:**
+ *
+ * The drag configuration requires estimated drag derivatives (daDotDrag, etc.).
+ * These can be obtained from ROE observations using the estimation utilities
+ * in drag-estimation.ts, which implement a simplified batch LS approach.
+ *
  * Reference: Koenig, Guffanti, D'Amico (2017) "New State Transition Matrices
  * for Spacecraft Relative Motion in Perturbed Orbits", JGCD Vol. 40, No. 7
+ * @see ../stm/drag-estimation.ts - Estimate drag params from ROE observations
  */
 
 import type { DragConfig } from "../types/config";

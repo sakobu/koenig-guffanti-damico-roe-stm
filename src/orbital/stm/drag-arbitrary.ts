@@ -11,10 +11,22 @@
  * All three drag time derivatives must be estimated from navigation data.
  * This is the most general model and works for any eccentricity.
  *
+ * **Batch LS Interpretation:**
+ *
+ * The 9D augmented state [ROE; drag_params] and the "dragColumns" (6x3 matrix)
+ * form a batch least squares framework where:
+ * - dragColumns = sensitivity matrix H = d(ROE)/d(drag_params)
+ * - The identity block preserves the 3 drag parameters
+ *
+ * This forward model can be inverted for parameter estimation. See
+ * drag-estimation.ts for the inverse (estimating drag from observations).
+ *
  * **When to use**:
  * - Near-circular orbits (e < 0.05) where eccentric model fails
  * - When you have good estimates of all three derivatives
  * - When highest accuracy is needed
+ * @see drag-estimation.ts - Inverse model for estimating drag from observations
+ * @see drag-eccentric.ts - Simpler model for e >= 0.05 (7D state, 1 drag param)
  */
 
 import type { DragConfigArbitrary } from "../types/config";
@@ -23,13 +35,13 @@ import type { ClassicalOrbitalElements } from "../types/orbital-elements";
 import type { ROEVector, ROEVector9 } from "../types/vectors";
 
 import { J2, R_EARTH } from "../constants";
+import { meanMotion } from "../math/kepler";
 import { matVecMul9 } from "../math/matrices";
 import {
   computeApsidalState,
   computeKappa,
   computeOrbitalFactors,
 } from "../math/orbital-factors";
-import { meanMotion } from "../math/kepler";
 import { buildJ2Matrix } from "./j2";
 
 /**

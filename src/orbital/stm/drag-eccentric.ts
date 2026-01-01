@@ -11,8 +11,20 @@
  * Uses the circularization constraint (Eq. 69): delta-e = (1-e) delta-a-dot
  * This reduces the state to 7D: [delta-alpha (6D), delta-a-dot]
  *
+ * **Batch LS Interpretation:**
+ *
+ * The 7D augmented state [ROE; delta-a-dot] and the "dragColumn" form a batch
+ * least squares framework where:
+ * - dragColumn = sensitivity matrix H = d(ROE)/d(delta-a-dot)
+ * - The identity row [0,0,0,0,0,0,1] preserves the drag parameter
+ *
+ * This forward model can be inverted for parameter estimation. See
+ * drag-estimation.ts for the inverse (estimating drag from observations).
+ *
  * **Validity**: Requires e >= 0.05 for circularization assumption.
  * For near-circular orbits, use the arbitrary eccentricity model instead.
+ * @see drag-estimation.ts - Inverse model for estimating drag from observations
+ * @see drag-arbitrary.ts - Alternative model for any eccentricity (9D state)
  */
 
 import type { STM7 } from "../types/matrices";
@@ -20,13 +32,13 @@ import type { ClassicalOrbitalElements } from "../types/orbital-elements";
 import type { ROEVector, ROEVector7 } from "../types/vectors";
 
 import { J2, R_EARTH } from "../constants";
+import { meanMotion } from "../math/kepler";
 import { matVecMul7 } from "../math/matrices";
 import {
   computeApsidalState,
   computeKappa,
   computeOrbitalFactors,
 } from "../math/orbital-factors";
-import { meanMotion } from "../math/kepler";
 import { buildJ2Matrix } from "./j2";
 
 /**

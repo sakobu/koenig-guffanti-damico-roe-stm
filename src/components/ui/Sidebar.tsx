@@ -38,7 +38,7 @@ export default function Sidebar() {
       {/* Toggle button - always visible */}
       <button
         onClick={toggleSidebar}
-        className={`fixed top-0.5 z-50 w-7 h-7 flex items-center justify-center
+        className={`fixed top-2.5 z-50 w-7 h-7 flex items-center justify-center
           bg-zinc-900/80 rounded cursor-pointer
           text-zinc-400 hover:text-zinc-100 transition-all duration-300 ease-in-out
           ${isOpen ? "left-66" : "left-0"}`}
