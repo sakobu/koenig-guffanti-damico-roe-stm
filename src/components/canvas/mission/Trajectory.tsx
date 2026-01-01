@@ -1,7 +1,7 @@
 import { Line } from "@react-three/drei";
-import type { Vector3 } from "three";
+import type { Vector3 } from "@orbital";
 import { useMissionStore } from "../../../stores/mission";
-import { ricToThreePosition } from "../../../utils/coordinates";
+import { ricToPosition } from "../../../utils/coordinates";
 
 export default function Trajectory() {
   const trajectoryPoints = useMissionStore((state) => state.trajectoryPoints);
@@ -11,11 +11,11 @@ export default function Trajectory() {
     return null;
   }
 
-  // Convert RIC trajectory points to Three.js coordinates for rendering
+  // Convert RIC trajectory points to scene coordinates for rendering
   // Include initial position as the starting point
   const points: Vector3[] = [
-    ricToThreePosition(initialPosition),
-    ...trajectoryPoints.map((pt) => ricToThreePosition(pt.position)),
+    ricToPosition(initialPosition),
+    ...trajectoryPoints.map((pt) => ricToPosition(pt.position)),
   ];
 
   return (

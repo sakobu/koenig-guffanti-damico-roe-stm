@@ -1,9 +1,11 @@
+import type { Vector3 } from "@orbital";
+
 export interface SolarPanelProps {
   width: number
   height: number
   depth: number
-  position: [number, number, number]
-  rotation?: [number, number, number]
+  position: Vector3
+  rotation?: Vector3
   color?: string
   emissive?: string
   emissiveIntensity?: number

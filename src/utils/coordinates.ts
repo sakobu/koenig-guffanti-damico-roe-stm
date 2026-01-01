@@ -1,4 +1,4 @@
-import { Vector3 as ThreeVector3 } from "three";
+import type { Vector3 as ThreeVector3 } from "three";
 import type { Vector3 } from "@orbital";
 
 /**
@@ -17,14 +17,6 @@ import type { Vector3 } from "@orbital";
  * Mapping: R→Y (up), I→X (right), C→Z (depth)
  */
 
-/** Convert RIC position [R, I, C] to Three.js Vector3 */
-export const ricToThreePosition = (ric: Vector3): ThreeVector3 =>
-  new ThreeVector3(
-    ric[1], // I → x (right)
-    ric[0], // R → y (up)
-    ric[2] // C → z (depth)
-  );
-
 /** Convert Three.js Vector3 to RIC position [R, I, C] */
 export const threeToRicPosition = (
   v: ThreeVector3
@@ -32,4 +24,11 @@ export const threeToRicPosition = (
   v.y, // y → R (up)
   v.x, // x → I (right)
   v.z, // z → C (depth)
+];
+
+/** Convert RIC position to scene coordinates (tuple). Use for R3F props. */
+export const ricToPosition = (ric: Vector3): Vector3 => [
+  ric[1], // I → x (right)
+  ric[0], // R → y (up)
+  ric[2], // C → z (depth)
 ];

@@ -1,5 +1,7 @@
+import type { Vector3 } from "@orbital";
+
 export interface NavigationLightProps {
-  position: [number, number, number]
+  position: Vector3
   color: string
   intensity?: number
   distance?: number

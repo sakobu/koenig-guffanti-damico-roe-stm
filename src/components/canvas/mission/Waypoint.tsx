@@ -6,7 +6,7 @@ import * as THREE from "three";
 import type { Vector3 } from "@orbital";
 import { useMissionStore } from "../../../stores/mission";
 import {
-  ricToThreePosition,
+  ricToPosition,
   threeToRicPosition,
 } from "../../../utils/coordinates";
 
@@ -51,12 +51,11 @@ export default function Waypoint({
       );
 
       raycaster.current.setFromCamera(mouse.current, camera);
-      dragPlane.current.set(new THREE.Vector3(0, 0, 1), -currentZ.current);
+      dragPlane.current.constant = -currentZ.current;
 
       if (raycaster.current.ray.intersectPlane(dragPlane.current, intersection.current)) {
-        return threeToRicPosition(
-          new THREE.Vector3(intersection.current.x, intersection.current.y, currentZ.current)
-        );
+        intersection.current.z = currentZ.current;
+        return threeToRicPosition(intersection.current);
       }
       return null;
     },
@@ -116,7 +115,7 @@ export default function Waypoint({
   const labelColor = isSelected ? "#67e8f9" : "#fbbf24";
 
   return (
-    <group position={ricToThreePosition(position)}>
+    <group position={ricToPosition(position)}>
       <Sphere
         args={[5 * scale, 16, 16]}
         onClick={handleClick}

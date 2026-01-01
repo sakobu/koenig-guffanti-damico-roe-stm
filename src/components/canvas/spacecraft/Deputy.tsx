@@ -1,7 +1,7 @@
 import { useZoomScale } from "../../../hooks/useZoomScale";
 import { useMissionStore } from "../../../stores/mission";
 import { useSimulationStore } from "../../../stores/simulation";
-import { ricToThreePosition } from "../../../utils/coordinates";
+import { ricToPosition } from "../../../utils/coordinates";
 import { Spacecraft } from "./Spacecraft";
 
 export default function Deputy() {
@@ -27,7 +27,7 @@ export default function Deputy() {
 
   return (
     <Spacecraft
-      position={ricToThreePosition(position).toArray()}
+      position={ricToPosition(position)}
       scale={1.8 * zoomScale}
       label="Deputy"
       labelColor="#6688ff"

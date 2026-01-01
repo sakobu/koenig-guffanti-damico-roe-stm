@@ -5,7 +5,7 @@ import { SolarPanel, type SolarPanelProps } from './SolarPanel'
 import { NavigationLight, type NavigationLightProps } from './NavigationLight'
 
 export interface ArmProps {
-  position: [number, number, number]
+  position: Vector3
   length: number
   direction: 'x' | 'y' | 'z'
 }
