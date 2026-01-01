@@ -1,4 +1,4 @@
-import Panel from "../Panel";
+import Panel from '../Panel';
 
 interface HotkeyRowProps {
   keys: string[];
@@ -27,10 +27,10 @@ export default function HelpHotkeysPanel() {
   return (
     <Panel title="Keyboard Shortcuts" defaultOpen>
       <div className="text-xs divide-y divide-zinc-800">
-        <HotkeyRow keys={["S"]} description="Toggle sidebar" />
-        <HotkeyRow keys={["H"]} description="Toggle HUD" />
-        <HotkeyRow keys={["Del", "Bksp"]} description="Delete waypoint" />
-        <HotkeyRow keys={["Esc"]} description="Deselect waypoint" />
+        <HotkeyRow keys={['S']} description="Toggle sidebar" />
+        <HotkeyRow keys={['H']} description="Toggle HUD" />
+        <HotkeyRow keys={['Del', 'Bksp']} description="Delete waypoint" />
+        <HotkeyRow keys={['Esc']} description="Deselect waypoint" />
       </div>
     </Panel>
   );

@@ -27,7 +27,7 @@
  * ```
  */
 export type DragConfigEccentric = {
-  readonly type: "eccentric";
+  readonly type: 'eccentric';
   /**
    * Time derivative of relative semi-major axis due to drag [1/s].
    * This value should be estimated from a navigation filter.
@@ -60,7 +60,7 @@ export type DragConfigEccentric = {
  * ```
  */
 export type DragConfigArbitrary = {
-  readonly type: "arbitrary";
+  readonly type: 'arbitrary';
   /** Time derivative of relative semi-major axis due to drag [1/s] */
   readonly daDotDrag: number;
   /** Time derivative of relative eccentricity vector x-component due to drag [1/s] */

@@ -1,4 +1,4 @@
-import { Line, Text, Sphere, GizmoHelper, Billboard } from "@react-three/drei";
+import { Billboard,GizmoHelper, Line, Sphere, Text } from '@react-three/drei';
 
 interface AxisProps {
   direction: [number, number, number];

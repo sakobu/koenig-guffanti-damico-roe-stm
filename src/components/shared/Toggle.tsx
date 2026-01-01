@@ -14,7 +14,7 @@ export default function Toggle({
   return (
     <div className="flex items-center justify-between">
       <span
-        className={`text-sm ${disabled ? "text-zinc-600" : "text-zinc-400"}`}
+        className={`text-sm ${disabled ? 'text-zinc-600' : 'text-zinc-400'}`}
       >
         {label}
       </span>
@@ -28,12 +28,12 @@ export default function Toggle({
           rounded-full border-2 border-transparent transition-colors duration-200 ease-in-out
           focus:outline-none focus-visible:ring-2 focus-visible:ring-cyan-500 focus-visible:ring-offset-2 focus-visible:ring-offset-zinc-900
           disabled:opacity-50 disabled:cursor-not-allowed
-          ${value ? "bg-cyan-500" : "bg-zinc-700"}`}
+          ${value ? 'bg-cyan-500' : 'bg-zinc-700'}`}
       >
         <span
           className={`pointer-events-none inline-block h-4 w-4 transform rounded-full
             bg-white shadow ring-0 transition duration-200 ease-in-out
-            ${value ? "translate-x-4" : "translate-x-0"}`}
+            ${value ? 'translate-x-4' : 'translate-x-0'}`}
         />
       </button>
     </div>

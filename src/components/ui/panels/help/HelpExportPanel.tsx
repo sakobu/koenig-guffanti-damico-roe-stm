@@ -1,4 +1,4 @@
-import Panel from "../Panel";
+import Panel from '../Panel';
 
 export default function HelpExportPanel() {
   return (
@@ -7,8 +7,8 @@ export default function HelpExportPanel() {
         <div>
           <p className="text-zinc-400 mb-1">Export Mission (JSON)</p>
           <p>
-            Complete mission data with waypoints in both{" "}
-            <span className="text-cyan-400">RIC</span> and{" "}
+            Complete mission data with waypoints in both{' '}
+            <span className="text-cyan-400">RIC</span> and{' '}
             <span className="text-cyan-400">ROE</span> formats. Includes chief
             orbit parameters, burn timing, and delta-V breakdown per leg.
           </p>

@@ -1,7 +1,8 @@
-import { useMissionStore } from "@stores/mission";
-import Panel from "../Panel";
-import Toggle from "../../../shared/Toggle";
-import Slider from "../../../shared/Slider";
+import { useMissionStore } from '@stores/mission';
+
+import Slider from '../../../shared/Slider';
+import Toggle from '../../../shared/Toggle';
+import Panel from '../Panel';
 
 /** Eccentricity threshold for eccentric drag model (from Koenig et al. 2017) */
 const ECCENTRICITY_THRESHOLD = 0.05;
@@ -91,8 +92,8 @@ export default function PhysicsPanel() {
 
   // Format eccentricity derivative for display (can be positive or negative)
   const formatEccentricityRate = (drag: number): string => {
-    if (drag === 0) return "0";
-    const sign = drag < 0 ? "-" : "+";
+    if (drag === 0) return '0';
+    const sign = drag < 0 ? '-' : '+';
     const absVal = Math.abs(drag);
     const exp = Math.round(Math.log10(absVal));
     const mantissa = (absVal / Math.pow(10, exp)).toFixed(1);

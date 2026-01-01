@@ -1,5 +1,6 @@
-import { Grid as DreiGrid, Text } from "@react-three/drei";
-import { useMemo } from "react";
+import { useMemo } from 'react';
+
+import { Grid as DreiGrid, Text } from '@react-three/drei';
 
 interface GridProps {
   size?: number;
@@ -24,7 +25,7 @@ export default function Grid({
     const result: {
       position: [number, number, number];
       label: string;
-      axis: "I" | "R";
+      axis: 'I' | 'R';
     }[] = [];
 
     // Distance markers along I axis (at R=0)
@@ -33,7 +34,7 @@ export default function Grid({
         result.push({
           position: [d, -markerOffset, 0],
           label: `${d}`,
-          axis: "I",
+          axis: 'I',
         });
       }
     }
@@ -44,7 +45,7 @@ export default function Grid({
         result.push({
           position: [-markerOffset * 1.5, d, 0],
           label: `${d}`,
-          axis: "R",
+          axis: 'R',
         });
       }
     }
@@ -72,8 +73,8 @@ export default function Grid({
           position={marker.position}
           fontSize={fontSize}
           color="#4a6a8a"
-          anchorX={marker.axis === "I" ? "center" : "right"}
-          anchorY={marker.axis === "I" ? "top" : "middle"}
+          anchorX={marker.axis === 'I' ? 'center' : 'right'}
+          anchorY={marker.axis === 'I' ? 'top' : 'middle'}
         >
           {marker.label}
         </Text>

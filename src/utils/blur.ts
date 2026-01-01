@@ -1,4 +1,4 @@
-import type { MouseEvent } from "react";
+import type { MouseEvent } from 'react';
 
 /**
  * Wraps a click handler to blur the element after execution.

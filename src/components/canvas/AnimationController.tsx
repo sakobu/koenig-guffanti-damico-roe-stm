@@ -1,7 +1,9 @@
-import { useEffect, useRef } from "react";
-import { useFrame } from "@react-three/fiber";
-import { useMissionStore } from "@stores/mission";
-import { useSimulationStore } from "@stores/simulation";
+import { useEffect, useRef } from 'react';
+
+import { useFrame } from '@react-three/fiber';
+
+import { useMissionStore } from '@stores/mission';
+import { useSimulationStore } from '@stores/simulation';
 
 /**
  * Headless component that drives the simulation animation loop.

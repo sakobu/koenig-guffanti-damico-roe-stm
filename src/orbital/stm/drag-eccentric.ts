@@ -27,19 +27,18 @@
  * @see drag-arbitrary.ts - Alternative model for any eccentricity (9D state)
  */
 
-import type { STM7 } from "../types/matrices";
-import type { ClassicalOrbitalElements } from "../types/orbital-elements";
-import type { ROEVector, ROEVector7 } from "../types/vectors";
-
-import { J2, R_EARTH } from "../constants";
-import { meanMotion } from "../math/kepler";
-import { matVecMul7 } from "../math/matrices";
+import { J2, R_EARTH } from '../constants';
+import { meanMotion } from '../math/kepler';
+import { matVecMul7 } from '../math/matrices';
 import {
   computeApsidalState,
   computeKappa,
   computeOrbitalFactors,
-} from "../math/orbital-factors";
-import { buildJ2Matrix } from "./j2";
+} from '../math/orbital-factors';
+import type { STM7 } from '../types/matrices';
+import type { ClassicalOrbitalElements } from '../types/orbital-elements';
+import type { ROEVector, ROEVector7 } from '../types/vectors';
+import { buildJ2Matrix } from './j2';
 
 /**
  * Compute complete J2+Drag STM for eccentric orbits

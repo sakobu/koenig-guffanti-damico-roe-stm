@@ -1,5 +1,6 @@
-import { useRef, useState } from "react";
-import { useFrame, useThree } from "@react-three/fiber";
+import { useRef, useState } from 'react';
+
+import { useFrame, useThree } from '@react-three/fiber';
 
 /** Default camera distance at which zoomScale = 1.0 */
 const DEFAULT_BASE_DISTANCE = 1500;

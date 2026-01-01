@@ -1,7 +1,9 @@
-import { Line } from "@react-three/drei";
-import type { Vector3 } from "@orbital";
-import { useMissionStore } from "@stores/mission";
-import { ricToPosition } from "@utils/coordinates";
+import { Line } from '@react-three/drei';
+
+import type { Vector3 } from '@orbital';
+
+import { useMissionStore } from '@stores/mission';
+import { ricToPosition } from '@utils/coordinates';
 
 export default function Trajectory() {
   const trajectoryPoints = useMissionStore((state) => state.trajectoryPoints);

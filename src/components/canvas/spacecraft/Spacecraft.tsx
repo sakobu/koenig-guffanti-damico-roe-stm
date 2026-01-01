@@ -1,38 +1,42 @@
-import { Text } from '@react-three/drei'
-import type { Vector3 } from '@orbital'
-import { MainBody, type MainBodyProps } from './MainBody'
-import { SolarPanel, type SolarPanelProps } from './SolarPanel'
-import { NavigationLight, type NavigationLightProps } from './NavigationLight'
+import { Text } from '@react-three/drei';
+
+import type { Vector3 } from '@orbital';
+
+import { MainBody, type MainBodyProps } from './MainBody';
+import { NavigationLight, type NavigationLightProps } from './NavigationLight';
+import { SolarPanel, type SolarPanelProps } from './SolarPanel';
 
 export interface ArmProps {
-  position: Vector3
-  length: number
-  direction: 'x' | 'y' | 'z'
+  position: Vector3;
+  length: number;
+  direction: 'x' | 'y' | 'z';
 }
 
 export interface SpacecraftProps {
-  position?: Vector3
-  scale?: number
-  mainBody: MainBodyProps
-  solarPanels: SolarPanelProps[]
-  arms?: ArmProps[]
-  navigationLights?: NavigationLightProps[]
-  label?: string
-  labelColor?: string
+  position?: Vector3;
+  scale?: number;
+  mainBody: MainBodyProps;
+  solarPanels: SolarPanelProps[];
+  arms?: ArmProps[];
+  navigationLights?: NavigationLightProps[];
+  label?: string;
+  labelColor?: string;
 }
 
 function Arm({ position, length, direction }: ArmProps) {
   const size: [number, number, number] =
-    direction === 'x' ? [length, 0.8, 0.8] :
-    direction === 'y' ? [0.8, length, 0.8] :
-    [0.8, 0.8, length]
+    direction === 'x'
+      ? [length, 0.8, 0.8]
+      : direction === 'y'
+        ? [0.8, length, 0.8]
+        : [0.8, 0.8, length];
 
   return (
     <mesh position={position}>
       <boxGeometry args={size} />
       <meshStandardMaterial color="#b0b0b0" metalness={0.7} roughness={0.3} />
     </mesh>
-  )
+  );
 }
 
 export function Spacecraft({
@@ -43,7 +47,7 @@ export function Spacecraft({
   arms = [],
   navigationLights = [],
   label,
-  labelColor = '#ffffff'
+  labelColor = '#ffffff',
 }: SpacecraftProps) {
   return (
     <group position={position} scale={[scale, scale, scale]}>
@@ -75,5 +79,5 @@ export function Spacecraft({
         </Text>
       )}
     </group>
-  )
+  );
 }

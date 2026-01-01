@@ -1,8 +1,8 @@
-import ScenarioPanel from "../panels/config/ScenarioPanel";
-import PhysicsPanel from "../panels/config/PhysicsPanel";
-import WaypointPanel from "../panels/config/WaypointPanel";
-import ResultsPanel from "../panels/config/ResultsPanel";
-import ExportPanel from "../panels/config/ExportPanel";
+import ExportPanel from '../panels/config/ExportPanel';
+import PhysicsPanel from '../panels/config/PhysicsPanel';
+import ResultsPanel from '../panels/config/ResultsPanel';
+import ScenarioPanel from '../panels/config/ScenarioPanel';
+import WaypointPanel from '../panels/config/WaypointPanel';
 
 export default function ConfigTab() {
   return (

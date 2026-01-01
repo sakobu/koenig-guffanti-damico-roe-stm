@@ -1,10 +1,12 @@
-import { Sphere, Billboard, Text } from "@react-three/drei";
-import { useThree } from "@react-three/fiber";
-import type { ThreeEvent } from "@react-three/fiber";
-import type { Vector3 } from "@orbital";
-import { useMissionStore } from "@stores/mission";
-import { useDraggable } from "@hooks/useDraggable";
-import { ricToPosition } from "@utils/coordinates";
+import { Billboard, Sphere, Text } from '@react-three/drei';
+import type { ThreeEvent } from '@react-three/fiber';
+import { useThree } from '@react-three/fiber';
+
+import type { Vector3 } from '@orbital';
+
+import { useDraggable } from '@hooks/useDraggable';
+import { useMissionStore } from '@stores/mission';
+import { ricToPosition } from '@utils/coordinates';
 
 interface WaypointProps {
   position: Vector3;
@@ -43,8 +45,8 @@ export default function Waypoint({
     onSelect();
   };
 
-  const color = isSelected ? "#22d3ee" : "#f59e0b";
-  const labelColor = isSelected ? "#67e8f9" : "#fbbf24";
+  const color = isSelected ? '#22d3ee' : '#f59e0b';
+  const labelColor = isSelected ? '#67e8f9' : '#fbbf24';
 
   return (
     <group position={ricToPosition(position)}>
@@ -53,10 +55,10 @@ export default function Waypoint({
         onClick={handleClick}
         {...handlers}
         onPointerOver={() => {
-          if (!isDragging) document.body.style.cursor = "grab";
+          if (!isDragging) document.body.style.cursor = 'grab';
         }}
         onPointerOut={() => {
-          if (!isDragging) document.body.style.cursor = "auto";
+          if (!isDragging) document.body.style.cursor = 'auto';
         }}
       >
         <meshStandardMaterial

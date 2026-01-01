@@ -7,49 +7,49 @@
 
 // Types
 export type {
+  DragConfig,
+  DragConfigArbitrary,
+  DragConfigEccentric,
+} from './types/config';
+export type {
   ClassicalOrbitalElements,
   QuasiNonsingularROE,
-} from "./types/orbital-elements";
-export type { RelativeState, Vector3 } from "./types/vectors";
+} from './types/orbital-elements';
 export type {
-  DragConfig,
-  DragConfigEccentric,
-  DragConfigArbitrary,
-} from "./types/config";
-export type {
-  Waypoint,
   Maneuver,
   ManeuverLeg,
   MissionPlan,
   TargetingOptions,
-  TrajectoryPoint,
   TargetingValidationCode,
   TargetingValidationResult,
-} from "./types/targeting";
+  TrajectoryPoint,
+  Waypoint,
+} from './types/targeting';
+export type { RelativeState, Vector3 } from './types/vectors';
 
 // Validation
-export { validateTargetingConfig } from "./targeting/validation";
+export { validateTargetingConfig } from './targeting/validation';
 
 // Constants
-export { J2, MU_EARTH, R_EARTH, SECONDS_PER_DAY } from "./constants";
+export { J2, MU_EARTH, R_EARTH, SECONDS_PER_DAY } from './constants';
 
 // Kepler utilities
 export {
-  trueAnomalyFromMean,
+  angularVelocity,
   meanMotion,
   orbitalRadius,
   radialVelocity,
-  angularVelocity,
-} from "./math/kepler";
+  trueAnomalyFromMean,
+} from './math/kepler';
 
 // Mission planning
 export {
-  planMission,
-  replanFromWaypoint,
+  extractWaypointPositions,
   getMissionStateAtTime,
   getMissionSummary,
-  extractWaypointPositions,
-} from "./targeting/planner";
+  planMission,
+  replanFromWaypoint,
+} from './targeting/planner';
 
 // Trajectory generation
 export {
@@ -57,7 +57,7 @@ export {
   generateMissionTrajectory,
   generateTrajectoryWithManeuvers,
   sampleTrajectoryUniform,
-} from "./targeting/trajectory";
+} from './targeting/trajectory';
 
 // ROE transforms
-export { ricToROE, roeToRIC } from "./transforms/roe-ric";
+export { ricToROE, roeToRIC } from './transforms/roe-ric';

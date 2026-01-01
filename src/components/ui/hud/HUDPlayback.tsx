@@ -1,15 +1,17 @@
-import { Play, Pause, RotateCcw } from "lucide-react";
-import { useMissionStore } from "@stores/mission";
-import { useSimulationStore, formatTime } from "@stores/simulation";
-import Button from "../../shared/Button";
-import Select from "../../shared/Select";
-import Slider from "../../shared/Slider";
+import { Pause, Play, RotateCcw } from 'lucide-react';
+
+import { useMissionStore } from '@stores/mission';
+import { formatTime,useSimulationStore } from '@stores/simulation';
+
+import Button from '../../shared/Button';
+import Select from '../../shared/Select';
+import Slider from '../../shared/Slider';
 
 const SPEED_OPTIONS = [
-  { value: "1", label: "1x" },
-  { value: "50", label: "50x" },
-  { value: "100", label: "100x" },
-  { value: "500", label: "500x" },
+  { value: '1', label: '1x' },
+  { value: '50', label: '50x' },
+  { value: '100', label: '100x' },
+  { value: '500', label: '500x' },
 ];
 
 export default function HUDPlayback() {
@@ -45,7 +47,7 @@ export default function HUDPlayback() {
           size="icon"
           onClick={playing ? pause : play}
           disabled={!missionPlan || trajectoryPoints.length === 0}
-          title={playing ? "Pause" : "Play"}
+          title={playing ? 'Pause' : 'Play'}
         >
           {playing ? (
             <Pause size={14} className="text-white" />

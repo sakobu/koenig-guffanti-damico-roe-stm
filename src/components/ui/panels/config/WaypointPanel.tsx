@@ -1,10 +1,14 @@
-import { useEffect } from "react";
-import { Gauge } from "lucide-react";
-import type { Vector3 } from "@orbital";
-import { useMissionStore } from "@stores/mission";
-import Panel from "../Panel";
-import Button from "../../../shared/Button";
-import WaypointEditor from "./WaypointEditor";
+import { useEffect } from 'react';
+
+import { Gauge } from 'lucide-react';
+
+import type { Vector3 } from '@orbital';
+
+import { useMissionStore } from '@stores/mission';
+
+import Button from '../../../shared/Button';
+import Panel from '../Panel';
+import WaypointEditor from './WaypointEditor';
 
 function hasVelocity(velocity: Vector3 | undefined): boolean {
   if (!velocity) return false;
@@ -32,10 +36,10 @@ export default function WaypointPanel() {
         return;
       }
 
-      if (e.key === "Escape") {
+      if (e.key === 'Escape') {
         selectWaypoint(null);
       } else if (
-        (e.key === "Delete" || e.key === "Backspace") &&
+        (e.key === 'Delete' || e.key === 'Backspace') &&
         selectedIndex !== null
       ) {
         e.preventDefault();
@@ -43,8 +47,8 @@ export default function WaypointPanel() {
       }
     };
 
-    window.addEventListener("keydown", handleKeyDown);
-    return () => window.removeEventListener("keydown", handleKeyDown);
+    window.addEventListener('keydown', handleKeyDown);
+    return () => window.removeEventListener('keydown', handleKeyDown);
   }, [selectedIndex, selectWaypoint, removeWaypoint]);
 
   return (
@@ -55,7 +59,9 @@ export default function WaypointPanel() {
         <div className="flex gap-2">
           <Button
             variant="danger"
-            onClick={() => selectedIndex !== null && removeWaypoint(selectedIndex)}
+            onClick={() =>
+              selectedIndex !== null && removeWaypoint(selectedIndex)
+            }
             disabled={selectedIndex === null}
             className="flex-1"
           >
@@ -80,12 +86,12 @@ export default function WaypointPanel() {
                 className={`text-xs font-mono px-2 py-1 rounded cursor-pointer
                   transition-colors flex items-center justify-between ${
                     selectedIndex === i
-                      ? "bg-cyan-600/30 text-cyan-300 ring-1 ring-cyan-500/50"
-                      : "bg-zinc-800/50 text-zinc-400 hover:bg-zinc-700/50"
+                      ? 'bg-cyan-600/30 text-cyan-300 ring-1 ring-cyan-500/50'
+                      : 'bg-zinc-800/50 text-zinc-400 hover:bg-zinc-700/50'
                   }`}
               >
                 <span>
-                  WP{i + 1}: [{Math.round(wp.position[0])},{" "}
+                  WP{i + 1}: [{Math.round(wp.position[0])},{' '}
                   {Math.round(wp.position[1])}, {Math.round(wp.position[2])}]
                 </span>
                 {hasVelocity(wp.velocity) && (

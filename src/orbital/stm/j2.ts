@@ -13,15 +13,14 @@
  * 4. Drift of relative inclination vector y-component (nodal regression)
  */
 
-import type { STM6 } from "../types/matrices";
-import type { ClassicalOrbitalElements } from "../types/orbital-elements";
-
+import { meanMotion } from '../math/kepler';
 import {
   computeApsidalState,
   computeKappa,
   computeOrbitalFactors,
-} from "../math/orbital-factors";
-import { meanMotion } from "../math/kepler";
+} from '../math/orbital-factors';
+import type { STM6 } from '../types/matrices';
+import type { ClassicalOrbitalElements } from '../types/orbital-elements';
 
 /**
  * Build the 6x6 J2-perturbed State Transition Matrix.

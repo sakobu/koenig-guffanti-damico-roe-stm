@@ -1,21 +1,25 @@
-import { useState, useMemo } from "react";
-import { Minus, GripHorizontal } from "lucide-react";
-import { useMissionStore } from "@stores/mission";
-import { useSimulationStore } from "@stores/simulation";
-import { useUIStore } from "@stores/ui";
-import { useHotkey } from "@hooks/useHotkey";
-import { computeDistance, computeDistanceTraveled } from "@utils/metrics";
-import type { Vector3 } from "@orbital";
-import HUDPlayback from "./HUDPlayback";
-import HUDPosition from "./HUDPosition";
-import HUDVelocity from "./HUDVelocity";
-import HUDMetrics from "./HUDMetrics";
+import { useMemo,useState } from 'react';
+
+import { GripHorizontal,Minus } from 'lucide-react';
+
+import type { Vector3 } from '@orbital';
+
+import { useHotkey } from '@hooks/useHotkey';
+import { useMissionStore } from '@stores/mission';
+import { useSimulationStore } from '@stores/simulation';
+import { useUIStore } from '@stores/ui';
+import { computeDistance, computeDistanceTraveled } from '@utils/metrics';
+
+import HUDMetrics from './HUDMetrics';
+import HUDPlayback from './HUDPlayback';
+import HUDPosition from './HUDPosition';
+import HUDVelocity from './HUDVelocity';
 
 export default function HUD() {
   const hudVisible = useUIStore((s) => s.hudVisible);
   const toggleHUD = useUIStore((s) => s.toggleHUD);
 
-  useHotkey("h", toggleHUD);
+  useHotkey('h', toggleHUD);
 
   // Mission state
   const initialPosition = useMissionStore((s) => s.initialPosition);
@@ -83,7 +87,7 @@ export default function HUD() {
           <button
             onClick={() => setMinimized(!minimized)}
             className="p-1 hover:bg-zinc-700 rounded transition-colors"
-            title={minimized ? "Expand" : "Minimize"}
+            title={minimized ? 'Expand' : 'Minimize'}
           >
             <Minus size={14} className="text-zinc-400" />
           </button>
@@ -92,7 +96,7 @@ export default function HUD() {
         {/* Content - collapsible */}
         <div
           className={`overflow-hidden transition-all duration-200 ease-in-out
-            ${minimized ? "max-h-0" : "max-h-125"}`}
+            ${minimized ? 'max-h-0' : 'max-h-125'}`}
         >
           <div className="p-3 space-y-2">
             <HUDPlayback />

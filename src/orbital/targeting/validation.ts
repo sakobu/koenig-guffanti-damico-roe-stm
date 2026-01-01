@@ -8,11 +8,11 @@
  * `solveRendezvous()` to catch configuration errors at selection time.
  */
 
-import type { ClassicalOrbitalElements } from "../types/orbital-elements";
+import type { ClassicalOrbitalElements } from '../types/orbital-elements';
 import type {
   TargetingOptions,
   TargetingValidationResult,
-} from "../types/targeting";
+} from '../types/targeting';
 
 /** Eccentricity threshold for eccentric drag model (from Koenig et al. 2017, Section VII) */
 const ECCENTRICITY_THRESHOLD = 0.05;
@@ -53,7 +53,7 @@ export const validateTargetingConfig = (
   if (chief.semiMajorAxis <= 0) {
     return {
       valid: false,
-      code: "INVALID_SEMI_MAJOR_AXIS",
+      code: 'INVALID_SEMI_MAJOR_AXIS',
       message: `Semi-major axis must be positive (a=${chief.semiMajorAxis} m)`,
     };
   }
@@ -61,7 +61,7 @@ export const validateTargetingConfig = (
   if (chief.eccentricity < 0 || chief.eccentricity >= 1) {
     return {
       valid: false,
-      code: "INVALID_ECCENTRICITY",
+      code: 'INVALID_ECCENTRICITY',
       message: `Eccentricity must be in range [0, 1) (e=${chief.eccentricity})`,
     };
   }
@@ -69,7 +69,7 @@ export const validateTargetingConfig = (
   if (chief.gravitationalParameter <= 0) {
     return {
       valid: false,
-      code: "INVALID_GRAVITATIONAL_PARAMETER",
+      code: 'INVALID_GRAVITATIONAL_PARAMETER',
       message: `Gravitational parameter must be positive (mu=${chief.gravitationalParameter})`,
     };
   }
@@ -79,12 +79,12 @@ export const validateTargetingConfig = (
   if (Math.abs(incDeg) < 0.1 || Math.abs(incDeg - 180) < 0.1) {
     return {
       valid: false,
-      code: "NEAR_EQUATORIAL_ORBIT",
+      code: 'NEAR_EQUATORIAL_ORBIT',
       message: `Near-equatorial orbit not supported (i=${incDeg.toFixed(
         2
       )} deg)`,
       suggestion:
-        "Quasi-nonsingular ROE requires i > 0.1 deg. Use nonsingular ROE formulation for equatorial orbits.",
+        'Quasi-nonsingular ROE requires i > 0.1 deg. Use nonsingular ROE formulation for equatorial orbits.',
     };
   }
 
@@ -93,8 +93,8 @@ export const validateTargetingConfig = (
     if (!options.dragConfig) {
       return {
         valid: false,
-        code: "DRAG_MISSING_CONFIG",
-        message: "Drag is enabled but no drag configuration provided",
+        code: 'DRAG_MISSING_CONFIG',
+        message: 'Drag is enabled but no drag configuration provided',
         suggestion:
           "Provide a dragConfig with type 'eccentric' or 'arbitrary'.",
       };
@@ -102,12 +102,12 @@ export const validateTargetingConfig = (
 
     // Check eccentric model eccentricity requirement
     if (
-      options.dragConfig.type === "eccentric" &&
+      options.dragConfig.type === 'eccentric' &&
       chief.eccentricity < ECCENTRICITY_THRESHOLD
     ) {
       return {
         valid: false,
-        code: "DRAG_ECCENTRICITY_TOO_LOW",
+        code: 'DRAG_ECCENTRICITY_TOO_LOW',
         message: `Eccentric drag model requires e >= ${ECCENTRICITY_THRESHOLD} (e=${chief.eccentricity.toFixed(
           6
         )})`,

@@ -33,12 +33,11 @@
  * @see drag-arbitrary.ts - Forward model for any eccentricity (9D augmented state)
  */
 
-import type { DragConfigArbitrary } from "../types/config";
-import type { ClassicalOrbitalElements } from "../types/orbital-elements";
-import type { ROEVector } from "../types/vectors";
-
-import { matVecMul6 } from "../math/matrices";
-import { computeJ2STM } from "./j2";
+import { matVecMul6 } from '../math/matrices';
+import type { DragConfigArbitrary } from '../types/config';
+import type { ClassicalOrbitalElements } from '../types/orbital-elements';
+import type { ROEVector } from '../types/vectors';
+import { computeJ2STM } from './j2';
 
 /**
  * Estimate drag derivatives with J2 correction.
@@ -97,7 +96,7 @@ export const estimateDragDerivativesWithJ2Correction = (
   roe2: ROEVector,
   chief: ClassicalOrbitalElements,
   dt: number
-): Omit<DragConfigArbitrary, "type"> => {
+): Omit<DragConfigArbitrary, 'type'> => {
   if (dt <= 0) {
     throw new Error(
       `[estimateDragDerivatives]: dt must be positive (dt=${dt})`

@@ -5,9 +5,8 @@
  * - Koenig, Guffanti, D'Amico (2017) "New State Transition Matrices..."
  */
 
-import type { ROEVector, ROEVector7, ROEVector9 } from "../types/vectors";
-
-import type { STM6, STM7, STM9 } from "../types/matrices";
+import type { STM6, STM7, STM9 } from '../types/matrices';
+import type { ROEVector, ROEVector7, ROEVector9 } from '../types/vectors';
 
 /**
  * Perform Matrix-Vector multiplication for a 6x6 Matrix and a 6-element Vector.

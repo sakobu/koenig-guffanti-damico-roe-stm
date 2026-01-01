@@ -9,10 +9,10 @@
 
 // Main propagation functions
 export {
+  generateROETrajectory,
   propagateROE,
   propagateROEWithChief,
-  generateROETrajectory,
-} from "./propagate";
+} from './propagate';
 
 // Drag dispatch (internal, but exported for advanced users)
-export { propagateWithDrag } from "./drag-dispatch";
+export { propagateWithDrag } from './drag-dispatch';

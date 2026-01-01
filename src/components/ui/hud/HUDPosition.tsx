@@ -1,15 +1,18 @@
-import { useState, useMemo } from "react";
-import { useMissionStore } from "@stores/mission";
-import { ricToROE } from "@orbital";
-import type { QuasiNonsingularROE, RelativeState, Vector3 } from "@orbital";
-import Select from "../../shared/Select";
-import { formatValue } from "@utils/formatting";
+import { useMemo,useState } from 'react';
 
-type CoordinateMode = "ric" | "roe";
+import type { QuasiNonsingularROE, RelativeState, Vector3 } from '@orbital';
+import { ricToROE } from '@orbital';
+
+import { useMissionStore } from '@stores/mission';
+import { formatValue } from '@utils/formatting';
+
+import Select from '../../shared/Select';
+
+type CoordinateMode = 'ric' | 'roe';
 
 const COORD_OPTIONS = [
-  { value: "ric", label: "RIC" },
-  { value: "roe", label: "ROE" },
+  { value: 'ric', label: 'RIC' },
+  { value: 'roe', label: 'ROE' },
 ];
 
 interface HUDPositionProps {
@@ -19,10 +22,10 @@ interface HUDPositionProps {
 
 export default function HUDPosition({ position, velocity }: HUDPositionProps) {
   const chief = useMissionStore((s) => s.chief);
-  const [coordMode, setCoordMode] = useState<CoordinateMode>("ric");
+  const [coordMode, setCoordMode] = useState<CoordinateMode>('ric');
 
   const roe = useMemo<QuasiNonsingularROE | null>(() => {
-    if (coordMode !== "roe") return null;
+    if (coordMode !== 'roe') return null;
     try {
       const state: RelativeState = {
         position: [...position] as Vector3,
@@ -50,7 +53,7 @@ export default function HUDPosition({ position, velocity }: HUDPositionProps) {
         Position
       </span>
 
-      {coordMode === "ric" ? (
+      {coordMode === 'ric' ? (
         <>
           <div className="grid grid-cols-3 gap-1 text-xs">
             <div className="bg-zinc-800/50 rounded px-2 py-1 flex justify-between">

@@ -1,7 +1,8 @@
-import { useMissionStore } from "@stores/mission";
-import { SCENARIO_OPTIONS } from "@config/scenarios";
-import Panel from "../Panel";
-import Select from "../../../shared/Select";
+import { SCENARIO_OPTIONS } from '@config/scenarios';
+import { useMissionStore } from '@stores/mission';
+
+import Select from '../../../shared/Select';
+import Panel from '../Panel';
 
 export default function ScenarioPanel() {
   const scenario = useMissionStore((state) => state.scenario);

@@ -8,18 +8,17 @@
  *   [Deputy] --dv1--> coast --dv2--> [WP1] --dv1--> coast --dv2--> [WP2] ...
  */
 
-import type { ClassicalOrbitalElements } from "../types/orbital-elements";
-import type { RelativeState, Vector3 } from "../types/vectors";
+import { ZERO_VECTOR3 } from '../math/vectors';
+import type { ClassicalOrbitalElements } from '../types/orbital-elements';
 import type {
   ManeuverLeg,
   MissionPlan,
   TargetingOptions,
   Waypoint,
-} from "../types/targeting";
-
-import { ZERO_VECTOR3 } from "../math/vectors";
-import { solveRendezvous } from "./rendezvous";
-import { optimizeTOF } from "./tof-optimizer";
+} from '../types/targeting';
+import type { RelativeState, Vector3 } from '../types/vectors';
+import { solveRendezvous } from './rendezvous';
+import { optimizeTOF } from './tof-optimizer';
 
 /**
  * Plan a complete multi-waypoint mission.

@@ -1,4 +1,5 @@
-import { create } from "zustand";
+import { create } from 'zustand';
+
 import type {
   ClassicalOrbitalElements,
   DragConfig,
@@ -7,18 +8,20 @@ import type {
   TrajectoryPoint,
   Vector3,
   Waypoint,
-} from "@orbital";
+} from '@orbital';
 import {
   generateMissionTrajectory,
   planMission,
   replanFromWaypoint,
   validateTargetingConfig,
-} from "@orbital";
-import { SCENARIOS, type ScenarioKey } from "@config/scenarios";
-import { useSimulationStore } from "./simulation";
+} from '@orbital';
+
+import { type ScenarioKey,SCENARIOS } from '@config/scenarios';
+
+import { useSimulationStore } from './simulation';
 
 // Default scenario
-const DEFAULT_SCENARIO: ScenarioKey = "iss";
+const DEFAULT_SCENARIO: ScenarioKey = 'iss';
 
 interface MissionState {
   // Chief orbit
@@ -58,7 +61,10 @@ interface MissionState {
 interface MissionActions {
   addWaypoint: (position: Vector3) => void;
   updateWaypoint: (index: number, position: Vector3) => void;
-  updateWaypointVelocity: (index: number, velocity: Vector3 | undefined) => void;
+  updateWaypointVelocity: (
+    index: number,
+    velocity: Vector3 | undefined
+  ) => void;
   removeWaypoint: (index: number) => void;
   clearWaypoints: () => void;
   selectWaypoint: (index: number | null) => void;
@@ -104,8 +110,8 @@ function computeMission(
     // Auto-select drag model based on eccentricity
     const isNearCircular = chief.eccentricity < ECCENTRICITY_THRESHOLD;
     const dragConfig: DragConfig = isNearCircular
-      ? { type: "arbitrary", daDotDrag, dexDotDrag, deyDotDrag }
-      : { type: "eccentric", daDotDrag };
+      ? { type: 'arbitrary', daDotDrag, dexDotDrag, deyDotDrag }
+      : { type: 'eccentric', daDotDrag };
 
     const options = {
       includeJ2,
@@ -116,9 +122,9 @@ function computeMission(
     // Validate configuration before planning
     const validation = validateTargetingConfig(chief, options);
     if (!validation.valid) {
-      console.warn("Targeting validation failed:", validation.message);
+      console.warn('Targeting validation failed:', validation.message);
       if (validation.suggestion) {
-        console.info("Suggestion:", validation.suggestion);
+        console.info('Suggestion:', validation.suggestion);
       }
       return { missionPlan: null, trajectoryPoints: [] };
     }
@@ -136,7 +142,7 @@ function computeMission(
 
     return { missionPlan: plan, trajectoryPoints: trajectory };
   } catch (error) {
-    console.error("Mission planning failed:", error);
+    console.error('Mission planning failed:', error);
     return { missionPlan: null, trajectoryPoints: [] };
   }
 }
@@ -185,8 +191,8 @@ function computeMissionIncremental(
   try {
     const isNearCircular = chief.eccentricity < ECCENTRICITY_THRESHOLD;
     const dragConfig: DragConfig = isNearCircular
-      ? { type: "arbitrary", daDotDrag, dexDotDrag, deyDotDrag }
-      : { type: "eccentric", daDotDrag };
+      ? { type: 'arbitrary', daDotDrag, dexDotDrag, deyDotDrag }
+      : { type: 'eccentric', daDotDrag };
 
     const options = {
       includeJ2,
@@ -196,7 +202,7 @@ function computeMissionIncremental(
 
     const validation = validateTargetingConfig(chief, options);
     if (!validation.valid) {
-      console.warn("Targeting validation failed:", validation.message);
+      console.warn('Targeting validation failed:', validation.message);
       return { missionPlan: null, trajectoryPoints: [] };
     }
 
@@ -221,7 +227,7 @@ function computeMissionIncremental(
 
     return { missionPlan: plan, trajectoryPoints: trajectory };
   } catch (error) {
-    console.error("Incremental mission planning failed:", error);
+    console.error('Incremental mission planning failed:', error);
     return { missionPlan: null, trajectoryPoints: [] };
   }
 }

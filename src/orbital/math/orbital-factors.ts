@@ -6,9 +6,8 @@
  *   Equations 14-16 (orbital factors), Equation 13 (apsidal precession)
  */
 
-import type { ApsidalState, OrbitalFactors } from "../types/orbital-elements";
-
-import { J2, R_EARTH } from "../constants";
+import { J2, R_EARTH } from '../constants';
+import type { ApsidalState, OrbitalFactors } from '../types/orbital-elements';
 
 /**
  * Compute the kappa factor used in J2 perturbation matrices.

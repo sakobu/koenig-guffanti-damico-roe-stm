@@ -16,18 +16,18 @@
 
 // Main mission planning API
 export {
-  planMission,
-  replanFromWaypoint,
+  extractWaypointPositions,
   getMissionStateAtTime,
   getMissionSummary,
-  extractWaypointPositions,
-} from "./planner";
+  planMission,
+  replanFromWaypoint,
+} from './planner';
 
 // Single-leg rendezvous solver
-export { solveRendezvous } from "./rendezvous";
+export { solveRendezvous } from './rendezvous';
 
 // TOF optimization
-export { optimizeTOF, optimizeTOFMultiStart } from "./tof-optimizer";
+export { optimizeTOF, optimizeTOFMultiStart } from './tof-optimizer';
 
 // Trajectory output for visualization
 export {
@@ -35,29 +35,29 @@ export {
   generateMissionTrajectory,
   generateTrajectoryWithManeuvers,
   sampleTrajectoryUniform,
-} from "./trajectory";
+} from './trajectory';
 
 // Control matrix (for advanced users)
 export {
-  computeControlMatrix,
   applyDeltaV,
   computeApproximateDeltaV,
-} from "./control-matrix";
+  computeControlMatrix,
+} from './control-matrix';
 
 // Validation (for UI-friendly error handling)
-export { validateTargetingConfig } from "./validation";
+export { validateTargetingConfig } from './validation';
 
 // Types (re-exported from centralized types)
 export type {
   ControlMatrix6x3,
-  Matrix3x3,
-  Matrix3x6,
-  Waypoint,
   Maneuver,
   ManeuverLeg,
+  Matrix3x3,
+  Matrix3x6,
   MissionPlan,
   TargetingOptions,
-  TrajectoryPoint,
   TargetingValidationCode,
   TargetingValidationResult,
-} from "../types/targeting";
+  TrajectoryPoint,
+  Waypoint,
+} from '../types/targeting';

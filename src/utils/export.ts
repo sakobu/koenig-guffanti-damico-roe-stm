@@ -6,15 +6,15 @@
  */
 
 import {
-  generateTrajectoryWithManeuvers,
-  ricToROE,
   type ClassicalOrbitalElements,
+  generateTrajectoryWithManeuvers,
   type MissionPlan,
+  ricToROE,
   type TargetingOptions,
   type TrajectoryPoint,
   type Vector3,
   type Waypoint,
-} from "@orbital";
+} from '@orbital';
 
 /**
  * Enhanced leg data with burn timing for JSON export
@@ -92,7 +92,7 @@ function downloadFile(
   const blob = new Blob([content], { type: mimeType });
   const url = URL.createObjectURL(blob);
 
-  const link = document.createElement("a");
+  const link = document.createElement('a');
   link.href = url;
   link.download = filename;
   document.body.appendChild(link);
@@ -108,7 +108,7 @@ function downloadFile(
  */
 function generateFilename(prefix: string, extension: string): string {
   const now = new Date();
-  const timestamp = now.toISOString().replace(/[:.]/g, "-").slice(0, 19);
+  const timestamp = now.toISOString().replace(/[:.]/g, '-').slice(0, 19);
   return `${prefix}_${timestamp}.${extension}`;
 }
 
@@ -191,8 +191,8 @@ export function exportMissionJSON(
   };
 
   const json = JSON.stringify(data, null, 2);
-  const filename = generateFilename("mission", "json");
-  downloadFile(json, filename, "application/json");
+  const filename = generateFilename('mission', 'json');
+  downloadFile(json, filename, 'application/json');
 }
 
 /**
@@ -220,17 +220,17 @@ export function exportTrajectoryCSV(
   );
 
   const headers = [
-    "time_s",
-    "event_type",
-    "position_r_m",
-    "position_i_m",
-    "position_c_m",
-    "velocity_r_ms",
-    "velocity_i_ms",
-    "velocity_c_ms",
-    "deltaV_r_ms",
-    "deltaV_i_ms",
-    "deltaV_c_ms",
+    'time_s',
+    'event_type',
+    'position_r_m',
+    'position_i_m',
+    'position_c_m',
+    'velocity_r_ms',
+    'velocity_i_ms',
+    'velocity_c_ms',
+    'deltaV_r_ms',
+    'deltaV_i_ms',
+    'deltaV_c_ms',
   ];
 
   // Build all rows with event type
@@ -248,7 +248,7 @@ export function exportTrajectoryCSV(
   for (const point of trajectoryPoints) {
     allRows.push({
       time: point.time,
-      eventType: "coast",
+      eventType: 'coast',
       position: point.position,
       velocity: point.velocity,
       deltaV: null,
@@ -261,7 +261,7 @@ export function exportTrajectoryCSV(
     const leg = missionPlan.legs[i];
     allRows.push({
       time: burn.time,
-      eventType: "departure",
+      eventType: 'departure',
       position: burn.position,
       velocity: [0, 0, 0], // Pre-burn velocity not tracked, use zeros
       deltaV: leg.burn1.deltaV,
@@ -274,7 +274,7 @@ export function exportTrajectoryCSV(
     const leg = missionPlan.legs[i];
     allRows.push({
       time: burn.time,
-      eventType: "arrival",
+      eventType: 'arrival',
       position: burn.position,
       velocity: leg.targetVelocity,
       deltaV: leg.burn2.deltaV,
@@ -282,7 +282,11 @@ export function exportTrajectoryCSV(
   }
 
   // Sort by time, with arrival before departure at same timestamp
-  const eventOrder: Record<string, number> = { arrival: 0, coast: 1, departure: 2 };
+  const eventOrder: Record<string, number> = {
+    arrival: 0,
+    coast: 1,
+    departure: 2,
+  };
   allRows.sort((a, b) => {
     const timeDiff = a.time - b.time;
     if (timeDiff !== 0) return timeDiff;
@@ -299,15 +303,15 @@ export function exportTrajectoryCSV(
     row.velocity[0].toFixed(6),
     row.velocity[1].toFixed(6),
     row.velocity[2].toFixed(6),
-    row.deltaV ? row.deltaV[0].toFixed(6) : "",
-    row.deltaV ? row.deltaV[1].toFixed(6) : "",
-    row.deltaV ? row.deltaV[2].toFixed(6) : "",
+    row.deltaV ? row.deltaV[0].toFixed(6) : '',
+    row.deltaV ? row.deltaV[1].toFixed(6) : '',
+    row.deltaV ? row.deltaV[2].toFixed(6) : '',
   ]);
 
-  const csv = [headers.join(","), ...csvRows.map((row) => row.join(","))].join(
-    "\n"
+  const csv = [headers.join(','), ...csvRows.map((row) => row.join(','))].join(
+    '\n'
   );
 
-  const filename = generateFilename("trajectory", "csv");
-  downloadFile(csv, filename, "text/csv");
+  const filename = generateFilename('trajectory', 'csv');
+  downloadFile(csv, filename, 'text/csv');
 }

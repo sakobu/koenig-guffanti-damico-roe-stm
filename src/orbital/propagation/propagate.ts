@@ -7,25 +7,24 @@
  * Reference: Koenig, Guffanti, D'Amico (2017)
  */
 
-import type { ROEPropagationOptions } from "../types/config";
-import type {
-  ClassicalOrbitalElements,
-  QuasiNonsingularROE,
-} from "../types/orbital-elements";
-import type { ROEVector } from "../types/vectors";
-
-import { J2, R_EARTH } from "../constants";
-import { matVecMul6 } from "../math/matrices";
-import { computeKappa } from "../math/orbital-factors";
-import { meanMotion } from "../math/kepler";
+import { J2, R_EARTH } from '../constants';
+import { meanMotion } from '../math/kepler';
+import { matVecMul6 } from '../math/matrices';
+import { computeKappa } from '../math/orbital-factors';
+import { computeJ2STM } from '../stm/j2';
+import { computeKeplerianSTM } from '../stm/keplerian';
 import {
   normalizeAngle,
   roeToVector,
   vectorToROE,
-} from "../transforms/roe-vector";
-import { propagateWithDrag } from "./drag-dispatch";
-import { computeJ2STM } from "../stm/j2";
-import { computeKeplerianSTM } from "../stm/keplerian";
+} from '../transforms/roe-vector';
+import type { ROEPropagationOptions } from '../types/config';
+import type {
+  ClassicalOrbitalElements,
+  QuasiNonsingularROE,
+} from '../types/orbital-elements';
+import type { ROEVector } from '../types/vectors';
+import { propagateWithDrag } from './drag-dispatch';
 
 /**
  * Propagate Quasi-Nonsingular ROE state forward in time.
@@ -105,10 +104,10 @@ export const propagateROE = (
   if (includeDrag) {
     if (!dragConfig) {
       throw new Error(
-        "[propagate]: dragConfig is required when includeDrag is true"
+        '[propagate]: dragConfig is required when includeDrag is true'
       );
     }
-    if (dragConfig.type === "eccentric" && chief.eccentricity < 0.05) {
+    if (dragConfig.type === 'eccentric' && chief.eccentricity < 0.05) {
       throw new Error(
         `[propagate]: Eccentric drag model requires e >= 0.05 (e=${chief.eccentricity.toFixed(
           4

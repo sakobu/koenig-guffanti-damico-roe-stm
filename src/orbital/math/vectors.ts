@@ -4,8 +4,8 @@
  * Common vector operations and small matrix utilities used throughout the library.
  */
 
-import type { ROEVector, Vector3 } from "../types/vectors";
-import type { ControlMatrix6x3, Matrix3x3 } from "../types/targeting";
+import type { ControlMatrix6x3, Matrix3x3 } from '../types/targeting';
+import type { ROEVector, Vector3 } from '../types/vectors';
 
 // ============================================================================
 // Vector Operations (3D)
@@ -109,8 +109,8 @@ export const invert3x3 = (A: Matrix3x3): Matrix3x3 => {
 
   if (Math.abs(det) < 1e-15) {
     throw new Error(
-      "[math]: Jacobian matrix is singular. " +
-        "The problem may be ill-conditioned at this configuration."
+      '[math]: Jacobian matrix is singular. ' +
+        'The problem may be ill-conditioned at this configuration.'
     );
   }
 

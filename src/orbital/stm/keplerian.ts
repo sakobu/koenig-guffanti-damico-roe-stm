@@ -12,10 +12,9 @@
  * where A_kep has only one non-zero element: A[1][0] = -3n/2
  */
 
-import type { STM6 } from "../types/matrices";
-import type { ClassicalOrbitalElements } from "../types/orbital-elements";
-
-import { meanMotion } from "../math/kepler";
+import { meanMotion } from '../math/kepler';
+import type { STM6 } from '../types/matrices';
+import type { ClassicalOrbitalElements } from '../types/orbital-elements';
 
 /**
  * Compute the Keplerian (unperturbed) State Transition Matrix.

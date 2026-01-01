@@ -1,14 +1,14 @@
-import type { Vector3 } from "@orbital";
+import type { Vector3 } from '@orbital';
 
 export interface SolarPanelProps {
-  width: number
-  height: number
-  depth: number
-  position: Vector3
-  rotation?: Vector3
-  color?: string
-  emissive?: string
-  emissiveIntensity?: number
+  width: number;
+  height: number;
+  depth: number;
+  position: Vector3;
+  rotation?: Vector3;
+  color?: string;
+  emissive?: string;
+  emissiveIntensity?: number;
 }
 
 export function SolarPanel({
@@ -19,7 +19,7 @@ export function SolarPanel({
   rotation = [0, 0, 0],
   color = '#d0d0d0',
   emissive = '#444444',
-  emissiveIntensity = 0.2
+  emissiveIntensity = 0.2,
 }: SolarPanelProps) {
   return (
     <mesh position={position} rotation={rotation}>
@@ -32,5 +32,5 @@ export function SolarPanel({
         emissiveIntensity={emissiveIntensity}
       />
     </mesh>
-  )
+  );
 }

@@ -19,12 +19,11 @@
  * @see ../stm/drag-estimation.ts - Estimate drag params from ROE observations
  */
 
-import type { DragConfig } from "../types/config";
-import type { ClassicalOrbitalElements } from "../types/orbital-elements";
-import type { ROEVector } from "../types/vectors";
-
-import { computeJ2DragSTMArbitrary } from "../stm/drag-arbitrary";
-import { computeJ2DragSTMEccentric } from "../stm/drag-eccentric";
+import { computeJ2DragSTMArbitrary } from '../stm/drag-arbitrary';
+import { computeJ2DragSTMEccentric } from '../stm/drag-eccentric';
+import type { DragConfig } from '../types/config';
+import type { ClassicalOrbitalElements } from '../types/orbital-elements';
+import type { ROEVector } from '../types/vectors';
 
 /** Eccentricity threshold for model selection (Section VII) */
 const ECCENTRICITY_THRESHOLD = 0.05;
@@ -67,7 +66,7 @@ export const propagateWithDrag = (
   tau: number,
   dragConfig: DragConfig
 ): ROEVector => {
-  if (dragConfig.type === "eccentric") {
+  if (dragConfig.type === 'eccentric') {
     // Validate eccentricity threshold
     if (chief.eccentricity < ECCENTRICITY_THRESHOLD) {
       throw new Error(

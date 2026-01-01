@@ -1,9 +1,10 @@
-import { Plane } from "@react-three/drei";
-import type { ThreeEvent } from "@react-three/fiber";
-import { Vector3 } from "three";
-import { useCameraDistance } from "@hooks/useCameraDistance";
-import { useMissionStore } from "@stores/mission";
-import { threeToRicPosition } from "@utils/coordinates";
+import { Plane } from '@react-three/drei';
+import type { ThreeEvent } from '@react-three/fiber';
+import { Vector3 } from 'three';
+
+import { useCameraDistance } from '@hooks/useCameraDistance';
+import { useMissionStore } from '@stores/mission';
+import { threeToRicPosition } from '@utils/coordinates';
 
 interface ClickPlaneProps {
   size?: number;

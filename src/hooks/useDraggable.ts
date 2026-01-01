@@ -1,8 +1,11 @@
-import { useState, useRef, useEffect, useCallback } from "react";
-import * as THREE from "three";
-import type { ThreeEvent } from "@react-three/fiber";
-import type { Vector3 } from "@orbital";
-import { threeToRicPosition } from "@utils/coordinates";
+import { useCallback,useEffect, useRef, useState } from 'react';
+
+import type { ThreeEvent } from '@react-three/fiber';
+import * as THREE from 'three';
+
+import type { Vector3 } from '@orbital';
+
+import { threeToRicPosition } from '@utils/coordinates';
 
 /**
  * Configuration options for the useDraggable hook.
@@ -220,7 +223,7 @@ export function useDraggable({
       onDragStartRef.current?.();
 
       // Visual feedback
-      document.body.style.cursor = "grabbing";
+      document.body.style.cursor = 'grabbing';
 
       // Capture pointer to receive events even when pointer leaves mesh
       (e.target as HTMLElement).setPointerCapture(e.pointerId);
@@ -252,7 +255,7 @@ export function useDraggable({
       onDragEndRef.current?.();
 
       // Reset cursor (back to grab, not auto - we're still hovering)
-      document.body.style.cursor = "grab";
+      document.body.style.cursor = 'grab';
 
       // Release pointer capture
       (e.target as HTMLElement).releasePointerCapture(e.pointerId);
@@ -285,8 +288,8 @@ export function useDraggable({
     };
 
     // passive: false allows preventDefault() to work
-    domElement.addEventListener("wheel", handleWheel, { passive: false });
-    return () => domElement.removeEventListener("wheel", handleWheel);
+    domElement.addEventListener('wheel', handleWheel, { passive: false });
+    return () => domElement.removeEventListener('wheel', handleWheel);
   }, [scrollEnabled, domElement]);
 
   // Cleanup on unmount - ensures proper state reset if component unmounts mid-drag
@@ -298,7 +301,7 @@ export function useDraggable({
         onDragEndRef.current?.();
       }
       // Always reset cursor on unmount
-      document.body.style.cursor = "auto";
+      document.body.style.cursor = 'auto';
     };
   }, []);
 

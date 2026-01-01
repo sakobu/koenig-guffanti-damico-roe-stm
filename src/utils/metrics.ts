@@ -1,4 +1,4 @@
-import type { Vector3 } from "@orbital";
+import type { Vector3 } from '@orbital';
 
 /**
  * Compute distance from origin (Chief is at origin)

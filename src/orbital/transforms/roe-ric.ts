@@ -15,22 +15,21 @@
  * The transformation reduces to the near-circular form (Eq. 2.17) when e -> 0.
  */
 
-import type { STM6 } from "../types/matrices";
-import type {
-  ClassicalOrbitalElements,
-  QuasiNonsingularROE,
-} from "../types/orbital-elements";
-import type { RelativeState, ROEVector } from "../types/vectors";
-
-import { matVecMul6 } from "../math/matrices";
 import {
   angularVelocity,
   meanMotion,
   orbitalRadius,
   radialVelocity,
   trueAnomalyFromMean,
-} from "../math/kepler";
-import { roeToVector, vectorToROE } from "./roe-vector";
+} from '../math/kepler';
+import { matVecMul6 } from '../math/matrices';
+import type { STM6 } from '../types/matrices';
+import type {
+  ClassicalOrbitalElements,
+  QuasiNonsingularROE,
+} from '../types/orbital-elements';
+import type { RelativeState, ROEVector } from '../types/vectors';
+import { roeToVector, vectorToROE } from './roe-vector';
 
 // ============================================================================
 // INTERNAL HELPER TYPES (used only by this module)
@@ -57,7 +56,7 @@ type MutableRow8 = [
   number,
   number,
   number,
-  number
+  number,
 ];
 
 /** Mutable 4x8 augmented matrix for Gaussian elimination. */
@@ -181,8 +180,8 @@ const invert2x2 = (M: Matrix2x2): Matrix2x2 => {
 
   if (Math.abs(det) < 1e-15) {
     throw new Error(
-      "ROE<->RIC: Out-of-plane matrix is singular. " +
-        "This can happen at theta = 0 deg or 180 deg with certain ROE configurations."
+      'ROE<->RIC: Out-of-plane matrix is singular. ' +
+        'This can happen at theta = 0 deg or 180 deg with certain ROE configurations.'
     );
   }
 
@@ -225,8 +224,8 @@ const invert4x4 = (M: Matrix4x4): Matrix4x4 => {
 
     if (maxVal < 1e-15) {
       throw new Error(
-        "ROE<->RIC: In-plane matrix is singular. " +
-          "Check orbital elements for degenerate configuration."
+        'ROE<->RIC: In-plane matrix is singular. ' +
+          'Check orbital elements for degenerate configuration.'
       );
     }
 

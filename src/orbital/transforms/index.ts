@@ -6,18 +6,18 @@
 
 // ROE <-> RIC conversions
 export {
-  roeToRIC,
-  ricToROE,
-  getROEtoRICMatrix,
   getRICtoROEMatrix,
-} from "./roe-ric";
+  getROEtoRICMatrix,
+  ricToROE,
+  roeToRIC,
+} from './roe-ric';
 
 // ROE state helpers
 export {
-  roeToVector,
-  vectorToROE,
-  normalizeAngle,
+  computeInverseJMatrix,
   // J transformation matrices (currently unused - flagged for review)
   computeJMatrix,
-  computeInverseJMatrix,
-} from "./roe-vector";
+  normalizeAngle,
+  roeToVector,
+  vectorToROE,
+} from './roe-vector';

@@ -1,4 +1,4 @@
-import Panel from "../Panel";
+import Panel from '../Panel';
 
 export default function HelpScenariosPanel() {
   return (
@@ -23,8 +23,8 @@ export default function HelpScenariosPanel() {
             altitude, stronger drag at perigee
           </p>
           <p>
-            <span className="text-cyan-400">Long-Duration Hold</span> — Optimized
-            for station-keeping
+            <span className="text-cyan-400">Long-Duration Hold</span> —
+            Optimized for station-keeping
           </p>
           <p>
             <span className="text-cyan-400">Large Formation</span> — Scaled for

@@ -1,6 +1,8 @@
-import { useState, type ReactNode } from "react";
-import { ChevronDown } from "lucide-react";
-import { withBlur } from "@utils/blur";
+import { type ReactNode,useState } from 'react';
+
+import { ChevronDown } from 'lucide-react';
+
+import { withBlur } from '@utils/blur';
 
 interface PanelProps {
   title: string;
@@ -27,12 +29,12 @@ export default function Panel({
         <ChevronDown
           size={16}
           className={`text-zinc-500 transition-transform duration-200
-            ${isOpen ? "rotate-0" : "-rotate-90"}`}
+            ${isOpen ? 'rotate-0' : '-rotate-90'}`}
         />
       </button>
       <div
         className={`overflow-hidden transition-all duration-200 ease-in-out
-          ${isOpen ? "max-h-250 opacity-100 mt-2" : "max-h-0 opacity-0"}`}
+          ${isOpen ? 'max-h-250 opacity-100 mt-2' : 'max-h-0 opacity-0'}`}
       >
         {children}
       </div>

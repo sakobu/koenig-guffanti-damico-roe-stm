@@ -1,8 +1,12 @@
-import { useState } from "react";
-import { AlertTriangle, Check, ChevronDown, X } from "lucide-react";
-import { useMissionStore } from "@stores/mission";
-import Panel from "../Panel";
-import type { ManeuverLeg } from "@orbital";
+import { useState } from 'react';
+
+import { AlertTriangle, Check, ChevronDown, X } from 'lucide-react';
+
+import type { ManeuverLeg } from '@orbital';
+
+import { useMissionStore } from '@stores/mission';
+
+import Panel from '../Panel';
 
 /**
  * Expandable row for displaying leg details
@@ -28,7 +32,7 @@ function LegRow({
         onClick={onToggle}
         className={`w-full flex items-center justify-between px-2 py-1.5 text-xs
           transition-colors cursor-pointer
-          ${isExpanded ? "bg-zinc-700/50" : "bg-zinc-800/50 hover:bg-zinc-700/50"}`}
+          ${isExpanded ? 'bg-zinc-700/50' : 'bg-zinc-800/50 hover:bg-zinc-700/50'}`}
       >
         <span className="font-mono text-zinc-300">
           Leg {index + 1}: {leg.totalDeltaV.toFixed(3)} m/s
@@ -42,7 +46,7 @@ function LegRow({
           <ChevronDown
             size={12}
             className={`text-zinc-500 transition-transform duration-200
-              ${isExpanded ? "rotate-0" : "-rotate-90"}`}
+              ${isExpanded ? 'rotate-0' : '-rotate-90'}`}
           />
         </div>
       </button>
@@ -50,7 +54,7 @@ function LegRow({
       {/* Expanded details */}
       <div
         className={`overflow-hidden transition-all duration-200 ease-in-out
-          ${isExpanded ? "max-h-60 opacity-100" : "max-h-0 opacity-0"}`}
+          ${isExpanded ? 'max-h-60 opacity-100' : 'max-h-0 opacity-0'}`}
       >
         <div className="pl-3 py-2 border-l-2 border-cyan-600 bg-zinc-800/30 space-y-1">
           <div className="flex justify-between text-xs">

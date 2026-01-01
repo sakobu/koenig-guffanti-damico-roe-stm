@@ -1,21 +1,23 @@
-import { Canvas } from '@react-three/fiber'
-import { OrbitControls } from '@react-three/drei'
-import type { ReactNode } from 'react'
-import { useMissionStore } from '@stores/mission'
+import type { ReactNode } from 'react';
+
+import { OrbitControls } from '@react-three/drei';
+import { Canvas } from '@react-three/fiber';
+
+import { useMissionStore } from '@stores/mission';
 
 interface SceneProps {
-  children?: ReactNode
-  cameraDistance?: number
-  maxZoomOut?: number
+  children?: ReactNode;
+  cameraDistance?: number;
+  maxZoomOut?: number;
 }
 
 interface ControlsProps {
-  maxZoomOut: number
+  maxZoomOut: number;
 }
 
 function Controls({ maxZoomOut }: ControlsProps) {
-  const isDragging = useMissionStore((s) => s.isDraggingWaypoint)
-  const hasSelection = useMissionStore((s) => s.selectedWaypointIndex !== null)
+  const isDragging = useMissionStore((s) => s.isDraggingWaypoint);
+  const hasSelection = useMissionStore((s) => s.selectedWaypointIndex !== null);
 
   return (
     <OrbitControls
@@ -25,7 +27,7 @@ function Controls({ maxZoomOut }: ControlsProps) {
       minDistance={50}
       maxDistance={maxZoomOut}
     />
-  )
+  );
 }
 
 export default function Scene({
@@ -53,5 +55,5 @@ export default function Scene({
 
       {children}
     </Canvas>
-  )
+  );
 }

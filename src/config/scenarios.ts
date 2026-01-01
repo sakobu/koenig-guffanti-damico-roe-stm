@@ -1,12 +1,12 @@
-import type { ClassicalOrbitalElements, Vector3 } from "@orbital";
-import { MU_EARTH } from "@orbital";
+import type { ClassicalOrbitalElements, Vector3 } from '@orbital';
+import { MU_EARTH } from '@orbital';
 
 export type ScenarioKey =
-  | "iss"
-  | "eccentric"
-  | "lowAltEccentric"
-  | "longDurationHold"
-  | "largeFormation";
+  | 'iss'
+  | 'eccentric'
+  | 'lowAltEccentric'
+  | 'longDurationHold'
+  | 'largeFormation';
 
 export interface Scenario {
   label: string;
@@ -35,7 +35,7 @@ export interface Scenario {
 
 export const SCENARIOS: Record<ScenarioKey, Scenario> = {
   iss: {
-    label: "ISS Circular",
+    label: 'ISS Circular',
     chief: {
       semiMajorAxis: 6_778_000,
       eccentricity: 0.0005,
@@ -59,7 +59,7 @@ export const SCENARIOS: Record<ScenarioKey, Scenario> = {
     trajectoryPointsPerLeg: 500,
   },
   eccentric: {
-    label: "High-Alt Eccentric",
+    label: 'High-Alt Eccentric',
     chief: {
       semiMajorAxis: 10_000_000,
       eccentricity: 0.1,
@@ -83,7 +83,7 @@ export const SCENARIOS: Record<ScenarioKey, Scenario> = {
     trajectoryPointsPerLeg: 500,
   },
   lowAltEccentric: {
-    label: "Low-Alt Eccentric",
+    label: 'Low-Alt Eccentric',
     chief: {
       semiMajorAxis: 7_500_000,
       eccentricity: 0.1,
@@ -107,7 +107,7 @@ export const SCENARIOS: Record<ScenarioKey, Scenario> = {
     trajectoryPointsPerLeg: 500,
   },
   longDurationHold: {
-    label: "Long-Duration Hold",
+    label: 'Long-Duration Hold',
     chief: {
       semiMajorAxis: 7_000_000, // ~622 km altitude
       eccentricity: 0.001, // Near-circular
@@ -131,7 +131,7 @@ export const SCENARIOS: Record<ScenarioKey, Scenario> = {
     trajectoryPointsPerLeg: 500,
   },
   largeFormation: {
-    label: "Large Formation (10km)",
+    label: 'Large Formation (10km)',
     chief: {
       semiMajorAxis: 7_200_000, // ~822 km altitude
       eccentricity: 0.0005, // Near-circular

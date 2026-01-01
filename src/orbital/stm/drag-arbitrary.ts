@@ -29,20 +29,19 @@
  * @see drag-eccentric.ts - Simpler model for e >= 0.05 (7D state, 1 drag param)
  */
 
-import type { DragConfigArbitrary } from "../types/config";
-import type { DragColumns6x3, STM9 } from "../types/matrices";
-import type { ClassicalOrbitalElements } from "../types/orbital-elements";
-import type { ROEVector, ROEVector9 } from "../types/vectors";
-
-import { J2, R_EARTH } from "../constants";
-import { meanMotion } from "../math/kepler";
-import { matVecMul9 } from "../math/matrices";
+import { J2, R_EARTH } from '../constants';
+import { meanMotion } from '../math/kepler';
+import { matVecMul9 } from '../math/matrices';
 import {
   computeApsidalState,
   computeKappa,
   computeOrbitalFactors,
-} from "../math/orbital-factors";
-import { buildJ2Matrix } from "./j2";
+} from '../math/orbital-factors';
+import type { DragConfigArbitrary } from '../types/config';
+import type { DragColumns6x3, STM9 } from '../types/matrices';
+import type { ClassicalOrbitalElements } from '../types/orbital-elements';
+import type { ROEVector, ROEVector9 } from '../types/vectors';
+import { buildJ2Matrix } from './j2';
 
 /**
  * Compute complete J2+Drag STM for arbitrary eccentricity orbits
@@ -71,7 +70,7 @@ export const computeJ2DragSTMArbitrary = (
   stm: STM9;
   propagate: (
     roe: ROEVector,
-    config: Omit<DragConfigArbitrary, "type">
+    config: Omit<DragConfigArbitrary, 'type'>
   ) => ROEVector;
   dragColumns: DragColumns6x3;
 } => {
@@ -157,7 +156,7 @@ export const computeJ2DragSTMArbitrary = (
 
     propagate: (
       roe: ROEVector,
-      config: Omit<DragConfigArbitrary, "type">
+      config: Omit<DragConfigArbitrary, 'type'>
     ): ROEVector => {
       const state9: ROEVector9 = [
         ...roe,
@@ -196,7 +195,7 @@ export const computeJ2DragSTMArbitrary = (
 export const eccentricToArbitraryConfig = (
   daDotDrag: number,
   chief: ClassicalOrbitalElements
-): Omit<DragConfigArbitrary, "type"> => {
+): Omit<DragConfigArbitrary, 'type'> => {
   const { eccentricity: e, argumentOfPerigee: omega } = chief;
 
   // Circularization constraint: delta-e-dot = (1-e) * delta-a-dot

@@ -16,9 +16,9 @@
  *   dey' = -dex sin(omega) + dey cos(omega) ~= e * d-omega
  */
 
-import type { ROEVector } from "../types/vectors";
-import type { STM6 } from "../types/matrices";
-import type { QuasiNonsingularROE } from "../types/orbital-elements";
+import type { STM6 } from '../types/matrices';
+import type { QuasiNonsingularROE } from '../types/orbital-elements';
+import type { ROEVector } from '../types/vectors';
 
 /**
  * Convert a Quasi-Nonsingular ROE object into a 6-element state vector.

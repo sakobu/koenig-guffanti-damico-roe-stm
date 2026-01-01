@@ -1,6 +1,6 @@
-import { create } from "zustand";
+import { create } from 'zustand';
 
-export type SidebarTab = "help" | "config";
+export type SidebarTab = 'help' | 'config';
 
 interface UIState {
   sidebarOpen: boolean;
@@ -22,7 +22,7 @@ export const useUIStore = create<UIStore>((set) => ({
   // Initial state
   sidebarOpen: true,
   hudVisible: true,
-  activeTab: "config",
+  activeTab: 'config',
 
   // Actions
   toggleSidebar: () => set((state) => ({ sidebarOpen: !state.sidebarOpen })),

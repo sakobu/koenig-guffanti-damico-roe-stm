@@ -18,7 +18,7 @@ export default function Slider({
   min,
   max,
   step = 1,
-  unit = "",
+  unit = '',
   disabled = false,
   formatValue,
   showEndLabels = false,
@@ -32,17 +32,19 @@ export default function Slider({
       {label && !showEndLabels && (
         <div className="flex items-center justify-between">
           <span
-            className={`text-sm ${disabled ? "text-zinc-600" : "text-zinc-400"}`}
+            className={`text-sm ${disabled ? 'text-zinc-600' : 'text-zinc-400'}`}
           >
             {label}
           </span>
           <span
             className={`text-sm font-mono ${
-              disabled ? "text-zinc-600" : "text-cyan-400"
+              disabled ? 'text-zinc-600' : 'text-cyan-400'
             }`}
           >
             {displayValue}
-            {unit && !formatValue && <span className="text-zinc-500 ml-0.5">{unit}</span>}
+            {unit && !formatValue && (
+              <span className="text-zinc-500 ml-0.5">{unit}</span>
+            )}
           </span>
         </div>
       )}

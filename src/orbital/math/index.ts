@@ -6,32 +6,32 @@
 
 // Keplerian mechanics
 export {
-  trueAnomalyFromMean,
+  angularVelocity,
   meanMotion,
   orbitalRadius,
   radialVelocity,
-  angularVelocity,
-} from "./kepler";
+  trueAnomalyFromMean,
+} from './kepler';
 
 // STM matrix-vector operations
-export { matVecMul6, matVecMul7, matVecMul9 } from "./matrices";
+export { matVecMul6, matVecMul7, matVecMul9 } from './matrices';
 
 // Orbital factors (Paper Eq. 14-16)
 export {
+  computeApsidalState,
   computeKappa,
   computeOrbitalFactors,
-  computeApsidalState,
-} from "./orbital-factors";
+} from './orbital-factors';
 
 // Vector operations
 export {
+  add3,
+  addROE,
+  invert3x3,
+  matMul3x3_3x1,
+  matMul6x3_3x1,
   norm3,
   sub3,
-  add3,
-  ZERO_VECTOR3,
-  matMul6x3_3x1,
-  matMul3x3_3x1,
-  invert3x3,
-  addROE,
   ZERO_ROE,
-} from "./vectors";
+  ZERO_VECTOR3,
+} from './vectors';

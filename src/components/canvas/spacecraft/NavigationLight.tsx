@@ -1,17 +1,17 @@
-import type { Vector3 } from "@orbital";
+import type { Vector3 } from '@orbital';
 
 export interface NavigationLightProps {
-  position: Vector3
-  color: string
-  intensity?: number
-  distance?: number
+  position: Vector3;
+  color: string;
+  intensity?: number;
+  distance?: number;
 }
 
 export function NavigationLight({
   position,
   color,
   intensity = 2,
-  distance = 100
+  distance = 100,
 }: NavigationLightProps) {
   return (
     <group position={position}>
@@ -21,11 +21,7 @@ export function NavigationLight({
         <meshBasicMaterial color={color} />
       </mesh>
       {/* Actual light */}
-      <pointLight
-        color={color}
-        intensity={intensity}
-        distance={distance}
-      />
+      <pointLight color={color} intensity={intensity} distance={distance} />
     </group>
-  )
+  );
 }

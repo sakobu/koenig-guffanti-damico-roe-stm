@@ -1,9 +1,12 @@
-import { useMemo } from "react";
-import { useMissionStore } from "@stores/mission";
-import { exportMissionJSON, exportTrajectoryCSV } from "@utils/export";
-import Panel from "../Panel";
-import Button from "../../../shared/Button";
-import type { DragConfig, TargetingOptions } from "@orbital";
+import { useMemo } from 'react';
+
+import type { DragConfig, TargetingOptions } from '@orbital';
+
+import { useMissionStore } from '@stores/mission';
+import { exportMissionJSON, exportTrajectoryCSV } from '@utils/export';
+
+import Button from '../../../shared/Button';
+import Panel from '../Panel';
 
 /** Eccentricity threshold for eccentric drag model (from Koenig et al. 2017) */
 const ECCENTRICITY_THRESHOLD = 0.05;
@@ -27,8 +30,8 @@ export default function ExportPanel() {
 
     const isNearCircular = chief.eccentricity < ECCENTRICITY_THRESHOLD;
     const dragConfig: DragConfig = isNearCircular
-      ? { type: "arbitrary", daDotDrag, dexDotDrag, deyDotDrag }
-      : { type: "eccentric", daDotDrag };
+      ? { type: 'arbitrary', daDotDrag, dexDotDrag, deyDotDrag }
+      : { type: 'eccentric', daDotDrag };
 
     return {
       includeJ2,

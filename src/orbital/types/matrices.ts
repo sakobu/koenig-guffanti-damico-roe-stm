@@ -15,7 +15,7 @@ export type Row6 = readonly [
   col2: number,
   col3: number,
   col4: number,
-  col5: number
+  col5: number,
 ];
 
 /**
@@ -29,7 +29,7 @@ export type Row7 = readonly [
   col3: number,
   col4: number,
   col5: number,
-  col6: number
+  col6: number,
 ];
 
 /**
@@ -45,7 +45,7 @@ export type Row9 = readonly [
   col5: number,
   col6: number,
   col7: number,
-  col8: number
+  col8: number,
 ];
 
 /**
@@ -66,7 +66,7 @@ export type STM6 = readonly [
   rowDex: Row6,
   rowDey: Row6,
   rowDix: Row6,
-  rowDiy: Row6
+  rowDiy: Row6,
 ];
 
 /**
@@ -80,7 +80,7 @@ export type STM7 = readonly [
   rowDey: Row7,
   rowDix: Row7,
   rowDiy: Row7,
-  rowDaDotDrag: Row7
+  rowDaDotDrag: Row7,
 ];
 
 /**
@@ -96,7 +96,7 @@ export type STM9 = readonly [
   rowDiy: Row9,
   rowDaDotDrag: Row9,
   rowDexDotDrag: Row9,
-  rowDeyDotDrag: Row9
+  rowDeyDotDrag: Row9,
 ];
 
 /**
@@ -109,5 +109,5 @@ export type DragColumns6x3 = readonly [
   rowDex: DragRow3,
   rowDey: DragRow3,
   rowDix: DragRow3,
-  rowDiy: DragRow3
+  rowDiy: DragRow3,
 ];

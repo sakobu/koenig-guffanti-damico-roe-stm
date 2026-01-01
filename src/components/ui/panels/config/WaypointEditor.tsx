@@ -1,29 +1,39 @@
-import { useState } from "react";
-import type { Waypoint, Vector3 } from "@orbital";
-import { useMissionStore } from "@stores/mission";
-import Select from "../../../shared/Select";
+import { useState } from 'react';
 
-type VelocityPreset = "stationary" | "driftForward" | "driftBackward" | "custom";
+import type { Vector3,Waypoint } from '@orbital';
 
-const VELOCITY_PRESETS: Record<Exclude<VelocityPreset, "custom">, Vector3 | undefined> = {
+import { useMissionStore } from '@stores/mission';
+
+import Select from '../../../shared/Select';
+
+type VelocityPreset =
+  | 'stationary'
+  | 'driftForward'
+  | 'driftBackward'
+  | 'custom';
+
+const VELOCITY_PRESETS: Record<
+  Exclude<VelocityPreset, 'custom'>,
+  Vector3 | undefined
+> = {
   stationary: undefined,
   driftForward: [0, 0.1, 0],
   driftBackward: [0, -0.1, 0],
 };
 
 function getVelocityPreset(velocity: Vector3 | undefined): VelocityPreset {
-  if (!velocity) return "stationary";
+  if (!velocity) return 'stationary';
   const [r, i, c] = velocity;
   if (Math.abs(r) < 0.001 && Math.abs(i - 0.1) < 0.001 && Math.abs(c) < 0.001) {
-    return "driftForward";
+    return 'driftForward';
   }
   if (Math.abs(r) < 0.001 && Math.abs(i + 0.1) < 0.001 && Math.abs(c) < 0.001) {
-    return "driftBackward";
+    return 'driftBackward';
   }
   if (Math.abs(r) < 0.001 && Math.abs(i) < 0.001 && Math.abs(c) < 0.001) {
-    return "stationary";
+    return 'stationary';
   }
-  return "custom";
+  return 'custom';
 }
 
 interface WaypointEditorProps {
@@ -31,9 +41,14 @@ interface WaypointEditorProps {
   index: number;
 }
 
-export default function WaypointEditor({ waypoint, index }: WaypointEditorProps) {
+export default function WaypointEditor({
+  waypoint,
+  index,
+}: WaypointEditorProps) {
   const updateWaypoint = useMissionStore((s) => s.updateWaypoint);
-  const updateWaypointVelocity = useMissionStore((s) => s.updateWaypointVelocity);
+  const updateWaypointVelocity = useMissionStore(
+    (s) => s.updateWaypointVelocity
+  );
 
   // Round to 2 decimal places
   const round2 = (n: number) => Math.round(n * 100) / 100;
@@ -53,11 +68,11 @@ export default function WaypointEditor({ waypoint, index }: WaypointEditorProps)
   });
 
   const [isCustomMode, setIsCustomMode] = useState(
-    getVelocityPreset(waypoint.velocity) === "custom"
+    getVelocityPreset(waypoint.velocity) === 'custom'
   );
 
   // Position handlers
-  const handlePositionChange = (axis: "r" | "i" | "c", value: string) => {
+  const handlePositionChange = (axis: 'r' | 'i' | 'c', value: string) => {
     setPosition((prev) => ({ ...prev, [axis]: value }));
   };
 
@@ -70,7 +85,7 @@ export default function WaypointEditor({ waypoint, index }: WaypointEditorProps)
 
   // Velocity handlers
   const handleVelocityPresetChange = (preset: string) => {
-    if (preset === "custom") {
+    if (preset === 'custom') {
       setIsCustomMode(true);
     } else {
       setIsCustomMode(false);
@@ -79,7 +94,7 @@ export default function WaypointEditor({ waypoint, index }: WaypointEditorProps)
     }
   };
 
-  const handleVelocityChange = (axis: "r" | "i" | "c", value: string) => {
+  const handleVelocityChange = (axis: 'r' | 'i' | 'c', value: string) => {
     setVelocity((prev) => ({ ...prev, [axis]: value }));
   };
 
@@ -96,14 +111,14 @@ export default function WaypointEditor({ waypoint, index }: WaypointEditorProps)
   };
 
   const currentPreset = isCustomMode
-    ? "custom"
+    ? 'custom'
     : getVelocityPreset(waypoint.velocity);
 
   const velocityOptions = [
-    { value: "stationary", label: "Stationary" },
-    { value: "driftForward", label: "Drift +I (along-track)" },
-    { value: "driftBackward", label: "Drift -I (retreat)" },
-    { value: "custom", label: "Custom..." },
+    { value: 'stationary', label: 'Stationary' },
+    { value: 'driftForward', label: 'Drift +I (along-track)' },
+    { value: 'driftBackward', label: 'Drift -I (retreat)' },
+    { value: 'custom', label: 'Custom...' },
   ];
 
   const inputClass = `w-full px-1.5 py-1 text-xs bg-zinc-800 text-zinc-200 rounded
@@ -116,7 +131,7 @@ export default function WaypointEditor({ waypoint, index }: WaypointEditorProps)
       <div className="space-y-2">
         <label className="block text-sm text-zinc-400">Position (m)</label>
         <div className="grid grid-cols-3 gap-2">
-          {(["r", "i", "c"] as const).map((axis) => (
+          {(['r', 'i', 'c'] as const).map((axis) => (
             <div key={axis}>
               <label className="block text-xs text-zinc-500 mb-1">
                 {axis.toUpperCase()}
@@ -126,7 +141,7 @@ export default function WaypointEditor({ waypoint, index }: WaypointEditorProps)
                 value={position[axis]}
                 onChange={(e) => handlePositionChange(axis, e.target.value)}
                 onBlur={commitPosition}
-                onKeyDown={(e) => e.key === "Enter" && commitPosition()}
+                onKeyDown={(e) => e.key === 'Enter' && commitPosition()}
                 step="1"
                 className={inputClass}
               />
@@ -144,9 +159,9 @@ export default function WaypointEditor({ waypoint, index }: WaypointEditorProps)
           options={velocityOptions}
         />
 
-        {currentPreset === "custom" && (
+        {currentPreset === 'custom' && (
           <div className="grid grid-cols-3 gap-2 mt-2">
-            {(["r", "i", "c"] as const).map((axis) => (
+            {(['r', 'i', 'c'] as const).map((axis) => (
               <div key={axis}>
                 <label className="block text-xs text-zinc-500 mb-1">
                   {axis.toUpperCase()} (m/s)
@@ -156,7 +171,7 @@ export default function WaypointEditor({ waypoint, index }: WaypointEditorProps)
                   value={velocity[axis]}
                   onChange={(e) => handleVelocityChange(axis, e.target.value)}
                   onBlur={commitVelocity}
-                  onKeyDown={(e) => e.key === "Enter" && commitVelocity()}
+                  onKeyDown={(e) => e.key === 'Enter' && commitVelocity()}
                   step="0.01"
                   className={inputClass}
                 />

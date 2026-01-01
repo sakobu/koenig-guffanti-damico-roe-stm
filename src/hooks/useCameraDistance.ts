@@ -1,5 +1,6 @@
-import { useRef, useState } from "react";
-import { useFrame, useThree } from "@react-three/fiber";
+import { useRef, useState } from 'react';
+
+import { useFrame, useThree } from '@react-three/fiber';
 
 /**
  * Returns the raw camera distance without scaling.

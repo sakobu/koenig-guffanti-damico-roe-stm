@@ -1,5 +1,6 @@
-import type { Vector3 as ThreeVector3 } from "three";
-import type { Vector3 } from "@orbital";
+import type { Vector3 as ThreeVector3 } from 'three';
+
+import type { Vector3 } from '@orbital';
 
 /**
  * RIC (Radial, In-track, Cross-track) to Three.js coordinate conversion.
@@ -18,9 +19,7 @@ import type { Vector3 } from "@orbital";
  */
 
 /** Convert Three.js Vector3 to RIC position [R, I, C] */
-export const threeToRicPosition = (
-  v: ThreeVector3
-): Vector3 => [
+export const threeToRicPosition = (v: ThreeVector3): Vector3 => [
   v.y, // y → R (up)
   v.x, // x → I (right)
   v.z, // z → C (depth)

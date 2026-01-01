@@ -1,12 +1,12 @@
 export interface MainBodyProps {
-  width: number
-  height: number
-  depth: number
-  color: string
-  emissive?: string
-  emissiveIntensity?: number
-  metalness?: number
-  roughness?: number
+  width: number;
+  height: number;
+  depth: number;
+  color: string;
+  emissive?: string;
+  emissiveIntensity?: number;
+  metalness?: number;
+  roughness?: number;
 }
 
 export function MainBody({
@@ -17,7 +17,7 @@ export function MainBody({
   emissive,
   emissiveIntensity = 0.3,
   metalness = 0.6,
-  roughness = 0.4
+  roughness = 0.4,
 }: MainBodyProps) {
   return (
     <mesh>
@@ -30,5 +30,5 @@ export function MainBody({
         emissiveIntensity={emissive ? emissiveIntensity : 0}
       />
     </mesh>
-  )
+  );
 }

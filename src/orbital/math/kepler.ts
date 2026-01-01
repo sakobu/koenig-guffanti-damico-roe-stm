@@ -5,7 +5,7 @@
  * when applying the STM over time by converting between anomalies and computing orbital periods.
  */
 
-import type { TrueAnomaly } from "../types/orbital-elements";
+import type { TrueAnomaly } from '../types/orbital-elements';
 
 /**
  * Solve Kepler's equation to obtain true anomaly from mean anomaly.

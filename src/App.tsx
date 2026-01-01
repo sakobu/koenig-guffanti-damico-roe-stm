@@ -1,16 +1,16 @@
-import Scene from "./components/canvas/Scene";
-import RICAxes from "./components/canvas/environment/RICAxes";
-import Grid from "./components/canvas/environment/Grid";
-import Chief from "./components/canvas/spacecraft/Chief";
-import Deputy from "./components/canvas/spacecraft/Deputy";
-import Waypoints from "./components/canvas/mission/Waypoints";
-import Trajectory from "./components/canvas/mission/Trajectory";
-import ClickPlane from "./components/canvas/mission/ClickPlane";
-import AnimationController from "./components/canvas/AnimationController";
-import Sidebar from "./components/ui/Sidebar";
-import HUD from "./components/ui/hud/HUD";
-import { useMissionStore } from "./stores/mission";
-import { SCENARIOS } from "./config/scenarios";
+import AnimationController from './components/canvas/AnimationController';
+import Grid from './components/canvas/environment/Grid';
+import RICAxes from './components/canvas/environment/RICAxes';
+import ClickPlane from './components/canvas/mission/ClickPlane';
+import Trajectory from './components/canvas/mission/Trajectory';
+import Waypoints from './components/canvas/mission/Waypoints';
+import Scene from './components/canvas/Scene';
+import Chief from './components/canvas/spacecraft/Chief';
+import Deputy from './components/canvas/spacecraft/Deputy';
+import HUD from './components/ui/hud/HUD';
+import Sidebar from './components/ui/Sidebar';
+import { SCENARIOS } from './config/scenarios';
+import { useMissionStore } from './stores/mission';
 
 export default function App() {
   const scenario = useMissionStore((s) => s.scenario);

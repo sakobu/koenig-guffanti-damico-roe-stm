@@ -7,12 +7,11 @@
  * Reference: Standard optimization techniques for spacecraft trajectory design.
  */
 
-import type { ClassicalOrbitalElements } from "../types/orbital-elements";
-import type { RelativeState, Vector3 } from "../types/vectors";
-import type { ManeuverLeg, TargetingOptions } from "../types/targeting";
-
-import { meanMotion } from "../math/kepler";
-import { solveRendezvous } from "./rendezvous";
+import { meanMotion } from '../math/kepler';
+import type { ClassicalOrbitalElements } from '../types/orbital-elements';
+import type { ManeuverLeg, TargetingOptions } from '../types/targeting';
+import type { RelativeState, Vector3 } from '../types/vectors';
+import { solveRendezvous } from './rendezvous';
 
 // Golden ratio for golden section search
 const PHI = (1 + Math.sqrt(5)) / 2;

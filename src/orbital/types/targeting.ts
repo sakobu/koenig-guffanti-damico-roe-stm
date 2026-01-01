@@ -7,9 +7,9 @@
  * PhD Thesis, TU Delft, 2010, Section 2.2.2 (Gauss Variational Equations)
  */
 
-import type { DragConfig } from "./config";
-import type { ClassicalOrbitalElements } from "./orbital-elements";
-import type { Vector3 } from "./vectors";
+import type { DragConfig } from './config';
+import type { ClassicalOrbitalElements } from './orbital-elements';
+import type { Vector3 } from './vectors';
 
 // ============================================================================
 // Matrix Types
@@ -27,7 +27,7 @@ export type ControlMatrix6x3 = readonly [
   readonly [number, number, number],
   readonly [number, number, number],
   readonly [number, number, number],
-  readonly [number, number, number]
+  readonly [number, number, number],
 ];
 
 /**
@@ -36,7 +36,7 @@ export type ControlMatrix6x3 = readonly [
 export type Matrix3x6 = readonly [
   readonly [number, number, number, number, number, number],
   readonly [number, number, number, number, number, number],
-  readonly [number, number, number, number, number, number]
+  readonly [number, number, number, number, number, number],
 ];
 
 /**
@@ -223,12 +223,12 @@ export type TrajectoryPoint = {
  * warnings, disable specific buttons, suggest fixes).
  */
 export type TargetingValidationCode =
-  | "DRAG_MISSING_CONFIG"
-  | "DRAG_ECCENTRICITY_TOO_LOW"
-  | "INVALID_SEMI_MAJOR_AXIS"
-  | "INVALID_ECCENTRICITY"
-  | "INVALID_GRAVITATIONAL_PARAMETER"
-  | "NEAR_EQUATORIAL_ORBIT";
+  | 'DRAG_MISSING_CONFIG'
+  | 'DRAG_ECCENTRICITY_TOO_LOW'
+  | 'INVALID_SEMI_MAJOR_AXIS'
+  | 'INVALID_ECCENTRICITY'
+  | 'INVALID_GRAVITATIONAL_PARAMETER'
+  | 'NEAR_EQUATORIAL_ORBIT';
 
 /**
  * Validation result for targeting configuration.
