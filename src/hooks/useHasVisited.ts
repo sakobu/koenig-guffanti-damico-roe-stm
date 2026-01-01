@@ -1,5 +1,5 @@
 import { useEffect } from "react";
-import { useUIStore } from "../stores/ui";
+import { useUIStore } from "@stores/ui";
 
 const STORAGE_KEY = "koenig-damico-has-visited";
 
