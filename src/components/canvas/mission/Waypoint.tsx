@@ -27,11 +27,15 @@ export default function Waypoint({
   onDrag,
   scale = 1,
 }: WaypointProps) {
-  const { camera, gl } = useThree();
+  const camera = useThree((state) => state.camera);
+  const gl = useThree((state) => state.gl);
   const [isDragging, setIsDragging] = useState(false);
   const setDraggingWaypoint = useMissionStore((s) => s.setDraggingWaypoint);
   const dragPlane = useRef(new THREE.Plane(new THREE.Vector3(0, 0, 1), 0));
   const currentZ = useRef(position[2]);
+  const raycaster = useRef(new THREE.Raycaster());
+  const mouse = useRef(new THREE.Vector2());
+  const intersection = useRef(new THREE.Vector3());
 
   // Update Z ref when position changes externally
   useEffect(() => {
@@ -41,22 +45,17 @@ export default function Waypoint({
   const getWorldPosition = useCallback(
     (clientX: number, clientY: number): Vector3 | null => {
       const rect = gl.domElement.getBoundingClientRect();
-      const mouse = new THREE.Vector2(
+      mouse.current.set(
         ((clientX - rect.left) / rect.width) * 2 - 1,
         -((clientY - rect.top) / rect.height) * 2 + 1
       );
 
-      const raycaster = new THREE.Raycaster();
-      raycaster.setFromCamera(mouse, camera);
-
-      // Create plane at current Z position
+      raycaster.current.setFromCamera(mouse.current, camera);
       dragPlane.current.set(new THREE.Vector3(0, 0, 1), -currentZ.current);
 
-      const intersection = new THREE.Vector3();
-      if (raycaster.ray.intersectPlane(dragPlane.current, intersection)) {
-        // Convert Three.js position to RIC, preserving current C (z) value
+      if (raycaster.current.ray.intersectPlane(dragPlane.current, intersection.current)) {
         return threeToRicPosition(
-          new THREE.Vector3(intersection.x, intersection.y, currentZ.current)
+          new THREE.Vector3(intersection.current.x, intersection.current.y, currentZ.current)
         );
       }
       return null;
