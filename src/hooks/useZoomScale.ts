@@ -2,7 +2,7 @@ import { useRef, useState } from "react";
 import { useFrame, useThree } from "@react-three/fiber";
 
 /** Default camera distance at which zoomScale = 1.0 */
-export const DEFAULT_BASE_DISTANCE = 1500;
+const DEFAULT_BASE_DISTANCE = 1500;
 
 interface UseZoomScaleOptions {
   baseDistance?: number;
@@ -52,7 +52,12 @@ export function useZoomScale(options: UseZoomScaleOptions = {}): number {
 
   useFrame(() => {
     const distance = camera.position.length();
-    const newScale = computeZoomScale(distance, baseDistance, minScale, maxScale);
+    const newScale = computeZoomScale(
+      distance,
+      baseDistance,
+      minScale,
+      maxScale
+    );
 
     // Only trigger re-render if change exceeds threshold
     if (Math.abs(newScale - scaleRef.current) > threshold) {
@@ -63,4 +68,3 @@ export function useZoomScale(options: UseZoomScaleOptions = {}): number {
 
   return scale;
 }
-

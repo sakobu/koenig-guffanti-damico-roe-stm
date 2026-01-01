@@ -1,14 +1,10 @@
 import { Sphere, Billboard, Text } from "@react-three/drei";
 import { useThree } from "@react-three/fiber";
 import type { ThreeEvent } from "@react-three/fiber";
-import { useState, useRef, useEffect, useCallback } from "react";
-import * as THREE from "three";
 import type { Vector3 } from "@orbital";
 import { useMissionStore } from "../../../stores/mission";
-import {
-  ricToPosition,
-  threeToRicPosition,
-} from "../../../utils/coordinates";
+import { useDraggable } from "../../../hooks/useDraggable";
+import { ricToPosition } from "../../../utils/coordinates";
 
 interface WaypointProps {
   position: Vector3;
@@ -29,97 +25,17 @@ export default function Waypoint({
 }: WaypointProps) {
   const camera = useThree((state) => state.camera);
   const gl = useThree((state) => state.gl);
-  const [isDragging, setIsDragging] = useState(false);
-  const isDraggingRef = useRef(false);
-  const pointerIdRef = useRef<number | null>(null);
   const setDraggingWaypoint = useMissionStore((s) => s.setDraggingWaypoint);
-  const dragPlane = useRef(new THREE.Plane(new THREE.Vector3(0, 0, 1), 0));
-  const currentZ = useRef(position[2]);
-  const raycaster = useRef(new THREE.Raycaster());
-  const mouse = useRef(new THREE.Vector2());
-  const intersection = useRef(new THREE.Vector3());
 
-  // Update Z ref when position changes externally
-  useEffect(() => {
-    currentZ.current = position[2];
-  }, [position]);
-
-  const getWorldPosition = useCallback(
-    (clientX: number, clientY: number): Vector3 | null => {
-      const rect = gl.domElement.getBoundingClientRect();
-      mouse.current.set(
-        ((clientX - rect.left) / rect.width) * 2 - 1,
-        -((clientY - rect.top) / rect.height) * 2 + 1
-      );
-
-      raycaster.current.setFromCamera(mouse.current, camera);
-      dragPlane.current.constant = -currentZ.current;
-
-      if (raycaster.current.ray.intersectPlane(dragPlane.current, intersection.current)) {
-        intersection.current.z = currentZ.current;
-        return threeToRicPosition(intersection.current);
-      }
-      return null;
-    },
-    [camera, gl]
-  );
-
-  const handlePointerDown = (e: ThreeEvent<PointerEvent>) => {
-    e.stopPropagation();
-    isDraggingRef.current = true;
-    pointerIdRef.current = e.pointerId;
-    setIsDragging(true);
-    setDraggingWaypoint(true);
-    document.body.style.cursor = "grabbing";
-    (e.target as HTMLElement).setPointerCapture(e.pointerId);
-  };
-
-  const handlePointerMove = (e: ThreeEvent<PointerEvent>) => {
-    if (!isDragging) return;
-    e.stopPropagation();
-
-    const newPos = getWorldPosition(e.clientX, e.clientY);
-    if (newPos) {
-      onDrag(newPos);
-    }
-  };
-
-  const handlePointerUp = (e: ThreeEvent<PointerEvent>) => {
-    if (!isDraggingRef.current) return;
-    e.stopPropagation();
-    isDraggingRef.current = false;
-    pointerIdRef.current = null;
-    setIsDragging(false);
-    setDraggingWaypoint(false);
-    document.body.style.cursor = "grab";
-    (e.target as HTMLElement).releasePointerCapture(e.pointerId);
-  };
-
-  // Scroll wheel for Z adjustment while dragging
-  useEffect(() => {
-    if (!isDragging) return;
-
-    const handleWheel = (e: WheelEvent) => {
-      e.preventDefault();
-      // Normalize delta for trackpad vs mouse wheel
-      const delta = e.deltaMode === 0 ? e.deltaY * 0.1 : e.deltaY * 3;
-      currentZ.current -= delta;
-      onDrag([position[0], position[1], currentZ.current]);
-    };
-
-    gl.domElement.addEventListener("wheel", handleWheel, { passive: false });
-    return () => gl.domElement.removeEventListener("wheel", handleWheel);
-  }, [isDragging, gl, onDrag, position]);
-
-  // Cleanup on unmount - release pointer state if component is removed while dragging
-  useEffect(() => {
-    return () => {
-      if (isDraggingRef.current) {
-        setDraggingWaypoint(false);
-      }
-      document.body.style.cursor = "auto";
-    };
-  }, [setDraggingWaypoint]);
+  const { isDragging, handlers } = useDraggable({
+    position,
+    camera,
+    domElement: gl.domElement,
+    onDrag,
+    onDragStart: () => setDraggingWaypoint(true),
+    onDragEnd: () => setDraggingWaypoint(false),
+    isActive: isSelected,
+  });
 
   const handleClick = (e: ThreeEvent<MouseEvent>) => {
     if (isDragging) return;
@@ -135,9 +51,7 @@ export default function Waypoint({
       <Sphere
         args={[5 * scale, 16, 16]}
         onClick={handleClick}
-        onPointerDown={handlePointerDown}
-        onPointerMove={handlePointerMove}
-        onPointerUp={handlePointerUp}
+        {...handlers}
         onPointerOver={() => {
           if (!isDragging) document.body.style.cursor = "grab";
         }}

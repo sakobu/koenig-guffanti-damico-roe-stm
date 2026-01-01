@@ -15,10 +15,11 @@ interface ControlsProps {
 
 function Controls({ maxZoomOut }: ControlsProps) {
   const isDragging = useMissionStore((s) => s.isDraggingWaypoint)
+  const hasSelection = useMissionStore((s) => s.selectedWaypointIndex !== null)
 
   return (
     <OrbitControls
-      enabled={!isDragging}
+      enabled={!isDragging && !hasSelection}
       enableDamping
       dampingFactor={0.05}
       minDistance={50}

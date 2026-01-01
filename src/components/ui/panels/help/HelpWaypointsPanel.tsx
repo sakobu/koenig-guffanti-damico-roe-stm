@@ -15,8 +15,9 @@ export default function HelpWaypointsPanel() {
           reposition it in the R-I plane.
         </p>
         <p>
-          <span className="text-zinc-300">Scroll wheel</span> while dragging to
-          adjust the C (cross-track) axis.
+          <span className="text-zinc-300">Scroll</span> to adjust the C
+          (cross-track) axis — while selected (trackpad) or while dragging
+          (mouse).
         </p>
       </div>
     </Panel>
