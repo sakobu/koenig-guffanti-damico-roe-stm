@@ -9,10 +9,8 @@ import { useSimulationStore } from "../../stores/simulation";
  * Must be rendered inside R3F Canvas.
  */
 export default function AnimationController() {
-  const trajectoryPoints = useMissionStore((s) => s.trajectoryPoints);
-  const missionPlan = useMissionStore((s) => s.missionPlan);
   const scenario = useMissionStore((s) => s.scenario);
-  const waypoints = useMissionStore((s) => s.waypoints);
+  const waypointsLength = useMissionStore((s) => s.waypoints.length);
 
   const playing = useSimulationStore((s) => s.playing);
   const tick = useSimulationStore((s) => s.tick);
@@ -20,27 +18,28 @@ export default function AnimationController() {
 
   // Track previous values to detect changes
   const prevScenarioRef = useRef(scenario);
-  const prevWaypointsLengthRef = useRef(waypoints.length);
+  const prevWaypointsLengthRef = useRef(waypointsLength);
 
   // Reset simulation when scenario changes or waypoints are cleared
   useEffect(() => {
     const scenarioChanged = prevScenarioRef.current !== scenario;
     const waypointsCleared =
-      prevWaypointsLengthRef.current > 0 && waypoints.length === 0;
+      prevWaypointsLengthRef.current > 0 && waypointsLength === 0;
 
     if (scenarioChanged || waypointsCleared) {
       reset();
     }
 
     prevScenarioRef.current = scenario;
-    prevWaypointsLengthRef.current = waypoints.length;
-  }, [scenario, waypoints.length, reset]);
+    prevWaypointsLengthRef.current = waypointsLength;
+  }, [scenario, waypointsLength, reset]);
 
   useFrame((_, delta) => {
-    // Only tick when playing and we have a mission
-    if (!playing || !missionPlan) return;
+    if (!playing) return;
 
-    // delta is in seconds from R3F
+    const { trajectoryPoints, missionPlan } = useMissionStore.getState();
+    if (!missionPlan) return;
+
     tick(delta, trajectoryPoints, missionPlan.totalTime);
   });
 

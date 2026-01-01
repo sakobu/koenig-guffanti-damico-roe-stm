@@ -35,7 +35,14 @@ export default function ExportPanel() {
       includeDrag,
       dragConfig: includeDrag ? dragConfig : undefined,
     };
-  }, [includeJ2, includeDrag, chief.eccentricity, daDotDrag, dexDotDrag, deyDotDrag]);
+  }, [
+    includeJ2,
+    includeDrag,
+    chief.eccentricity,
+    daDotDrag,
+    dexDotDrag,
+    deyDotDrag,
+  ]);
 
   const handleExportJSON = () => {
     if (missionPlan) {
