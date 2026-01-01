@@ -1,5 +1,6 @@
 import { useState, type ReactNode } from "react";
 import { ChevronDown } from "lucide-react";
+import { withBlur } from "../../../utils/blur";
 
 interface PanelProps {
   title: string;
@@ -17,7 +18,7 @@ export default function Panel({
   return (
     <div className="border-t border-zinc-800 pt-3">
       <button
-        onClick={() => setIsOpen(!isOpen)}
+        onClick={withBlur(() => setIsOpen(!isOpen))}
         className="flex items-center justify-between w-full text-left group"
       >
         <span className="text-xs text-zinc-500 uppercase tracking-wider group-hover:text-zinc-400 transition-colors">

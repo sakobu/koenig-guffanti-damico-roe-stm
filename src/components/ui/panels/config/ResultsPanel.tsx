@@ -1,6 +1,6 @@
 import { useState } from "react";
 import { AlertTriangle, Check, ChevronDown, X } from "lucide-react";
-import { useMissionStore } from "../../../stores/mission";
+import { useMissionStore } from "../../../../stores/mission";
 import Panel from "../Panel";
 import type { ManeuverLeg } from "@orbital";
 

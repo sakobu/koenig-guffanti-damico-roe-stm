@@ -1,9 +1,9 @@
 import { useEffect } from "react";
 import { Gauge } from "lucide-react";
 import type { Vector3 } from "@orbital";
-import { useMissionStore } from "../../../stores/mission";
+import { useMissionStore } from "../../../../stores/mission";
 import Panel from "../Panel";
-import Button from "../../shared/Button";
+import Button from "../../../shared/Button";
 import WaypointEditor from "./WaypointEditor";
 
 function hasVelocity(velocity: Vector3 | undefined): boolean {

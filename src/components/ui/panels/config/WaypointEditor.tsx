@@ -1,7 +1,7 @@
 import { useState } from "react";
 import type { Waypoint, Vector3 } from "@orbital";
-import { useMissionStore } from "../../../stores/mission";
-import Select from "../../shared/Select";
+import { useMissionStore } from "../../../../stores/mission";
+import Select from "../../../shared/Select";
 
 type VelocityPreset = "stationary" | "driftForward" | "driftBackward" | "custom";
 

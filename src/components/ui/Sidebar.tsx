@@ -1,24 +1,26 @@
 import { ChevronLeft } from "lucide-react";
 import { useUIStore } from "../../stores/ui";
 import { useHotkey } from "../../hooks/useHotkey";
-import WaypointPanel from "./panels/WaypointPanel";
-import PhysicsPanel from "./panels/PhysicsPanel";
-import ScenarioPanel from "./panels/ScenarioPanel";
-import ResultsPanel from "./panels/ResultsPanel";
-import ExportPanel from "./panels/ExportPanel";
+import { useHasVisited } from "../../hooks/useHasVisited";
+import { withBlur } from "../../utils/blur";
+import TabBar from "./TabBar";
+import HelpTab from "./tabs/HelpTab";
+import ConfigTab from "./tabs/ConfigTab";
 
 export default function Sidebar() {
   const isOpen = useUIStore((state) => state.sidebarOpen);
   const toggleSidebar = useUIStore((state) => state.toggleSidebar);
+  const activeTab = useUIStore((state) => state.activeTab);
 
   useHotkey("s", toggleSidebar);
+  useHasVisited();
 
   return (
     <>
       {/* Sidebar */}
       <div
         className={`fixed left-0 top-0 h-full w-70 bg-zinc-900/90
-          z-50 transition-transform duration-300 ease-in-out
+          z-50 transition-transform duration-300 ease-in-out flex flex-col
           ${isOpen ? "translate-x-0" : "-translate-x-full"}`}
       >
         {/* Header */}
@@ -28,19 +30,18 @@ export default function Sidebar() {
           </h1>
         </div>
 
+        {/* Tab Bar */}
+        <TabBar />
+
         {/* Content area */}
-        <div className="p-4 space-y-4 overflow-y-auto h-[calc(100%-60px)]">
-          <ScenarioPanel />
-          <PhysicsPanel />
-          <WaypointPanel />
-          <ResultsPanel />
-          <ExportPanel />
+        <div className="flex-1 p-4 space-y-4 overflow-y-auto">
+          {activeTab === "help" ? <HelpTab /> : <ConfigTab />}
         </div>
       </div>
 
       {/* Toggle button - always visible */}
       <button
-        onClick={toggleSidebar}
+        onClick={withBlur(toggleSidebar)}
         className={`fixed top-2.5 z-50 w-7 h-7 flex items-center justify-center
           bg-zinc-900/80 rounded cursor-pointer
           text-zinc-400 hover:text-zinc-100 transition-all duration-300 ease-in-out
