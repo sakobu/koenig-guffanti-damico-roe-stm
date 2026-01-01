@@ -3,7 +3,12 @@
     "baseUrl": ".",
     "paths": {
       "@orbital": ["src/orbital/index.ts"],
-      "@orbital/*": ["src/orbital/*"]
+      "@orbital/*": ["src/orbital/*"],
+      "@components/*": ["src/components/*"],
+      "@config/*": ["src/config/*"],
+      "@hooks/*": ["src/hooks/*"],
+      "@stores/*": ["src/stores/*"],
+      "@utils/*": ["src/utils/*"]
     },
     "tsBuildInfoFile": "./node_modules/.tmp/tsconfig.app.tsbuildinfo",
     "target": "ES2022",

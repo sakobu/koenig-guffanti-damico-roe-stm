@@ -1,6 +1,6 @@
 import { Play, Pause, RotateCcw } from "lucide-react";
-import { useMissionStore } from "../../../stores/mission";
-import { useSimulationStore, formatTime } from "../../../stores/simulation";
+import { useMissionStore } from "@stores/mission";
+import { useSimulationStore, formatTime } from "@stores/simulation";
 import Button from "../../shared/Button";
 import Select from "../../shared/Select";
 import Slider from "../../shared/Slider";

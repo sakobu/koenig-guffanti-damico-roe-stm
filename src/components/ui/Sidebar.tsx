@@ -1,8 +1,8 @@
 import { ChevronLeft } from "lucide-react";
-import { useUIStore } from "../../stores/ui";
-import { useHotkey } from "../../hooks/useHotkey";
-import { useHasVisited } from "../../hooks/useHasVisited";
-import { withBlur } from "../../utils/blur";
+import { useUIStore } from "@stores/ui";
+import { useHotkey } from "@hooks/useHotkey";
+import { useHasVisited } from "@hooks/useHasVisited";
+import { withBlur } from "@utils/blur";
 import TabBar from "./TabBar";
 import HelpTab from "./tabs/HelpTab";
 import ConfigTab from "./tabs/ConfigTab";

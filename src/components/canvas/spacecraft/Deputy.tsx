@@ -1,7 +1,7 @@
-import { useZoomScale } from "../../../hooks/useZoomScale";
-import { useMissionStore } from "../../../stores/mission";
-import { useSimulationStore } from "../../../stores/simulation";
-import { ricToPosition } from "../../../utils/coordinates";
+import { useZoomScale } from "@hooks/useZoomScale";
+import { useMissionStore } from "@stores/mission";
+import { useSimulationStore } from "@stores/simulation";
+import { ricToPosition } from "@utils/coordinates";
 import { Spacecraft } from "./Spacecraft";
 
 export default function Deputy() {

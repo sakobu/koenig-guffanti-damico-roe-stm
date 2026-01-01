@@ -1,5 +1,5 @@
-import { useUIStore, type SidebarTab } from "../../stores/ui";
-import { withBlur } from "../../utils/blur";
+import { useUIStore, type SidebarTab } from "@stores/ui";
+import { withBlur } from "@utils/blur";
 
 const TABS: { id: SidebarTab; label: string }[] = [
   { id: "help", label: "Help" },

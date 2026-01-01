@@ -1,5 +1,5 @@
 import type { Vector3 } from "@orbital";
-import { formatValue } from "../../../utils/formatting";
+import { formatValue } from "@utils/formatting";
 
 interface HUDVelocityProps {
   velocity: Vector3;

@@ -1,9 +1,9 @@
 import { useState, useMemo } from "react";
-import { useMissionStore } from "../../../stores/mission";
+import { useMissionStore } from "@stores/mission";
 import { ricToROE } from "@orbital";
 import type { QuasiNonsingularROE, RelativeState, Vector3 } from "@orbital";
 import Select from "../../shared/Select";
-import { formatValue } from "../../../utils/formatting";
+import { formatValue } from "@utils/formatting";
 
 type CoordinateMode = "ric" | "roe";
 

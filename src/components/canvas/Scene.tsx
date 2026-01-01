@@ -1,7 +1,7 @@
 import { Canvas } from '@react-three/fiber'
 import { OrbitControls } from '@react-three/drei'
 import type { ReactNode } from 'react'
-import { useMissionStore } from '../../stores/mission'
+import { useMissionStore } from '@stores/mission'
 
 interface SceneProps {
   children?: ReactNode

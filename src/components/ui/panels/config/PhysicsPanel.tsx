@@ -1,4 +1,4 @@
-import { useMissionStore } from "../../../../stores/mission";
+import { useMissionStore } from "@stores/mission";
 import Panel from "../Panel";
 import Toggle from "../../../shared/Toggle";
 import Slider from "../../../shared/Slider";

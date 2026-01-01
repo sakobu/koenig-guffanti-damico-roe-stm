@@ -1,13 +1,10 @@
 import { useState, useMemo } from "react";
 import { Minus, GripHorizontal } from "lucide-react";
-import { useMissionStore } from "../../../stores/mission";
-import { useSimulationStore } from "../../../stores/simulation";
-import { useUIStore } from "../../../stores/ui";
-import { useHotkey } from "../../../hooks/useHotkey";
-import {
-  computeDistance,
-  computeDistanceTraveled,
-} from "../../../utils/metrics";
+import { useMissionStore } from "@stores/mission";
+import { useSimulationStore } from "@stores/simulation";
+import { useUIStore } from "@stores/ui";
+import { useHotkey } from "@hooks/useHotkey";
+import { computeDistance, computeDistanceTraveled } from "@utils/metrics";
 import type { Vector3 } from "@orbital";
 import HUDPlayback from "./HUDPlayback";
 import HUDPosition from "./HUDPosition";

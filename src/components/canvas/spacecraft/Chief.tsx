@@ -1,4 +1,4 @@
-import { useZoomScale } from "../../../hooks/useZoomScale";
+import { useZoomScale } from "@hooks/useZoomScale";
 import { Spacecraft } from "./Spacecraft";
 
 export default function Chief() {

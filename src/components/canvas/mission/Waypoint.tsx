@@ -2,9 +2,9 @@ import { Sphere, Billboard, Text } from "@react-three/drei";
 import { useThree } from "@react-three/fiber";
 import type { ThreeEvent } from "@react-three/fiber";
 import type { Vector3 } from "@orbital";
-import { useMissionStore } from "../../../stores/mission";
-import { useDraggable } from "../../../hooks/useDraggable";
-import { ricToPosition } from "../../../utils/coordinates";
+import { useMissionStore } from "@stores/mission";
+import { useDraggable } from "@hooks/useDraggable";
+import { ricToPosition } from "@utils/coordinates";
 
 interface WaypointProps {
   position: Vector3;

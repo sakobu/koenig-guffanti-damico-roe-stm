@@ -2,7 +2,7 @@ import { useState, useRef, useEffect, useCallback } from "react";
 import * as THREE from "three";
 import type { ThreeEvent } from "@react-three/fiber";
 import type { Vector3 } from "@orbital";
-import { threeToRicPosition } from "../utils/coordinates";
+import { threeToRicPosition } from "@utils/coordinates";
 
 /**
  * Configuration options for the useDraggable hook.

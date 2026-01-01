@@ -14,7 +14,7 @@ import {
   replanFromWaypoint,
   validateTargetingConfig,
 } from "@orbital";
-import { SCENARIOS, type ScenarioKey } from "../config/scenarios";
+import { SCENARIOS, type ScenarioKey } from "@config/scenarios";
 import { useSimulationStore } from "./simulation";
 
 // Default scenario

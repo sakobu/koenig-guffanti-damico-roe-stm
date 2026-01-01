@@ -1,5 +1,5 @@
-import { useMissionStore } from "../../../../stores/mission";
-import { SCENARIO_OPTIONS } from "../../../../config/scenarios";
+import { useMissionStore } from "@stores/mission";
+import { SCENARIO_OPTIONS } from "@config/scenarios";
 import Panel from "../Panel";
 import Select from "../../../shared/Select";
 

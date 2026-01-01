@@ -1,5 +1,5 @@
-import { useZoomScale } from "../../../hooks/useZoomScale";
-import { useMissionStore } from "../../../stores/mission";
+import { useZoomScale } from "@hooks/useZoomScale";
+import { useMissionStore } from "@stores/mission";
 import Waypoint from "./Waypoint";
 
 export default function Waypoints() {

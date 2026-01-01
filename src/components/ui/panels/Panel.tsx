@@ -1,6 +1,6 @@
 import { useState, type ReactNode } from "react";
 import { ChevronDown } from "lucide-react";
-import { withBlur } from "../../../utils/blur";
+import { withBlur } from "@utils/blur";
 
 interface PanelProps {
   title: string;

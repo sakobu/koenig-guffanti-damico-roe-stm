@@ -1,6 +1,6 @@
 import { useMemo } from "react";
-import { useMissionStore } from "../../../../stores/mission";
-import { exportMissionJSON, exportTrajectoryCSV } from "../../../../utils/export";
+import { useMissionStore } from "@stores/mission";
+import { exportMissionJSON, exportTrajectoryCSV } from "@utils/export";
 import Panel from "../Panel";
 import Button from "../../../shared/Button";
 import type { DragConfig, TargetingOptions } from "@orbital";
