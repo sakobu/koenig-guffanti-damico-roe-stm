@@ -1,4 +1,4 @@
-import { useState, useMemo, useEffect } from "react";
+import { useState, useMemo } from "react";
 import { Play, Pause, RotateCcw, Minus, GripHorizontal } from "lucide-react";
 import { useMissionStore } from "../../stores/mission";
 import { useSimulationStore, formatTime } from "../../stores/simulation";
@@ -8,6 +8,7 @@ import type { QuasiNonsingularROE, RelativeState, Vector3 } from "@orbital";
 import Button from "../shared/Button";
 import Select from "../shared/Select";
 import Slider from "../shared/Slider";
+import { useHotkey } from "../../hooks/useHotkey";
 
 type CoordinateMode = "ric" | "roe";
 
@@ -66,26 +67,7 @@ export default function HUD() {
   const hudVisible = useUIStore((s) => s.hudVisible);
   const toggleHUD = useUIStore((s) => s.toggleHUD);
 
-  // Keyboard shortcut: H to toggle HUD visibility
-  useEffect(() => {
-    const handleKeyDown = (e: KeyboardEvent) => {
-      // Ignore if user is typing in an input field
-      if (
-        e.target instanceof HTMLInputElement ||
-        e.target instanceof HTMLTextAreaElement ||
-        e.target instanceof HTMLSelectElement
-      ) {
-        return;
-      }
-
-      if (e.key.toLowerCase() === "h") {
-        toggleHUD();
-      }
-    };
-
-    window.addEventListener("keydown", handleKeyDown);
-    return () => window.removeEventListener("keydown", handleKeyDown);
-  }, [toggleHUD]);
+  useHotkey("h", toggleHUD);
 
   // Mission state
   const chief = useMissionStore((s) => s.chief);

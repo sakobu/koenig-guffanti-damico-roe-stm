@@ -1,5 +1,6 @@
 import { ChevronLeft } from "lucide-react";
 import { useUIStore } from "../../stores/ui";
+import { useHotkey } from "../../hooks/useHotkey";
 import WaypointPanel from "./panels/WaypointPanel";
 import PhysicsPanel from "./panels/PhysicsPanel";
 import ScenarioPanel from "./panels/ScenarioPanel";
@@ -9,6 +10,8 @@ import ExportPanel from "./panels/ExportPanel";
 export default function Sidebar() {
   const isOpen = useUIStore((state) => state.sidebarOpen);
   const toggleSidebar = useUIStore((state) => state.toggleSidebar);
+
+  useHotkey("s", toggleSidebar);
 
   return (
     <>
