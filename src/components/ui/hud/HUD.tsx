@@ -1,15 +1,18 @@
 import { useState, useMemo } from "react";
 import { Minus, GripHorizontal } from "lucide-react";
-import { useMissionStore } from "../../stores/mission";
-import { useSimulationStore } from "../../stores/simulation";
-import { useUIStore } from "../../stores/ui";
-import { useHotkey } from "../../hooks/useHotkey";
-import { computeDistance, computeDistanceTraveled } from "../../utils/metrics";
+import { useMissionStore } from "../../../stores/mission";
+import { useSimulationStore } from "../../../stores/simulation";
+import { useUIStore } from "../../../stores/ui";
+import { useHotkey } from "../../../hooks/useHotkey";
+import {
+  computeDistance,
+  computeDistanceTraveled,
+} from "../../../utils/metrics";
 import type { Vector3 } from "@orbital";
-import HUDPlayback from "./hud/HUDPlayback";
-import HUDPosition from "./hud/HUDPosition";
-import HUDVelocity from "./hud/HUDVelocity";
-import HUDMetrics from "./hud/HUDMetrics";
+import HUDPlayback from "./HUDPlayback";
+import HUDPosition from "./HUDPosition";
+import HUDVelocity from "./HUDVelocity";
+import HUDMetrics from "./HUDMetrics";
 
 export default function HUD() {
   const hudVisible = useUIStore((s) => s.hudVisible);
@@ -52,7 +55,13 @@ export default function HUD() {
     return isSimulating && hasTrajectory && validIndex
       ? trajectoryPoints[currentPointIndex].velocity
       : [0, 0, 0];
-  }, [isSimulating, hasTrajectory, validIndex, trajectoryPoints, currentPointIndex]);
+  }, [
+    isSimulating,
+    hasTrajectory,
+    validIndex,
+    trajectoryPoints,
+    currentPointIndex,
+  ]);
 
   const distance = computeDistance(currentPosition);
 
@@ -94,11 +103,17 @@ export default function HUD() {
             {/* Divider */}
             <div className="border-t border-zinc-700" />
 
-            <HUDPosition position={currentPosition} velocity={currentVelocity} />
+            <HUDPosition
+              position={currentPosition}
+              velocity={currentVelocity}
+            />
 
             <HUDVelocity velocity={currentVelocity} />
 
-            <HUDMetrics distance={distance} distanceTraveled={distanceTraveled} />
+            <HUDMetrics
+              distance={distance}
+              distanceTraveled={distanceTraveled}
+            />
           </div>
         </div>
       </div>
