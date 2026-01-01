@@ -2,19 +2,12 @@ import { useEffect } from 'react';
 
 import { Gauge } from 'lucide-react';
 
-import type { Vector3 } from '@orbital';
-
 import { useMissionStore } from '@stores/mission';
+import { hasVelocity } from '@utils/metrics';
 
 import Button from '../../../shared/Button';
 import Panel from '../Panel';
 import WaypointEditor from './WaypointEditor';
-
-function hasVelocity(velocity: Vector3 | undefined): boolean {
-  if (!velocity) return false;
-  const [r, i, c] = velocity;
-  return Math.abs(r) >= 0.001 || Math.abs(i) >= 0.001 || Math.abs(c) >= 0.001;
-}
 
 export default function WaypointPanel() {
   const waypoints = useMissionStore((s) => s.waypoints);

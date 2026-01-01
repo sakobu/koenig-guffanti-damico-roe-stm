@@ -5,6 +5,7 @@ import { AlertTriangle, Check, ChevronDown, X } from 'lucide-react';
 import type { ManeuverLeg } from '@orbital';
 
 import { useMissionStore } from '@stores/mission';
+import { formatPosition } from '@utils/formatting';
 
 import Panel from '../Panel';
 
@@ -22,9 +23,6 @@ function LegRow({
   isExpanded: boolean;
   onToggle: () => void;
 }) {
-  const formatPosition = (pos: readonly [number, number, number]) =>
-    `[${pos[0].toFixed(1)}, ${pos[1].toFixed(1)}, ${pos[2].toFixed(1)}]`;
-
   return (
     <div className="rounded overflow-hidden">
       {/* Collapsed header - always visible */}

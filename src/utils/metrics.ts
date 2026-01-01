@@ -8,6 +8,36 @@ export function computeDistance(position: Vector3): number {
 }
 
 /**
+ * Check if a velocity vector is non-zero (any component >= 0.001 m/s)
+ */
+export function hasVelocity(velocity: Vector3 | undefined): boolean {
+  if (!velocity) return false;
+  const [r, i, c] = velocity;
+  return Math.abs(r) >= 0.001 || Math.abs(i) >= 0.001 || Math.abs(c) >= 0.001;
+}
+
+/**
+ * Detect which velocity preset matches a given velocity vector
+ * Returns 'stationary', 'driftForward', 'driftBackward', or 'custom'
+ */
+export function getVelocityPreset(
+  velocity: Vector3 | undefined
+): 'stationary' | 'driftForward' | 'driftBackward' | 'custom' {
+  if (!velocity) return 'stationary';
+  const [r, i, c] = velocity;
+  if (Math.abs(r) < 0.001 && Math.abs(i - 0.1) < 0.001 && Math.abs(c) < 0.001) {
+    return 'driftForward';
+  }
+  if (Math.abs(r) < 0.001 && Math.abs(i + 0.1) < 0.001 && Math.abs(c) < 0.001) {
+    return 'driftBackward';
+  }
+  if (Math.abs(r) < 0.001 && Math.abs(i) < 0.001 && Math.abs(c) < 0.001) {
+    return 'stationary';
+  }
+  return 'custom';
+}
+
+/**
  * Compute cumulative arc length along the trajectory up to a given index.
  */
 export function computeDistanceTraveled(

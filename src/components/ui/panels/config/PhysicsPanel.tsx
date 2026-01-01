@@ -1,4 +1,12 @@
 import { useMissionStore } from '@stores/mission';
+import {
+  dragToSlider,
+  eccentricityDragToSlider,
+  formatDragRate,
+  formatEccentricityRate,
+  sliderToDrag,
+  sliderToEccentricityDrag,
+} from '@utils/formatting';
 
 import Slider from '../../../shared/Slider';
 import Toggle from '../../../shared/Toggle';
@@ -23,47 +31,10 @@ export default function PhysicsPanel() {
   // Determine if near-circular orbit (requires arbitrary drag model)
   const isNearCircular = chief.eccentricity < ECCENTRICITY_THRESHOLD;
 
-  // Convert scientific notation to slider-friendly values
-  // daDotDrag ranges from -1e-9 (strong) to -1e-11 (weak)
-  // Map to 1-100 scale for slider, then convert back
-  const dragToSlider = (drag: number): number => {
-    // -1e-9 = 100, -1e-10 = 50, -1e-11 = 1
-    const exp = Math.log10(-drag);
-    return Math.round(((exp + 11) / 2) * 100);
-  };
-
-  const sliderToDrag = (slider: number): number => {
-    // Reverse: 100 = -1e-9, 50 = -1e-10, 1 = -1e-11
-    const exp = (slider / 100) * 2 - 11;
-    return -Math.pow(10, exp);
-  };
-
   const sliderValue = dragToSlider(daDotDrag);
 
   const handleDragSliderChange = (value: number) => {
     setDaDotDrag(sliderToDrag(value));
-  };
-
-  // For dex/dey: range from -1e-10 (strong) to -1e-12 (weak)
-  // Can also be positive, so we use absolute values
-  const eccentricityDragToSlider = (drag: number): number => {
-    if (drag === 0) return 50; // Center position for zero
-    const sign = Math.sign(drag);
-    const absVal = Math.abs(drag);
-    // Map 1e-12 to 1e-10 to 0-100 scale
-    const exp = Math.log10(absVal);
-    const normalized = ((exp + 12) / 2) * 100;
-    // Use 50 as center, 0-50 for negative, 50-100 for positive
-    return sign > 0 ? 50 + normalized / 2 : 50 - normalized / 2;
-  };
-
-  const sliderToEccentricityDrag = (slider: number): number => {
-    if (slider === 50) return 0;
-    const isPositive = slider > 50;
-    const normalized = isPositive ? (slider - 50) * 2 : (50 - slider) * 2;
-    const exp = (normalized / 100) * 2 - 12;
-    const value = Math.pow(10, exp);
-    return isPositive ? value : -value;
   };
 
   const handleDexSliderChange = (value: number) => {
@@ -81,23 +52,6 @@ export default function PhysicsPanel() {
     if (!value && includeDrag) {
       setIncludeDrag(false);
     }
-  };
-
-  // Format drag rate for display
-  const formatDragRate = (drag: number): string => {
-    const exp = Math.round(Math.log10(-drag));
-    const mantissa = (-drag / Math.pow(10, exp)).toFixed(1);
-    return `${mantissa}×10^${exp}`;
-  };
-
-  // Format eccentricity derivative for display (can be positive or negative)
-  const formatEccentricityRate = (drag: number): string => {
-    if (drag === 0) return '0';
-    const sign = drag < 0 ? '-' : '+';
-    const absVal = Math.abs(drag);
-    const exp = Math.round(Math.log10(absVal));
-    const mantissa = (absVal / Math.pow(10, exp)).toFixed(1);
-    return `${sign}${mantissa}×10^${exp}`;
   };
 
   return (

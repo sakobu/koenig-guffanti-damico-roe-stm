@@ -1,8 +1,10 @@
 import { useState } from 'react';
 
-import type { Vector3,Waypoint } from '@orbital';
+import type { Vector3, Waypoint } from '@orbital';
 
 import { useMissionStore } from '@stores/mission';
+import { round2 } from '@utils/formatting';
+import { getVelocityPreset } from '@utils/metrics';
 
 import Select from '../../../shared/Select';
 
@@ -21,21 +23,6 @@ const VELOCITY_PRESETS: Record<
   driftBackward: [0, -0.1, 0],
 };
 
-function getVelocityPreset(velocity: Vector3 | undefined): VelocityPreset {
-  if (!velocity) return 'stationary';
-  const [r, i, c] = velocity;
-  if (Math.abs(r) < 0.001 && Math.abs(i - 0.1) < 0.001 && Math.abs(c) < 0.001) {
-    return 'driftForward';
-  }
-  if (Math.abs(r) < 0.001 && Math.abs(i + 0.1) < 0.001 && Math.abs(c) < 0.001) {
-    return 'driftBackward';
-  }
-  if (Math.abs(r) < 0.001 && Math.abs(i) < 0.001 && Math.abs(c) < 0.001) {
-    return 'stationary';
-  }
-  return 'custom';
-}
-
 interface WaypointEditorProps {
   waypoint: Waypoint;
   index: number;
@@ -49,9 +36,6 @@ export default function WaypointEditor({
   const updateWaypointVelocity = useMissionStore(
     (s) => s.updateWaypointVelocity
   );
-
-  // Round to 2 decimal places
-  const round2 = (n: number) => Math.round(n * 100) / 100;
 
   // Position state - initialized from waypoint prop (resets via key on parent)
   const [position, setPosition] = useState({

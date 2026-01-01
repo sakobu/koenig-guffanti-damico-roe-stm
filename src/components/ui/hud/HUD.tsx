@@ -1,6 +1,6 @@
-import { useMemo,useState } from 'react';
+import { useMemo, useState } from 'react';
 
-import { GripHorizontal,Minus } from 'lucide-react';
+import { GripHorizontal, Minus } from 'lucide-react';
 
 import type { Vector3 } from '@orbital';
 
