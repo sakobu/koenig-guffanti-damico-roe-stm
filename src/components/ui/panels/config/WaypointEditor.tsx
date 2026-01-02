@@ -6,7 +6,7 @@ import { useMissionStore } from '@stores/mission';
 import { round2 } from '@utils/formatting';
 import { getVelocityPreset } from '@utils/metrics';
 
-import Select from '../../../shared/Select';
+import Select from '../../../shared/controls/Select';
 
 type VelocityPreset =
   | 'stationary'

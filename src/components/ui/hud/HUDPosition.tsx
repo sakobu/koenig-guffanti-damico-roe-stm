@@ -6,7 +6,7 @@ import { ricToROE } from '@orbital';
 import { useMissionStore } from '@stores/mission';
 import { formatValue } from '@utils/formatting';
 
-import Select from '../../shared/Select';
+import Select from '../../shared/controls/Select';
 
 type CoordinateMode = 'ric' | 'roe';
 

@@ -3,9 +3,9 @@ import { Pause, Play, RotateCcw } from 'lucide-react';
 import { useMissionStore } from '@stores/mission';
 import { formatTime,useSimulationStore } from '@stores/simulation';
 
-import Button from '../../shared/Button';
-import Select from '../../shared/Select';
-import Slider from '../../shared/Slider';
+import Button from '../../shared/controls/Button';
+import Select from '../../shared/controls/Select';
+import Slider from '../../shared/controls/Slider';
 
 const SPEED_OPTIONS = [
   { value: '1', label: '1x' },

@@ -23,6 +23,12 @@ import { useSimulationStore } from './simulation';
 // Default scenario
 const DEFAULT_SCENARIO: ScenarioKey = 'iss';
 
+export interface MissionError {
+  message: string;
+  suggestion?: string;
+  timestamp: number;
+}
+
 interface MissionState {
   // Chief orbit
   chief: ClassicalOrbitalElements;
@@ -56,6 +62,9 @@ interface MissionState {
 
   // UI state
   isDraggingWaypoint: boolean;
+
+  // Error state for UI notifications
+  lastError: MissionError | null;
 }
 
 interface MissionActions {
@@ -75,12 +84,19 @@ interface MissionActions {
   setDeyDotDrag: (value: number) => void;
   setScenario: (key: ScenarioKey) => void;
   setDraggingWaypoint: (value: boolean) => void;
+  clearError: () => void;
 }
 
 type MissionStore = MissionState & MissionActions;
 
 /** Eccentricity threshold for eccentric drag model (from Koenig et al. 2017) */
 const ECCENTRICITY_THRESHOLD = 0.05;
+
+interface ComputeMissionResult {
+  missionPlan: MissionPlan | null;
+  trajectoryPoints: readonly TrajectoryPoint[];
+  error: MissionError | null;
+}
 
 // Recompute mission plan and trajectory
 function computeMission(
@@ -93,12 +109,9 @@ function computeMission(
   dexDotDrag: number,
   deyDotDrag: number,
   scenario: ScenarioKey
-): {
-  missionPlan: MissionPlan | null;
-  trajectoryPoints: readonly TrajectoryPoint[];
-} {
+): ComputeMissionResult {
   if (waypoints.length === 0) {
-    return { missionPlan: null, trajectoryPoints: [] };
+    return { missionPlan: null, trajectoryPoints: [], error: null };
   }
 
   const initialState: RelativeState = {
@@ -122,11 +135,15 @@ function computeMission(
     // Validate configuration before planning
     const validation = validateTargetingConfig(chief, options);
     if (!validation.valid) {
-      console.warn('Targeting validation failed:', validation.message);
-      if (validation.suggestion) {
-        console.info('Suggestion:', validation.suggestion);
-      }
-      return { missionPlan: null, trajectoryPoints: [] };
+      return {
+        missionPlan: null,
+        trajectoryPoints: [],
+        error: {
+          message: validation.message,
+          suggestion: validation.suggestion,
+          timestamp: Date.now(),
+        },
+      };
     }
 
     const plan = planMission(initialState, waypoints, chief, options);
@@ -140,10 +157,18 @@ function computeMission(
       SCENARIOS[scenario].trajectoryPointsPerLeg
     );
 
-    return { missionPlan: plan, trajectoryPoints: trajectory };
+    return { missionPlan: plan, trajectoryPoints: trajectory, error: null };
   } catch (error) {
-    console.error('Mission planning failed:', error);
-    return { missionPlan: null, trajectoryPoints: [] };
+    const errorMessage =
+      error instanceof Error ? error.message : 'Mission planning failed';
+    return {
+      missionPlan: null,
+      trajectoryPoints: [],
+      error: {
+        message: errorMessage,
+        timestamp: Date.now(),
+      },
+    };
   }
 }
 
@@ -160,10 +185,7 @@ function computeMissionIncremental(
   dexDotDrag: number,
   deyDotDrag: number,
   scenario: ScenarioKey
-): {
-  missionPlan: MissionPlan | null;
-  trajectoryPoints: readonly TrajectoryPoint[];
-} {
+): ComputeMissionResult {
   // Fall back to full replan if no existing plan or modifying first waypoint
   if (!existingPlan || modifiedIndex === 0) {
     return computeMission(
@@ -180,7 +202,7 @@ function computeMissionIncremental(
   }
 
   if (waypoints.length === 0) {
-    return { missionPlan: null, trajectoryPoints: [] };
+    return { missionPlan: null, trajectoryPoints: [], error: null };
   }
 
   const initialState: RelativeState = {
@@ -202,8 +224,15 @@ function computeMissionIncremental(
 
     const validation = validateTargetingConfig(chief, options);
     if (!validation.valid) {
-      console.warn('Targeting validation failed:', validation.message);
-      return { missionPlan: null, trajectoryPoints: [] };
+      return {
+        missionPlan: null,
+        trajectoryPoints: [],
+        error: {
+          message: validation.message,
+          suggestion: validation.suggestion,
+          timestamp: Date.now(),
+        },
+      };
     }
 
     // Use incremental replanning - reuses legs before modifiedIndex
@@ -225,10 +254,18 @@ function computeMissionIncremental(
       SCENARIOS[scenario].trajectoryPointsPerLeg
     );
 
-    return { missionPlan: plan, trajectoryPoints: trajectory };
+    return { missionPlan: plan, trajectoryPoints: trajectory, error: null };
   } catch (error) {
-    console.error('Incremental mission planning failed:', error);
-    return { missionPlan: null, trajectoryPoints: [] };
+    const errorMessage =
+      error instanceof Error ? error.message : 'Incremental planning failed';
+    return {
+      missionPlan: null,
+      trajectoryPoints: [],
+      error: {
+        message: errorMessage,
+        timestamp: Date.now(),
+      },
+    };
   }
 }
 
@@ -247,13 +284,14 @@ export const useMissionStore = create<MissionStore>((set, get) => ({
   scenario: DEFAULT_SCENARIO,
   selectedWaypointIndex: null,
   isDraggingWaypoint: false,
+  lastError: null,
 
   // Actions
   addWaypoint: (position) => {
     const state = get();
     const newWaypoints = [...state.waypoints, { position }];
     const newIndex = newWaypoints.length - 1;
-    const { missionPlan, trajectoryPoints } = computeMission(
+    const { missionPlan, trajectoryPoints, error } = computeMission(
       newWaypoints,
       state.chief,
       state.initialPosition,
@@ -270,6 +308,7 @@ export const useMissionStore = create<MissionStore>((set, get) => ({
       missionPlan,
       trajectoryPoints,
       selectedWaypointIndex: newIndex,
+      lastError: error,
     });
   },
 
@@ -279,7 +318,7 @@ export const useMissionStore = create<MissionStore>((set, get) => ({
       i === index ? { ...wp, position } : wp
     );
     // Use incremental replanning to reuse unchanged legs
-    const { missionPlan, trajectoryPoints } = computeMissionIncremental(
+    const { missionPlan, trajectoryPoints, error } = computeMissionIncremental(
       state.missionPlan,
       index,
       newWaypoints,
@@ -292,7 +331,7 @@ export const useMissionStore = create<MissionStore>((set, get) => ({
       state.deyDotDrag,
       state.scenario
     );
-    set({ waypoints: newWaypoints, missionPlan, trajectoryPoints });
+    set({ waypoints: newWaypoints, missionPlan, trajectoryPoints, lastError: error });
   },
 
   updateWaypointVelocity: (index, velocity) => {
@@ -301,7 +340,7 @@ export const useMissionStore = create<MissionStore>((set, get) => ({
       i === index ? { ...wp, velocity } : wp
     );
     // Velocity change affects the leg, use full recompute
-    const { missionPlan, trajectoryPoints } = computeMission(
+    const { missionPlan, trajectoryPoints, error } = computeMission(
       newWaypoints,
       state.chief,
       state.initialPosition,
@@ -312,13 +351,13 @@ export const useMissionStore = create<MissionStore>((set, get) => ({
       state.deyDotDrag,
       state.scenario
     );
-    set({ waypoints: newWaypoints, missionPlan, trajectoryPoints });
+    set({ waypoints: newWaypoints, missionPlan, trajectoryPoints, lastError: error });
   },
 
   removeWaypoint: (index) => {
     const state = get();
     const newWaypoints = state.waypoints.filter((_, i) => i !== index);
-    const { missionPlan, trajectoryPoints } = computeMission(
+    const { missionPlan, trajectoryPoints, error } = computeMission(
       newWaypoints,
       state.chief,
       state.initialPosition,
@@ -344,6 +383,7 @@ export const useMissionStore = create<MissionStore>((set, get) => ({
       trajectoryPoints,
       selectedWaypointIndex: newSelectedIndex,
       isDraggingWaypoint: false,
+      lastError: error,
     });
   },
 
@@ -353,6 +393,7 @@ export const useMissionStore = create<MissionStore>((set, get) => ({
       missionPlan: null,
       trajectoryPoints: [],
       selectedWaypointIndex: null,
+      lastError: null,
     });
   },
 
@@ -362,7 +403,7 @@ export const useMissionStore = create<MissionStore>((set, get) => ({
 
   setIncludeJ2: (value) => {
     const state = get();
-    const { missionPlan, trajectoryPoints } = computeMission(
+    const { missionPlan, trajectoryPoints, error } = computeMission(
       state.waypoints,
       state.chief,
       state.initialPosition,
@@ -373,12 +414,12 @@ export const useMissionStore = create<MissionStore>((set, get) => ({
       state.deyDotDrag,
       state.scenario
     );
-    set({ includeJ2: value, missionPlan, trajectoryPoints });
+    set({ includeJ2: value, missionPlan, trajectoryPoints, lastError: error });
   },
 
   setIncludeDrag: (value) => {
     const state = get();
-    const { missionPlan, trajectoryPoints } = computeMission(
+    const { missionPlan, trajectoryPoints, error } = computeMission(
       state.waypoints,
       state.chief,
       state.initialPosition,
@@ -389,12 +430,12 @@ export const useMissionStore = create<MissionStore>((set, get) => ({
       state.deyDotDrag,
       state.scenario
     );
-    set({ includeDrag: value, missionPlan, trajectoryPoints });
+    set({ includeDrag: value, missionPlan, trajectoryPoints, lastError: error });
   },
 
   setDaDotDrag: (value) => {
     const state = get();
-    const { missionPlan, trajectoryPoints } = computeMission(
+    const { missionPlan, trajectoryPoints, error } = computeMission(
       state.waypoints,
       state.chief,
       state.initialPosition,
@@ -405,12 +446,12 @@ export const useMissionStore = create<MissionStore>((set, get) => ({
       state.deyDotDrag,
       state.scenario
     );
-    set({ daDotDrag: value, missionPlan, trajectoryPoints });
+    set({ daDotDrag: value, missionPlan, trajectoryPoints, lastError: error });
   },
 
   setDexDotDrag: (value) => {
     const state = get();
-    const { missionPlan, trajectoryPoints } = computeMission(
+    const { missionPlan, trajectoryPoints, error } = computeMission(
       state.waypoints,
       state.chief,
       state.initialPosition,
@@ -421,12 +462,12 @@ export const useMissionStore = create<MissionStore>((set, get) => ({
       state.deyDotDrag,
       state.scenario
     );
-    set({ dexDotDrag: value, missionPlan, trajectoryPoints });
+    set({ dexDotDrag: value, missionPlan, trajectoryPoints, lastError: error });
   },
 
   setDeyDotDrag: (value) => {
     const state = get();
-    const { missionPlan, trajectoryPoints } = computeMission(
+    const { missionPlan, trajectoryPoints, error } = computeMission(
       state.waypoints,
       state.chief,
       state.initialPosition,
@@ -437,7 +478,7 @@ export const useMissionStore = create<MissionStore>((set, get) => ({
       value,
       state.scenario
     );
-    set({ deyDotDrag: value, missionPlan, trajectoryPoints });
+    set({ deyDotDrag: value, missionPlan, trajectoryPoints, lastError: error });
   },
 
   setScenario: (key) => {
@@ -461,10 +502,15 @@ export const useMissionStore = create<MissionStore>((set, get) => ({
       missionPlan: null,
       trajectoryPoints: [],
       selectedWaypointIndex: null,
+      lastError: null,
     });
   },
 
   setDraggingWaypoint: (value) => {
     set({ isDraggingWaypoint: value });
+  },
+
+  clearError: () => {
+    set({ lastError: null });
   },
 }));

@@ -1,7 +1,7 @@
 import { SCENARIO_OPTIONS } from '@config/scenarios';
 import { useMissionStore } from '@stores/mission';
 
-import Select from '../../../shared/Select';
+import Select from '../../../shared/controls/Select';
 import Panel from '../Panel';
 
 export default function ScenarioPanel() {

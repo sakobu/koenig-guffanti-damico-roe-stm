@@ -5,7 +5,7 @@ import type { DragConfig, TargetingOptions } from '@orbital';
 import { useMissionStore } from '@stores/mission';
 import { exportMissionJSON, exportTrajectoryCSV } from '@utils/export';
 
-import Button from '../../../shared/Button';
+import Button from '../../../shared/controls/Button';
 import Panel from '../Panel';
 
 /** Eccentricity threshold for eccentric drag model (from Koenig et al. 2017) */

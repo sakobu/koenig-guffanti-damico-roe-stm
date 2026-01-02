@@ -5,7 +5,7 @@ import { Gauge } from 'lucide-react';
 import { useMissionStore } from '@stores/mission';
 import { hasVelocity } from '@utils/metrics';
 
-import Button from '../../../shared/Button';
+import Button from '../../../shared/controls/Button';
 import Panel from '../Panel';
 import WaypointEditor from './WaypointEditor';
 

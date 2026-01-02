@@ -8,8 +8,8 @@ import {
   sliderToEccentricityDrag,
 } from '@utils/formatting';
 
-import Slider from '../../../shared/Slider';
-import Toggle from '../../../shared/Toggle';
+import Slider from '../../../shared/controls/Slider';
+import Toggle from '../../../shared/controls/Toggle';
 import Panel from '../Panel';
 
 /** Eccentricity threshold for eccentric drag model (from Koenig et al. 2017) */
