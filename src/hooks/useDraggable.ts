@@ -262,12 +262,19 @@ export function useDraggable({
     },
   };
 
-  // Scroll wheel for Z (Crosstrack) adjustment while dragging or when active (selected)
+  // Scroll wheel and two-finger touch for Z (Crosstrack) adjustment
+  // Enabled while dragging or when active (selected)
   const scrollEnabled = isDragging || isActive;
+
+  // Track active touches for two-finger gesture
+  const touchesRef = useRef<Map<number, { startY: number; currentY: number }>>(
+    new Map()
+  );
 
   useEffect(() => {
     if (!scrollEnabled) return;
 
+    // Mouse wheel handler (desktop/trackpad)
     const handleWheel = (e: WheelEvent) => {
       e.preventDefault();
 
@@ -287,9 +294,96 @@ export function useDraggable({
       ]);
     };
 
+    // Two-finger touch handlers (tablet)
+    const handleTouchStart = (e: TouchEvent) => {
+      // Track all new touches
+      for (let i = 0; i < e.changedTouches.length; i++) {
+        const touch = e.changedTouches[i];
+        touchesRef.current.set(touch.identifier, {
+          startY: touch.clientY,
+          currentY: touch.clientY,
+        });
+      }
+
+      // If exactly 2 fingers, prevent default to stop OrbitControls zoom
+      if (e.touches.length === 2) {
+        e.preventDefault();
+      }
+    };
+
+    const handleTouchMove = (e: TouchEvent) => {
+      // Update tracked touch positions
+      for (let i = 0; i < e.changedTouches.length; i++) {
+        const touch = e.changedTouches[i];
+        const tracked = touchesRef.current.get(touch.identifier);
+        if (tracked) {
+          tracked.currentY = touch.clientY;
+        }
+      }
+
+      // Two-finger vertical drag for Z adjustment
+      if (e.touches.length === 2 && touchesRef.current.size >= 2) {
+        e.preventDefault();
+
+        // Calculate average vertical delta of both fingers
+        let totalDeltaY = 0;
+        let count = 0;
+        touchesRef.current.forEach((touch) => {
+          totalDeltaY += touch.currentY - touch.startY;
+          count++;
+        });
+
+        if (count === 0) return;
+        const avgDeltaY = totalDeltaY / count;
+
+        // Apply Z adjustment (inverted: drag up = increase Z)
+        // Scale factor tuned for natural feel
+        const zDelta = -avgDeltaY * 0.5;
+
+        // Reset start positions for continuous adjustment
+        touchesRef.current.forEach((touch) => {
+          touch.startY = touch.currentY;
+        });
+
+        // Only apply if there's meaningful movement
+        if (Math.abs(zDelta) > 0.1) {
+          currentZ.current += zDelta;
+          onDragRef.current([
+            positionRef.current[0],
+            positionRef.current[1],
+            currentZ.current,
+          ]);
+        }
+      }
+    };
+
+    const handleTouchEnd = (e: TouchEvent) => {
+      // Remove ended touches from tracking
+      for (let i = 0; i < e.changedTouches.length; i++) {
+        const touch = e.changedTouches[i];
+        touchesRef.current.delete(touch.identifier);
+      }
+    };
+
     // passive: false allows preventDefault() to work
     domElement.addEventListener('wheel', handleWheel, { passive: false });
-    return () => domElement.removeEventListener('wheel', handleWheel);
+    domElement.addEventListener('touchstart', handleTouchStart, {
+      passive: false,
+    });
+    domElement.addEventListener('touchmove', handleTouchMove, {
+      passive: false,
+    });
+    domElement.addEventListener('touchend', handleTouchEnd);
+    domElement.addEventListener('touchcancel', handleTouchEnd);
+
+    return () => {
+      domElement.removeEventListener('wheel', handleWheel);
+      domElement.removeEventListener('touchstart', handleTouchStart);
+      domElement.removeEventListener('touchmove', handleTouchMove);
+      domElement.removeEventListener('touchend', handleTouchEnd);
+      domElement.removeEventListener('touchcancel', handleTouchEnd);
+      touchesRef.current.clear();
+    };
   }, [scrollEnabled, domElement]);
 
   // Cleanup on unmount - ensures proper state reset if component unmounts mid-drag
