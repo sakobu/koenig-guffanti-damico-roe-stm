@@ -31,6 +31,8 @@ The orbital mechanics engine implements the framework from:
 - _J2-Perturbed_: Includes secular effects from Earth's oblateness (nodal regression, apsidal precession)
 - _J2 + Drag_: Adds density-model-free atmospheric drag effects
 
+For detailed mathematical derivations and implementation notes, see [J2_AND_DRAG_MODELS.md](./J2_AND_DRAG_MODELS.md).
+
 **Two-Burn Rendezvous:** The targeting algorithm computes optimal impulsive maneuvers using an iterative shooting method with the control influence matrix derived from the Gauss Variational Equations. For implementation details, see [TARGETING.md](./TARGETING.md).
 
 ## Features
