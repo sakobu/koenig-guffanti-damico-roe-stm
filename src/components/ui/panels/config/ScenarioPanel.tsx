@@ -1,5 +1,6 @@
 import { SCENARIO_OPTIONS } from '@config/scenarios';
 import { useMissionStore } from '@stores/mission';
+import { radToDeg } from '@utils/angle';
 
 import Select from '../../../shared/controls/Select';
 import Panel from '../Panel';
@@ -36,7 +37,7 @@ export default function ScenarioPanel() {
           <div className="flex justify-between text-xs">
             <span className="text-zinc-500">Inclination</span>
             <span className="font-mono text-zinc-300">
-              {((chief.inclination * 180) / Math.PI).toFixed(1)}°
+              {radToDeg(chief.inclination).toFixed(1)}°
             </span>
           </div>
         </div>

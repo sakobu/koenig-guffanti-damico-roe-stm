@@ -1,6 +1,8 @@
 import type { ClassicalOrbitalElements, Vector3 } from '@orbital';
 import { MU_EARTH } from '@orbital';
 
+import { degToRad } from '@utils/angle';
+
 export type ScenarioKey =
   | 'iss'
   | 'eccentric'
@@ -39,9 +41,9 @@ export const SCENARIOS: Record<ScenarioKey, Scenario> = {
     chief: {
       semiMajorAxis: 6_778_000,
       eccentricity: 0.0005,
-      inclination: (51.6 * Math.PI) / 180,
-      raan: (45 * Math.PI) / 180,
-      argumentOfPerigee: (30 * Math.PI) / 180,
+      inclination: degToRad(51.6),
+      raan: degToRad(45),
+      argumentOfPerigee: degToRad(30),
       meanAnomaly: 0,
       angularMomentum: Math.sqrt(MU_EARTH * 6_778_000 * (1 - 0.0005 ** 2)),
       gravitationalParameter: MU_EARTH,
@@ -63,9 +65,9 @@ export const SCENARIOS: Record<ScenarioKey, Scenario> = {
     chief: {
       semiMajorAxis: 10_000_000,
       eccentricity: 0.1,
-      inclination: (63.4 * Math.PI) / 180, // Critical inclination
-      raan: (45 * Math.PI) / 180,
-      argumentOfPerigee: (270 * Math.PI) / 180,
+      inclination: degToRad(63.4), // Critical inclination
+      raan: degToRad(45),
+      argumentOfPerigee: degToRad(270),
       meanAnomaly: 0,
       angularMomentum: Math.sqrt(MU_EARTH * 10_000_000 * (1 - 0.1 ** 2)),
       gravitationalParameter: MU_EARTH,
@@ -87,9 +89,9 @@ export const SCENARIOS: Record<ScenarioKey, Scenario> = {
     chief: {
       semiMajorAxis: 7_500_000,
       eccentricity: 0.1,
-      inclination: (51.6 * Math.PI) / 180,
-      raan: (45 * Math.PI) / 180,
-      argumentOfPerigee: (30 * Math.PI) / 180,
+      inclination: degToRad(51.6),
+      raan: degToRad(45),
+      argumentOfPerigee: degToRad(30),
       meanAnomaly: 0,
       angularMomentum: Math.sqrt(MU_EARTH * 7_500_000 * (1 - 0.1 ** 2)),
       gravitationalParameter: MU_EARTH,
@@ -135,9 +137,9 @@ export const SCENARIOS: Record<ScenarioKey, Scenario> = {
     chief: {
       semiMajorAxis: 7_200_000, // ~822 km altitude
       eccentricity: 0.0005, // Near-circular
-      inclination: (45 * Math.PI) / 180, // Mid-inclination, safe
-      raan: (45 * Math.PI) / 180,
-      argumentOfPerigee: (30 * Math.PI) / 180,
+      inclination: degToRad(45), // Mid-inclination, safe
+      raan: degToRad(45),
+      argumentOfPerigee: degToRad(30),
       meanAnomaly: 0,
       angularMomentum: Math.sqrt(MU_EARTH * 7_200_000 * (1 - 0.0005 ** 2)),
       gravitationalParameter: MU_EARTH,

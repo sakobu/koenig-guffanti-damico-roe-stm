@@ -1,4 +1,4 @@
-import { useCallback, useRef } from 'react';
+import { useCallback, useEffect, useRef } from 'react';
 
 interface UseLongPressOptions {
   /**
@@ -70,8 +70,12 @@ export function useLongPress({
   // Store callbacks in refs to avoid stale closures
   const onLongPressRef = useRef(onLongPress);
   const onCancelRef = useRef(onCancel);
-  onLongPressRef.current = onLongPress;
-  onCancelRef.current = onCancel;
+
+  // Sync callback refs in effect (not during render)
+  useEffect(() => {
+    onLongPressRef.current = onLongPress;
+    onCancelRef.current = onCancel;
+  });
 
   const cancel = useCallback(() => {
     if (timerRef.current) {

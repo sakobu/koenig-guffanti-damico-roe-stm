@@ -274,6 +274,9 @@ export function useDraggable({
   useEffect(() => {
     if (!scrollEnabled) return;
 
+    // Capture ref value at effect setup for cleanup
+    const touches = touchesRef.current;
+
     // Mouse wheel handler (desktop/trackpad)
     const handleWheel = (e: WheelEvent) => {
       e.preventDefault();
@@ -382,7 +385,7 @@ export function useDraggable({
       domElement.removeEventListener('touchmove', handleTouchMove);
       domElement.removeEventListener('touchend', handleTouchEnd);
       domElement.removeEventListener('touchcancel', handleTouchEnd);
-      touchesRef.current.clear();
+      touches.clear();
     };
   }, [scrollEnabled, domElement]);
 

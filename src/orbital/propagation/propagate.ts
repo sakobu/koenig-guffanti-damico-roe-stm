@@ -7,6 +7,8 @@
  * Reference: Koenig, Guffanti, D'Amico (2017)
  */
 
+import { radToDeg } from '@utils/angle';
+
 import { J2, R_EARTH } from '../constants';
 import { meanMotion } from '../math/kepler';
 import { matVecMul6 } from '../math/matrices';
@@ -82,7 +84,7 @@ export const propagateROE = (
       `[propagate]: Gravitational parameter must be positive (mu=${chief.gravitationalParameter})`
     );
   }
-  const incDeg = (chief.inclination * 180) / Math.PI;
+  const incDeg = radToDeg(chief.inclination);
   if (Math.abs(incDeg) < 0.1 || Math.abs(incDeg - 180) < 0.1) {
     throw new Error(
       `[propagate]: Near-equatorial orbit not supported for quasi-nonsingular ROE ` +

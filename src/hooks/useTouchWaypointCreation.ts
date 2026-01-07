@@ -1,4 +1,4 @@
-import { useCallback, useRef } from 'react';
+import { useCallback, useEffect, useRef } from 'react';
 
 import type { ThreeEvent } from '@react-three/fiber';
 import type { Vector3 } from 'three';
@@ -63,7 +63,11 @@ export function useTouchWaypointCreation({
 
   // Store callback in ref to avoid stale closure in long-press handler
   const onCreateWaypointRef = useRef(onCreateWaypoint);
-  onCreateWaypointRef.current = onCreateWaypoint;
+
+  // Sync callback ref in effect (not during render)
+  useEffect(() => {
+    onCreateWaypointRef.current = onCreateWaypoint;
+  });
 
   const handleLongPress = useCallback(() => {
     if (touchPositionRef.current) {

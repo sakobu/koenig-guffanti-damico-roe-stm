@@ -7,6 +7,8 @@
  * Reference: Standard optimization techniques for spacecraft trajectory design.
  */
 
+import { TWO_PI } from '@utils/angle';
+
 import { meanMotion } from '../math/kepler';
 import type { ClassicalOrbitalElements } from '../types/orbital-elements';
 import type { ManeuverLeg, TargetingOptions } from '../types/targeting';
@@ -41,7 +43,7 @@ export const optimizeTOF = (
 ): ManeuverLeg => {
   // Compute orbital period for search bounds
   const n = meanMotion(chief.semiMajorAxis, chief.gravitationalParameter);
-  const period = (2 * Math.PI) / n;
+  const period = TWO_PI / n;
 
   // Get search bounds from options or use defaults
   const minOrbits = options?.tofSearchRange?.minOrbits ?? DEFAULT_MIN_ORBITS;
@@ -151,7 +153,7 @@ export const optimizeTOFMultiStart = (
   numSamples: number = 5
 ): ManeuverLeg => {
   const n = meanMotion(chief.semiMajorAxis, chief.gravitationalParameter);
-  const period = (2 * Math.PI) / n;
+  const period = TWO_PI / n;
 
   const minOrbits = options?.tofSearchRange?.minOrbits ?? DEFAULT_MIN_ORBITS;
   const maxOrbits = options?.tofSearchRange?.maxOrbits ?? DEFAULT_MAX_ORBITS;

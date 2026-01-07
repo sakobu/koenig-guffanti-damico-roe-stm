@@ -8,6 +8,8 @@
  * `solveRendezvous()` to catch configuration errors at selection time.
  */
 
+import { radToDeg } from '@utils/angle';
+
 import type { ClassicalOrbitalElements } from '../types/orbital-elements';
 import type {
   TargetingOptions,
@@ -75,7 +77,7 @@ export const validateTargetingConfig = (
   }
 
   // Check for near-equatorial orbit (quasi-nonsingular ROE limitation)
-  const incDeg = (chief.inclination * 180) / Math.PI;
+  const incDeg = radToDeg(chief.inclination);
   if (Math.abs(incDeg) < 0.1 || Math.abs(incDeg - 180) < 0.1) {
     return {
       valid: false,

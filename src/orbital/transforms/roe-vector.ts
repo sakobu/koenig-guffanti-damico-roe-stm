@@ -16,6 +16,8 @@
  *   dey' = -dex sin(omega) + dey cos(omega) ~= e * d-omega
  */
 
+import { TWO_PI } from '@utils/angle';
+
 import type { STM6 } from '../types/matrices';
 import type { QuasiNonsingularROE } from '../types/orbital-elements';
 import type { ROEVector } from '../types/vectors';
@@ -124,7 +126,6 @@ export const computeInverseJMatrix = (omega: number): STM6 => {
  * @returns Normalized angle in [0, 2*PI)
  */
 export const normalizeAngle = (angle: number): number => {
-  const TWO_PI = 2 * Math.PI;
   const result = angle % TWO_PI;
   return result < 0 ? result + TWO_PI : result;
 };
