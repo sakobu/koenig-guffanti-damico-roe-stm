@@ -1,6 +1,6 @@
 import { Plane } from '@react-three/drei';
 import type { ThreeEvent } from '@react-three/fiber';
-import { Vector3 } from 'three';
+import { DoubleSide, Vector3 } from 'three';
 
 import { useCameraDistance } from '@hooks/useCameraDistance';
 import { useTouchWaypointCreation } from '@hooks/useTouchWaypointCreation';
@@ -21,9 +21,10 @@ export default function ClickPlane({ size = 4000 }: ClickPlaneProps) {
   const effectiveSize = Math.max(size, cameraDistance * 3);
 
   // Touch: long-press to create waypoint
-  const { handlers: touchHandlers, setTouchPosition } = useTouchWaypointCreation({
-    onCreateWaypoint: (pos) => addWaypoint(threeToRicPosition(pos)),
-  });
+  const { handlers: touchHandlers, setTouchPosition } =
+    useTouchWaypointCreation({
+      onCreateWaypoint: (pos) => addWaypoint(threeToRicPosition(pos)),
+    });
 
   // Desktop: shift+click to add waypoint
   const handleClick = (e: ThreeEvent<MouseEvent>) => {
@@ -67,7 +68,7 @@ export default function ClickPlane({ size = 4000 }: ClickPlaneProps) {
       onPointerCancel={touchHandlers.onPointerCancel}
       visible={false}
     >
-      <meshBasicMaterial transparent opacity={0} />
+      <meshBasicMaterial transparent opacity={0} side={DoubleSide} />
     </Plane>
   );
 }
